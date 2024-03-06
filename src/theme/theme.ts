@@ -44,6 +44,7 @@ const theme = createTheme({
   typography: {
     fontFamily: ["Rubik", "Arial", "sans-serif"].join(","),
     h6: {
+      fontSize: "1.5rem",
       fontWeight: "bolder",
     },
     subtitle1: {
@@ -113,12 +114,19 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: "#6D53F3",
+          backgroundColor: "#ece9f7",
           border: "1px solid #6D53F3",
           borderRadius: 30,
           padding: "8px 2px",
           fontWeight: "bold",
+          // "&:hover": {
+          //   backgroundColor: "#D6CCFE",
+          // },
+        },
+        deleteIcon: {
+          color: "#6D53F3",
           "&:hover": {
-            backgroundColor: "#D6CCFE",
+            color: "#4c3aaa",
           },
         },
       },

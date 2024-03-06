@@ -1,15 +1,33 @@
 import axiosInstance from "@apis/axiosConfig";
-import { AxiosError } from 'axios';
+import { AxiosError } from "axios";
 
-export const signIn = async (authCode: string) => {
+export const signIn = async (authCode: string): Promise<CurrentUser> => {
   try {
-    console.log("sign in api fired")
-    const response = await axiosInstance.get(`/auth/kakao/callback?code=${authCode}`);
+    console.log("sign in api fired");
+    const response = await axiosInstance.get(
+      `/auth/kakao/callback?code=${authCode}`
+    );
+    console.log(response.data);
+
+    const { accessToken, userId, userName, issuedTime, expiresIn } = response.data.data;
+    console.log("sign in function", accessToken)
+    if (accessToken) {
+      sessionStorage.setItem("accessToken", accessToken);
+      sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("userName", userName);
+      sessionStorage.setItem("issuedTime", issuedTime);
+      sessionStorage.setItem("expiresIn", expiresIn);
+
+    }
+
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-        throw new Error(`Failed to fetch group summary list: ${error.response?.status} - ${error.response?.statusText}`);
-      } else {
-        throw new Error('Failed to fetch group summary list');
-      }  }
+      throw new Error(
+        `Failed to sign in user: ${error.response?.status} - ${error.response?.statusText}`
+      );
+    } else {
+      throw new Error("Failed to sign in user");
+    }
+  }
 };
