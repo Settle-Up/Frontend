@@ -9,7 +9,8 @@
       "@apis/*": ["apis/*"],
       "@utils/*": ["utils/*"],
       "@theme": ["theme/theme"],
-      "@models": ["models/*"]
+      "@models": ["models/*"],
+      "@store": ["store/*"],
     }
   }
 }

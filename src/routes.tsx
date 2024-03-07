@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "@pages/LoginPage";
 import LoginLoadingPage from "@pages/LoginLoadingPage";
 import GroupListPage from "@pages/GroupListPage";
+import GroupCreatePage from "@pages/GroupCreatePage";
+import PageLayout from "@components/PageLayout";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +16,18 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <GroupListPage />,
+    element: <PageLayout />,
+    children: [
+      {
+        path: "/",
+        index: true,
+        element: <GroupListPage />,
+      },
+      {
+        path: "/create/group",
+        element: <GroupCreatePage />,
+      },
+    ],
   },
 ]);
 
