@@ -1,21 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Chip,
-  List,
-  ListItem,
-  Skeleton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useMutation, useQuery } from "react-query";
+import { Box, Stack, Typography } from "@mui/material";
+import { useMutation } from "react-query";
 import CustomButton from "@components/CustomButton";
 import StandardLabeledInput from "@components/StandardLabeledInput";
-import { searchUserEmailList } from "@apis/search/searchUserEmailList";
 import { createNewGroup } from "@apis/group/createNewGroup";
 import CustomModal from "@components/CustomModal";
+import EmailSearchForm from "@components/EmailSearchForm";
 
 const GroupCreatePage = () => {
   const navigate = useNavigate();
@@ -26,7 +17,7 @@ const GroupCreatePage = () => {
     groupName: "",
     groupUserList: [],
   });
-  const [email, setEmail] = useState("");
+
   const [groupNameError, setGroupNameError] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
@@ -36,17 +27,10 @@ const GroupCreatePage = () => {
     },
   });
 
-  const {
-    data: userEmailList,
-    isFetching,
-    error,
-    refetch,
-  } = useQuery("userEmailList", () => searchUserEmailList(email), {
-    enabled: false,
-    staleTime: 0,
-    cacheTime: 0,
-  });
-
+  const handleModalClose = () => {
+    setIsSuccessModalOpen(false);
+    navigate("/");
+  };
 
   // const { data: userEmailList, isLoading, error } = userEmailListQuery;
   // const userEmailList: User[] = [
@@ -113,133 +97,60 @@ const GroupCreatePage = () => {
     createNewGroupMutation.mutate(modifiedGroup);
   };
 
-  const handleModalClose = () => {
-    setIsSuccessModalOpen(false);
-    navigate("/");
-  };
-
-  const GroupCreationSuccessModal = () => (
-    <CustomModal
-      ariaLabel="Add New Member"
-      isOpen={isSuccessModalOpen}
-      handleClose={handleModalClose}
-    >
-      <Typography variant="subtitle1">Awesome!</Typography>
-      <Typography variant="h6" color="text.secondary">
-        {newGroup.groupName} example
-      </Typography>
-      <Typography variant="subtitle1">
-        is all set up and invites are on their way to your members.
-      </Typography>
-      <Typography variant="subtitle1">
-        Time to streamline your group expenses!
-      </Typography>
-      <CustomButton
-        buttonStyle="default"
-        sx={{ width: "100%" }}
-        onClick={handleModalClose}
-      >
-        Go Home
-      </CustomButton>
-    </CustomModal>
-  );
-
   return (
     <>
-      <StandardLabeledInput
-        ariaLabel="Add a group name"
-        label="Group Name *"
-        handleInputChange={handleGroupNameChange}
-        error={!!groupNameError}
-        helperText={groupNameError}
-      />
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <Typography id="email-input" gutterBottom variant="subtitle2">
-          Email
-        </Typography>
-        <Box sx={{ display: "flex", marginBottom: 1, gap: 2 }}>
-          {newGroup.groupUserList?.map((user) => (
-            <Chip
-              key={user.userId}
-              label={user.userEmail}
-              onDelete={() => handleEmailUnselection(user)}
-            />
-          ))}
-        </Box>
-        <Stack spacing={1} direction="row" alignItems="center">
-          <TextField
-            aria-labelledby="email-input"
-            fullWidth
-            variant="outlined"
-            sx={{ mb: 2 }}
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
+      <Stack sx={{ height: "100%", justifyContent: "space-between" }}>
+        <Box>
+          <StandardLabeledInput
+            ariaLabel="Add a group name"
+            label="Group Name *"
+            handleInputChange={handleGroupNameChange}
+            error={!!groupNameError}
+            helperText={groupNameError}
           />
-
-          <CustomButton
-            type="submit"
-            buttonStyle="default"
-            disabled={email.trim().length === 0}
-            sx={{ flex: 0 }}
-            onClick={(event) => {
-              event.preventDefault();
-              refetch();
-            }}
-          >
-            Search
-          </CustomButton>
-        </Stack>
-        <Box
-          className="custom-scrollbar"
-          sx={{
-            p: 2,
-            m: 2,
-            backgroundColor: "white",
-            borderRadius: 3,
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            maxHeight: "400px",
-            overflow: "auto",
-          }}
-        >
-          {isFetching ? (
-            <List>
-              {[...new Array(5)].map((_, index) => (
-                <ListItem key={index}>
-                  <Skeleton
-                    variant="text"
-                    width={200}
-                    height={40}
-                    animation="wave"
-                  />
-                </ListItem>
-              ))}
-            </List>
-          ) : userEmailList && userEmailList.length > 0 ? (
-            <List>
-              {userEmailList.map((user: GeneralUser) => (
-                <ListItem
-                  key={user?.userId}
-                  onClick={() => handleEmailSelection(user)}
-                >
-                  {user?.userEmail}
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography>No matching users found.</Typography>
-          )}
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography id="email-input" gutterBottom variant="subtitle2">
+              Add Members
+            </Typography>
+            <EmailSearchForm
+              selectedEmailList={newGroup.groupUserList}
+              handleEmailSelection={handleEmailSelection}
+              handleEmailUnselection={handleEmailUnselection}
+            />
+          </Box>
         </Box>
-      </Box>
-      <CustomButton
-        buttonStyle="default"
-        disabled={newGroup.groupName.trim().length <= 1}
-        onClick={handleCreateGroupClick}
+        <CustomButton
+          buttonStyle="default"
+          disabled={newGroup.groupName.trim().length <= 1}
+          onClick={handleCreateGroupClick}
+          sx={{ width: { xs: "100%", sm: "100%" } }}
+        >
+          Create
+        </CustomButton>
+      </Stack>
+      <CustomModal
+        ariaLabel="Add New Member"
+        isOpen={isSuccessModalOpen}
+        handleClose={handleModalClose}
       >
-        Create
-      </CustomButton>
-      {GroupCreationSuccessModal()}
+        <Typography variant="subtitle1">Awesome!</Typography>
+        <Typography variant="h6" color="text.secondary">
+          {newGroup.groupName}
+        </Typography>
+        <Typography variant="subtitle1">
+          is all set up and invites are on their way to your members.
+        </Typography>
+        <Typography variant="subtitle1">
+          Time to streamline your group expenses!
+        </Typography>
+        <CustomButton
+          buttonStyle="default"
+          sx={{ width: "100%" }}
+          onClick={handleModalClose}
+        >
+          Go Home
+        </CustomButton>
+      </CustomModal>
     </>
   );
 };

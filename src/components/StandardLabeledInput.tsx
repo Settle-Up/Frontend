@@ -18,7 +18,7 @@ const StandardLabeledInput = ({
 }: StandardLabeledInputProps) => {
   return (
     <>
-      <Typography id={ariaLabel} gutterBottom variant="subtitle2">
+      <Typography id={ariaLabel} variant="subtitle2">
         {label}
       </Typography>
       <TextField

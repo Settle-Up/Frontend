@@ -18,6 +18,10 @@ const theme = createTheme({
       dark: "#958eb1",
       contrastText: "#fff",
     },
+    black: {
+      main: "#000000",
+      light: "#333333",
+    },
     error: {
       main: "#ce3838",
     },
@@ -43,6 +47,10 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ["Rubik", "Arial", "sans-serif"].join(","),
+    h5: {
+      fontSize: "1.7rem",
+      fontWeight: "bolder",
+    },
     h6: {
       fontSize: "1.5rem",
       fontWeight: "bolder",

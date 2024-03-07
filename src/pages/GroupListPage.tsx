@@ -5,7 +5,7 @@ import { userAuthState } from "../store/userStore";
 import { useRecoilValue } from "recoil";
 import { useQuery } from "react-query";
 import { getGroupSummaryList } from "@apis/group/getGroupSummaryList";
-import { IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CustomIconButton from "@components/CustomIconButton";
 
@@ -20,15 +20,24 @@ const GroupListPage = () => {
   // groupSummaryList?.forEach(group => )
 
   return (
-    <>
-      <Typography> Group </Typography>
-      <CustomIconButton
-        icon={<AddIcon />}
-        ariaLabel="Create New Group"
-        shape="square"
-        handleClick={() => navigate("/create/group")}
-      />
-    </>
+    <Stack>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Typography variant="subtitle2"> Groups </Typography>
+        <CustomIconButton
+          icon={<AddIcon />}
+          ariaLabel="Create New Group"
+          shape="square"
+          handleClick={() => navigate("/create/group")}
+        />
+        <CustomIconButton
+          icon={<AddIcon sx={{ fontSize: "36px" }} />}
+          ariaLabel="Create New Group"
+          shape="round"
+          handleClick={() => navigate("/create/group")}
+          sx={{ position: "absolute", bottom: 50, right: 50, boxShadow: 4 }}
+        />
+      </Box>
+    </Stack>
   );
 };
 
