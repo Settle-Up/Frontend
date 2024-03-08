@@ -34,25 +34,3 @@ export const resizeImage = (
   });
 };
 
-// Example usage
-const handleImageUpload = async (
-  event: React.ChangeEvent<HTMLInputElement>
-) => {
-  const files = event.target.files;
-  if (files && files.length > 0) {
-    try {
-      const resizedImage = await resizeImage(
-        files[0],
-        10000,
-        10000,
-        "JPEG",
-        100,
-        0
-      );
-      console.log("Resized image:", resizedImage);
-      // Proceed with uploading or further processing
-    } catch (error) {
-      console.error("Error resizing the image:", error);
-    }
-  }
-};

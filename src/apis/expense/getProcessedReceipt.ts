@@ -20,13 +20,5 @@ export const getProcessedReceipt = async (formData: FormData) => {
       extractedData
     );
     return extractedData;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(
-        `Failed to sign in user: ${error.response?.status} - ${error.response?.statusText}`
-      );
-    } else {
-      throw new Error("Failed to sign in user");
-    }
-  }
+  } catch (error) {}
 };
