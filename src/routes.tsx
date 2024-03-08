@@ -1,9 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import LoginPage from "@pages/LoginPage";
-import LoginLoadingPage from "@pages/LoginLoadingPage";
-import GroupListPage from "@pages/GroupListPage";
-import GroupCreatePage from "@pages/GroupCreatePage";
 import PageLayout from "@components/PageLayout";
+import { LoginPage, LoginLoadingPage } from "@pages/auth";
+import { GroupListPage, GroupCreatePage } from "@pages/group";
+import {
+  ReceiptUploadPage,
+  ProcessedReceiptInitialReviewPage,
+} from "@pages/expenseCreate";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
       {
         path: "/create/group",
         element: <GroupCreatePage />,
+      },
+      {
+        path: "/upload-receipt",
+        element: <ReceiptUploadPage />,
+      },
+      {
+        path: "/processed-receipt/initial-review",
+        element: <ProcessedReceiptInitialReviewPage />,
       },
     ],
   },

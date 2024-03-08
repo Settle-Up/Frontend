@@ -37,8 +37,8 @@ type NewGroup = {
   type JoinedGroupSummary = {
     groupId: string;
     groupName: string;
-    settlementBalance: string;
-    lastActive: string;
+    settlementBalance?: string;
+    lastActive?: string;
   }
   
   type JoniedGroupSummaryList = JoinedGroupSummary[]

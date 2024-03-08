@@ -25,10 +25,10 @@ const CustomIconButton = ({
   let hoverBgColor = theme.palette.black.light;
   if (variant === "primary") {
     backgroundColor = theme.palette.primary.main;
-    hoverBgColor = theme.palette.primary.light;
+    hoverBgColor = theme.palette.primary.dark;
   } else if (variant === "secondary") {
     backgroundColor = theme.palette.secondary.main;
-    hoverBgColor = theme.palette.secondary.light;
+    hoverBgColor = theme.palette.secondary.dark;
   }
 
   let borderRadius = shape === "round" ? "50%" : "20%";

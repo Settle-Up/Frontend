@@ -5,8 +5,7 @@ import { useSetRecoilState } from "recoil";
 import { useEffect } from "react";
 import Spinner from "@components/Spinner";
 import { signIn } from "@apis/auth/signIn";
-import { userAuthState } from "../store/userStore";
-
+import { userAuthState } from "../../store/userStore";
 
 const LoginLoadingPage = () => {
   const location = useLocation();
@@ -35,7 +34,7 @@ const LoginLoadingPage = () => {
 
   useEffect(() => {
     if (userAuthData) {
-      setUserAuthState(userAuthData)
+      setUserAuthState(userAuthData);
       navigate("/");
     }
   }, [userAuthData, navigate, setUserAuthState]);
