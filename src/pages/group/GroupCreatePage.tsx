@@ -88,13 +88,13 @@ const GroupCreatePage = () => {
       userIds = [currentUserId, ...userIds];
     }
 
-    const modifiedGroup = {
+    const requestData = {
       ...newGroup,
       groupMemberCount: userIds.length,
       groupUserList: userIds,
     };
 
-    createNewGroupMutation.mutate(modifiedGroup);
+    createNewGroupMutation.mutate(requestData);
   };
 
   return (

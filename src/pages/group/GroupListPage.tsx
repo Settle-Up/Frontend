@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import { userAuthState } from "../store/userStore";
+import { userAuthState } from "../../store/userStore";
 import { useRecoilValue } from "recoil";
 import { useQuery } from "react-query";
 import { getGroupSummaryList } from "@apis/group/getGroupSummaryList";
@@ -31,9 +31,9 @@ const GroupListPage = () => {
         />
         <CustomIconButton
           icon={<AddIcon sx={{ fontSize: "36px" }} />}
-          ariaLabel="Create New Group"
+          ariaLabel="Add New Receipt"
           shape="round"
-          handleClick={() => navigate("/create/group")}
+          handleClick={() => navigate("/upload-receipt")}
           sx={{ position: "absolute", bottom: 50, right: 50, boxShadow: 4 }}
         />
       </Box>

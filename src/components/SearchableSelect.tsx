@@ -6,23 +6,36 @@ type Option = {
 };
 
 type SearchableSelectProps<T extends Option> = {
-  ariaLabel: string;
+  ariaLabelledby: string;
   possibleOptions: T[];
-  selectedOptions: T;
-  handleSelectionChange: (value : T | T[] | null) => void;
+  selectedOptions: T | T[] | null;
+  handleSelectionChange: (value: T | T[] | null) => void;
   multiselect?: boolean;
 };
 
 const SearchableSelect = <T extends Option>({
-  ariaLabel,
+  ariaLabelledby,
   possibleOptions,
   selectedOptions,
   handleSelectionChange,
   multiselect = false,
 }: SearchableSelectProps<T>) => {
+  let value;
+  if (multiselect) {
+    value = Array.isArray(selectedOptions) ? selectedOptions : [];
+  } else {
+    value =
+      selectedOptions &&
+      !Array.isArray(selectedOptions) &&
+      selectedOptions.id !== "" &&
+      possibleOptions.some((option) => option.id === selectedOptions.id)
+        ? selectedOptions
+        : null;
+  }
+
   return (
     <Autocomplete
-      value={selectedOptions ?? (multiselect ? [] : null)}
+      value={value}
       onChange={(event, newValue) => handleSelectionChange(newValue)}
       options={possibleOptions}
       isOptionEqualToValue={(option: T, value) => option.id === value.id}
@@ -31,10 +44,9 @@ const SearchableSelect = <T extends Option>({
       renderInput={(params) => (
         <TextField
           {...params}
-          id={ariaLabel}
+          aria-labelledby={ariaLabelledby}
           variant="outlined"
           fullWidth
-          placeholder="d"
           InputProps={{
             ...params.InputProps,
           }}

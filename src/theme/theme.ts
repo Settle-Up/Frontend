@@ -5,11 +5,13 @@ const theme = createTheme({
     mode: "light",
     primary: {
       main: "#6D53F3",
+      light: "#8a75f5",
+      dark: "#4c3aaa",
     },
     secondary: {
-      main: "#f57c00",
-      light: "#ffb74d",
-      dark: "#e65100",
+      main: "#d66d11",
+      // light: "#ffb74d",
+      // dark: "#e65100",
       contrastText: "#fff",
     },
     tertiary: {
@@ -144,6 +146,32 @@ const theme = createTheme({
         root: {
           "& .MuiBackdrop-root": {
             backgroundColor: "rgba(0, 0, 0, 0.6)",
+          },
+        },
+      },
+    },
+    MuiSnackbarContent: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#F7F5FF",
+          color: "#8a75f5",
+          borderRadius: 10,
+          border: "1px solid #6D53F3",
+          textAlign: "center",
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        inputRoot: {
+          '&[class*="MuiOutlinedInput-root"]': {
+            paddingTop: "8px",
+            paddingBottom: "8px",
+            paddingLeft: "14px",
+            paddingRight: "14px",
+          },
+          "& .MuiAutocomplete-input": {
+            padding: "0px",
           },
         },
       },

@@ -38,9 +38,9 @@ const SecondaryOutlineButton = styled(Button)({
 
 const DefaultButton = styled(Button)({
   color: "white",
-  backgroundColor: "black",
+  backgroundColor: theme.palette.black.main,
   "&:hover": {
-    backgroundColor: "#616161",
+    backgroundColor: theme.palette.black.light,
   },
 });
 
