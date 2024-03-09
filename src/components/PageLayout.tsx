@@ -10,7 +10,7 @@ const PageLayout = () => {
           maxWidth: "600px",
           //   alignItems: "center",
           m: "auto",
-          px: 4,
+          px: 2,
           pt: 4,
           pb: 6,
           gap: 2,

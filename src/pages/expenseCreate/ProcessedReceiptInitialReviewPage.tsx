@@ -1,23 +1,28 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import CustomButton from "@components/CustomButton";
-import { useRecoilValue } from "recoil";
-import { newExpenseState } from "@store/expenseStore";
+import ReceiptDetailsPaper from "@components/ReceiptDetailsPaper";
+import HeadingWithTip from "@components/HeadingWithTip";
 
+const ProcessReceiptInitialReviewPage = () => {
+  const navigate = useNavigate();
 
-type ProcessReceiptInitialReviewPageProps = {};
-
-const ProcessReceiptInitialReviewPage =
-  ({}: ProcessReceiptInitialReviewPageProps) => {
-    const navigate = useNavigate();
-
-    const newExpense = useRecoilValue(newExpenseState);
-
-    return (
-      <>
-        <Typography variant="h6" gutterBottom>
-          Review Extracted Receipt Details
-        </Typography>
+  return (
+    <>
+      <Stack
+        sx={{
+          flexGrow: 1,
+          justifyContent: "space-between",
+          // border: "2px dotted red",
+        }}
+      >
+        <Stack sx={{ gap: 2}}>
+          <HeadingWithTip
+            heading="Review Extracted Receipt Details"
+            tipMessage="Ensure all details match your receipt. You can proceed if the information is accurate or edit if adjustments are needed."
+          />
+          <ReceiptDetailsPaper />
+        </Stack>
         <Box
           sx={{
             display: "flex",
@@ -44,8 +49,9 @@ const ProcessReceiptInitialReviewPage =
             Edit Receipt Details
           </CustomButton>
         </Box>
-      </>
-    );
-  };
+      </Stack>
+    </>
+  );
+};
 
 export default ProcessReceiptInitialReviewPage;
