@@ -9,9 +9,9 @@ const theme = createTheme({
       dark: "#4c3aaa",
     },
     secondary: {
-      main: "#d66d11",
-      // light: "#ffb74d",
-      // dark: "#e65100",
+      main: "#484041",
+      light: "#757171",
+      dark: "#322c2d",
       contrastText: "#fff",
     },
     tertiary: {
@@ -33,7 +33,7 @@ const theme = createTheme({
     },
     text: {
       secondary: "#6D53F3",
-      primary: "#000000",
+      primary: "#484041",
     },
     divider: "#D6CCFE",
     warning: {
@@ -153,11 +153,19 @@ const theme = createTheme({
     MuiSnackbarContent: {
       styleOverrides: {
         root: {
-          backgroundColor: "#F7F5FF",
-          color: "#8a75f5",
-          borderRadius: 10,
-          border: "1px solid #6D53F3",
-          textAlign: "center",
+          // backgroundColor: "#F7F5FF",
+          // color: "#8a75f5",
+          // borderRadius: 10,
+          // border: "1px solid #6D53F3",
+          // textAlign: "center",
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          fontSize: "16px",
+          fontWeight: "bold",
         },
       },
     },

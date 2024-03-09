@@ -2,17 +2,17 @@ type AllocationType = "VariableQuantity" | "EqualQuantity" | "";
 
 type PurchaserDetails = {
   userId: string;
-  purchasedQuantity?: number | undefined;
+  purchasedQuantity?: string | undefined;
 };
 
 type ItemOrderDetails = {
   id: string;
   itemName: string;
-  unitPrice: number;
-  itemQuantity: number;
-  itemTotalPrice: number;
-  jointPurchaserCount: number;
-  jointPurchaserList: PurchaserDetails[];
+  unitPrice: string;
+  itemQuantity: string;
+  itemTotalPrice: string;
+  jointPurchaserCount?: string;
+  jointPurchaserList?: PurchaserDetails[];
 };
 
 type GroupExpenseBase = {
@@ -23,9 +23,9 @@ type GroupExpenseBase = {
   receiptName: string;
   address: string;
   receiptDate: string;
-  receiptTotalPrice: number;
-  discountApplied: number;
-  actualPaidPrice: number;
+  receiptTotalPrice: string;
+  discountApplied: string;
+  actualPaidPrice: string;
   allocationType: AllocationType;
   itemOrderDetailsList: ItemOrderDetails[];
 };

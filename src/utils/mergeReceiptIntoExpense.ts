@@ -15,7 +15,7 @@ export const mergeReceiptInToExpense = (receiptData: NewReceipt, existingData: N
       unitPrice: item.unitPrice,
       itemQuantity: item.itemQuantity,
       itemTotalPrice: item.itemTotalPrice,
-      jointPurchaserCount: 0,
+      jointPurchaserCount: "0",
       jointPurchaserList: [],
     })),
   };

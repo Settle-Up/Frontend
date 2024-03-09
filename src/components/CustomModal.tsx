@@ -6,16 +6,16 @@ import CloseIcon from "@mui/icons-material/Close";
 type CustomModalProps = {
   ariaLabel: string;
   children: ReactNode;
-  isOpen: boolean;
   handleClose: (isOpen: boolean) => void;
+  isOpen: boolean;
   showCloseButton?: boolean;
 };
 
 const CustomModal = ({
   ariaLabel,
   children,
-  isOpen,
   handleClose,
+  isOpen,
   showCloseButton = false,
 }: CustomModalProps) => {
   return (
@@ -23,7 +23,7 @@ const CustomModal = ({
       <Modal
         open={isOpen}
         onClose={handleClose}
-        aria-labelledby={ariaLabel}
+        aria-label={ariaLabel}
         sx={{
           display: "flex",
           alignItems: "center",

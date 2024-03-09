@@ -14,7 +14,7 @@ const SecondaryButton = styled(Button)({
   color: "white",
   backgroundColor: theme.palette.secondary.main,
   "&:hover": {
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.secondary.light,
   },
 });
 
@@ -30,17 +30,17 @@ const SecondaryOutlineButton = styled(Button)({
   backgroundColor: "white",
   border: `1px solid ${theme.palette.secondary.main}`,
   "&:hover": {
-    color: theme.palette.secondary.dark,
-    backgroundColor: theme.palette.secondary.light,
+    color: "white",
+    backgroundColor: "#8C7D7F",
     border: `1px solid ${theme.palette.secondary.dark}`,
   },
 });
 
 const DefaultButton = styled(Button)({
   color: "white",
-  backgroundColor: theme.palette.black.main,
+  backgroundColor: theme.palette.secondary.main,
   "&:hover": {
-    backgroundColor: theme.palette.black.light,
+    backgroundColor: theme.palette.secondary.light,
   },
 });
 
@@ -53,13 +53,15 @@ interface CustomButtonProps extends ButtonProps {
     | "default";
   EndIcon?: React.ElementType<SvgIconProps> | undefined;
   sx?: SxProps;
+  type?: "button" | "submit" | "reset";
 }
 
 const CustomButton = ({
   buttonStyle,
+  children,
   EndIcon,
   sx,
-  children,
+  type = "button",
   ...props
 }: CustomButtonProps) => {
   let ButtonComponent: React.ElementType;
@@ -89,7 +91,6 @@ const CustomButton = ({
 
   return (
     <ButtonComponent
-      variant={variant}
       endIcon={EndIcon}
       {...props}
       sx={{
@@ -102,6 +103,8 @@ const CustomButton = ({
         px: 2,
         ...sx,
       }}
+      type={type}
+      variant={variant}
     >
       {children}
     </ButtonComponent>

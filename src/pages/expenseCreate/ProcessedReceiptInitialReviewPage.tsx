@@ -13,8 +13,6 @@ const ProcessReceiptInitialReviewPage =
 
     const newExpense = useRecoilValue(newExpenseState);
 
-    console.log(newExpense)
-
     return (
       <>
         <Typography variant="h6" gutterBottom>

@@ -46,11 +46,11 @@ const GroupPickerFromJoined = () => {
 
   return (
     <>
-      <Typography id="select-group" variant="subtitle2">
+      <Typography id="group" variant="subtitle2">
         Choose Group
       </Typography>
       <SearchableSelect
-        ariaLabelledby="select-group"
+        ariaLabelledby="group"
         // possibleOptions={possibleGroupOptions}
         possibleOptions={extractedGroupData}
         selectedOptions={{

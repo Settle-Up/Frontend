@@ -3,9 +3,7 @@ import { AxiosError } from "axios";
 
 export const searchUserEmailList = async (query: string): Promise<GeneralUser[]> => {
   try {
-    console.log("searchUserEmailList API fired")
     const response = await axiosInstance.get(`/?search=${query}`);
-    console.log(response.data);
     return response.data.data.searchList;
   } catch (error) {
     if (error instanceof AxiosError) {

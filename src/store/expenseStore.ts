@@ -11,10 +11,12 @@ export const newExpenseState = atom<NewGroupExpense>({
     receiptName: "",
     address: "",
     receiptDate: "",
-    receiptTotalPrice: 0,
-    discountApplied: 0,
-    actualPaidPrice: 0,
+    receiptTotalPrice: "",
+    discountApplied: "",
+    actualPaidPrice: "",
     allocationType: "",
     itemOrderDetailsList: [],
   },
 });
+
+

@@ -1,36 +1,43 @@
-import { Snackbar, SnackbarContent, Typography } from "@mui/material";
-import theme from "@theme";
+import { Alert, Backdrop, Snackbar } from "@mui/material";
 
 type CustomSnackbarProps = {
+  handleClose: () => void;
+  message: string;
+  severity: "info" | "success" | "warning" | "error";
   show: boolean;
-  setShowSnackbar: (isVisible: boolean) => void;
 };
 
-const CustomSnackbar = ({ show, setShowSnackbar }: CustomSnackbarProps) => {
-  const handleClose = () => {
-    setShowSnackbar(false);
-  };
-
+const CustomSnackbar = ({
+  handleClose,
+  message,
+  severity,
+  show,
+}: CustomSnackbarProps) => {
   return (
-    <Snackbar
-      open={show}
-      autoHideDuration={6000} 
-      onClose={handleClose}
-    //   anchorOrigin={{
-    //     vertical: "top",
-    //     horizontal: "center",
-    //   }}
-    >
-      <SnackbarContent
-        message={
-          <Typography>
-            We're sorry, but your receipt processing is taking longer than
-            expected. Please wait a little longer, your receipt processing is on
-            its way!
-          </Typography>
-        }
+    <>
+      <Backdrop
+        open={show}
+        sx={{
+          zIndex: 1200,
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          pointerEvents: "none",
+        }}
       />
-    </Snackbar>
+      <Snackbar
+        open={show}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        color="error"
+      >
+        <Alert severity={severity} onClose={handleClose}>
+          {message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
