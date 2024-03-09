@@ -1,34 +1,42 @@
 import React from "react";
-import { Typography, TextField } from "@mui/material";
+import { Typography, TextField, SxProps } from "@mui/material";
 
 interface StandardLabeledInputProps {
-  ariaLabel: string;
-  label: string;
+  error?: boolean;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: boolean; 
-  helperText?: string; 
+  helperText?: string;
+  label: string;
+  name: string;
+  sx? : SxProps;
+  value: string | number;
 }
 
 const StandardLabeledInput = ({
-  ariaLabel,
-  label,
-  handleInputChange,
   error = false,
-  helperText = ''
+  handleInputChange,
+  helperText = "",
+  label,
+  name,
+  sx,
+  value,
 }: StandardLabeledInputProps) => {
+
   return (
     <>
-      <Typography id={ariaLabel} variant="subtitle2">
+      <Typography id={name} variant="subtitle2" gutterBottom>
         {label}
       </Typography>
       <TextField
-        aria-labelledby={ariaLabel}
-        fullWidth
-        variant="outlined"
-        sx={{ mb: 2 }}
-        onChange={handleInputChange}
+        aria-labelledby={name}
         error={error}
+        fullWidth
         helperText={helperText}
+        name={name}
+        onChange={handleInputChange}
+        required={true}
+        sx={sx}
+        value={value}
+        variant="outlined"
       />
     </>
   );

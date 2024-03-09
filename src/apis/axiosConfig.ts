@@ -1,10 +1,11 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://4bb2-125-132-224-129.ngrok-free.app/",
+  baseURL: " https://a5d3-125-132-224-129.ngrok-free.app/",
   headers: {
     "ngrok-skip-browser-warning": "true",
   },
+  withCredentials: true
 });
 
 axiosInstance.interceptors.request.use(

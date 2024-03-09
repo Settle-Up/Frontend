@@ -1,18 +1,17 @@
 type ReceiptItem = {
   itemName: string;
-  unitPrice: number;
-  itemQuantity: number;
-  itemTotalPrice: number;
+  unitPrice: string;
+  itemQuantity: string;
+  itemTotalPrice: string;
 };
 
 type NewReceipt = {
   receiptName: string;
   address: string;
   receiptDate: string;
-  receiptTotalPrice: number;
-  discountApplied: number;
-  actualPaidPrice: number;
+  receiptTotalPrice: string;
+  discountApplied: string;
+  actualPaidPrice: string;
   itemList: ReceiptItem[];
 };
 
-/* there seems no need for Receipt model; because this is part of the expense */

@@ -6,12 +6,13 @@ const PageLayout = () => {
     <>
       <Stack
         sx={{
-          height: "100vh",
+          minHeight: "100vh",
           maxWidth: "600px",
           //   alignItems: "center",
           m: "auto",
           px: 4,
-          py: 2,
+          pt: 4,
+          pb: 6,
           gap: 2,
           // border: "3px dotted blue",
         }}

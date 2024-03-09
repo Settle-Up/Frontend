@@ -7,18 +7,18 @@ type Option = {
 
 type SearchableSelectProps<T extends Option> = {
   ariaLabelledby: string;
-  possibleOptions: T[];
-  selectedOptions: T | T[] | null;
   handleSelectionChange: (value: T | T[] | null) => void;
   multiselect?: boolean;
+  possibleOptions: T[];
+  selectedOptions: T | T[] | null;
 };
 
 const SearchableSelect = <T extends Option>({
   ariaLabelledby,
-  possibleOptions,
-  selectedOptions,
   handleSelectionChange,
   multiselect = false,
+  possibleOptions,
+  selectedOptions,
 }: SearchableSelectProps<T>) => {
   let value;
   if (multiselect) {
@@ -40,7 +40,7 @@ const SearchableSelect = <T extends Option>({
       options={possibleOptions}
       isOptionEqualToValue={(option: T, value) => option.id === value.id}
       multiple={multiselect}
-      noOptionsText="일치하는 옵션이 없습니다"
+      noOptionsText="There are no matching options."
       renderInput={(params) => (
         <TextField
           {...params}

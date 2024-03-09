@@ -99,14 +99,15 @@ const GroupCreatePage = () => {
 
   return (
     <>
-      <Stack sx={{ height: "100%", justifyContent: "space-between" }}>
+      <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
         <Box>
           <StandardLabeledInput
-            ariaLabel="Add a group name"
-            label="Group Name *"
-            handleInputChange={handleGroupNameChange}
             error={!!groupNameError}
             helperText={groupNameError}
+            handleInputChange={handleGroupNameChange}
+            label="Group Name *"
+            name="groupName"
+            value={newGroup.groupName}
           />
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography id="email-input" gutterBottom variant="subtitle2">

@@ -19,7 +19,10 @@ const ReceiptUploadPage = () => {
     onSuccess: (newReceipt) => {
       if (newReceipt) {
         const mergedData = mergeReceiptInToExpense(newReceipt, newExpense);
-        console.log("-----------------Merged data-----------------", mergedData);
+        console.log(
+          "-----------------Merged data-----------------",
+          mergedData
+        );
         setNewExpense(mergedData);
         navigate("/processed-receipt/initial-review");
       }
@@ -39,7 +42,13 @@ const ReceiptUploadPage = () => {
       {getProcessedReceiptMutation.isLoading ? (
         <ReceiptProcessingIndicator />
       ) : (
-        <Stack sx={{ height: "100%", justifyContent: "space-between" }}>
+        <Stack
+          sx={{
+            flexGrow: 1,
+            justifyContent: "space-between",
+            // border: "2px dotted red",
+          }}
+        >
           <Stack spacing={2}>
             <GroupPickerFromJoined />
             <ImageUploaderWithPreview />
@@ -50,7 +59,6 @@ const ReceiptUploadPage = () => {
               flexDirection: { xs: "column", sm: "row" },
               justifyContent: { xs: "flex-end" },
               gap: 2,
-              my: 3,
             }}
           >
             <CustomButton

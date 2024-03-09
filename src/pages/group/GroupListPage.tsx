@@ -1,13 +1,10 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
-import { userAuthState } from "../../store/userStore";
+import { Box, Stack, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import CustomIconButton from "@components/CustomIconButton";
 import { useRecoilValue } from "recoil";
 import { useQuery } from "react-query";
 import { getGroupSummaryList } from "@apis/group/getGroupSummaryList";
-import { Box, IconButton, Stack, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import CustomIconButton from "@components/CustomIconButton";
 
 const GroupListPage = () => {
   const navigate = useNavigate();
@@ -24,16 +21,16 @@ const GroupListPage = () => {
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <Typography variant="subtitle2"> Groups </Typography>
         <CustomIconButton
-          icon={<AddIcon />}
           ariaLabel="Create New Group"
-          shape="square"
           handleClick={() => navigate("/create/group")}
+          icon={<AddIcon />}
+          shape="square"
         />
         <CustomIconButton
-          icon={<AddIcon sx={{ fontSize: "36px" }} />}
           ariaLabel="Add New Receipt"
-          shape="round"
           handleClick={() => navigate("/upload-receipt")}
+          icon={<AddIcon sx={{ fontSize: "36px" }} />}
+          shape="round"
           sx={{ position: "absolute", bottom: 50, right: 50, boxShadow: 4 }}
         />
       </Box>

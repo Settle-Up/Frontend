@@ -4,25 +4,27 @@ import { SxProps, Theme } from "@mui/system";
 import theme from "@theme";
 
 interface CustomIconButtonProps {
-  icon: React.ReactNode;
   ariaLabel: string;
-  handleClick: () => void;
-  variant?: "default" | "primary" | "secondary";
+  handleClick?: () => void;
+  icon: React.ReactNode;
   shape: "round" | "square";
   sx?: SxProps<Theme>;
+  type?: "button" | "submit" | "reset";
+  variant?: "default" | "primary" | "secondary";
 }
 
 const CustomIconButton = ({
-  icon,
   ariaLabel,
   handleClick,
-  variant = "default",
+  icon,
   shape,
   sx = {},
+  type = "button",
+  variant = "default",
 }: CustomIconButtonProps) => {
-  let backgroundColor = theme.palette.black.main;
+  let backgroundColor = theme.palette.secondary.main;
   let color = "white";
-  let hoverBgColor = theme.palette.black.light;
+  let hoverBgColor = theme.palette.secondary.light;
   if (variant === "primary") {
     backgroundColor = theme.palette.primary.main;
     hoverBgColor = theme.palette.primary.dark;
@@ -37,6 +39,7 @@ const CustomIconButton = ({
     <IconButton
       onClick={handleClick}
       aria-label={ariaLabel}
+      type={type}
       sx={{
         backgroundColor,
         color,

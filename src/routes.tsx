@@ -4,6 +4,7 @@ import { LoginPage, LoginLoadingPage } from "@pages/auth";
 import { GroupListPage, GroupCreatePage } from "@pages/group";
 import {
   ReceiptUploadPage,
+  ReceiptEditingPage,
   ProcessedReceiptInitialReviewPage,
 } from "@pages/expenseCreate";
 
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/upload-receipt",
         element: <ReceiptUploadPage />,
+      },
+      {
+        path: "/edit-receipt",
+        element: <ReceiptEditingPage />,
       },
       {
         path: "/processed-receipt/initial-review",
