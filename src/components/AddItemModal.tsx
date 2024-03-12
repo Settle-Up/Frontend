@@ -6,17 +6,20 @@ import theme from "@theme";
 import { useSetRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import { v4 as uuidv4 } from "uuid";
+import { formatNumberInput } from "@utils/numberStringConversions";
 
 type AddItemModalProps = {
   handleClose: () => void;
   open: boolean;
-  triggerRequiredFieldsAlert: () => void;
+  setItemErrors: React.Dispatch<
+    React.SetStateAction<ItemOrderDetailsListError>
+  >;
 };
 
 const AddItemModal = ({
   handleClose,
   open,
-  triggerRequiredFieldsAlert,
+  setItemErrors,
 }: AddItemModalProps) => {
   const setNewExpense = useSetRecoilState(newExpenseState);
 
@@ -25,21 +28,49 @@ const AddItemModal = ({
     unitPrice: "",
     itemQuantity: "",
     itemTotalPrice: "",
-    id: uuidv4(),
+    id: "",
+  });
+  const [itemError, setItemError] = useState<ItemError>({
+    itemName: { hasError: false, message: "" },
+    unitPrice: { hasError: false, message: "" },
+    itemQuantity: { hasError: false, message: "" },
+    itemTotalPrice: { hasError: false, message: "" },
   });
 
   const { itemName, unitPrice, itemQuantity, itemTotalPrice } = item;
+
+  const validateItem = () => {
+    const newItemErrors = { ...itemError };
+    Object.keys(newItemErrors).forEach((key) => {
+      if (key in item) {
+        newItemErrors[key as keyof typeof newItemErrors].hasError =
+          !item[key as keyof typeof item];
+      }
+    });
+
+    return newItemErrors;
+  };
 
   const handleAddItem = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const isFormValid = itemName && unitPrice && itemQuantity && itemTotalPrice;
+    const updatedItemError = validateItem();
+    setItemError(updatedItemError);
 
-    if (isFormValid) {
-      setNewExpense((prevExpense) => ({
+    const noItemErrors = Object.values(updatedItemError).every(
+      (value) => value.hasError === false
+    );
+
+    const randomId = uuidv4();
+
+    if (noItemErrors) {
+      setNewExpense((prevExpense: NewGroupExpense) => ({
         ...prevExpense,
-        itemOrderDetailsList: [...prevExpense.itemOrderDetailsList, item],
+        itemOrderDetailsList: [
+          ...prevExpense.itemOrderDetailsList,
+          { ...item, id: randomId },
+        ],
       }));
 
       setItem({
@@ -47,20 +78,60 @@ const AddItemModal = ({
         unitPrice: "",
         itemQuantity: "",
         itemTotalPrice: "",
-        id: uuidv4(),
+        id: "",
       });
+
+      setItemErrors((prev) => ({
+        ...prev,
+        [randomId]: {
+          itemName: { hasError: false, message: "" },
+          unitPrice: { hasError: false, message: "" },
+          itemQuantity: { hasError: false, message: "" },
+          itemTotalPrice: { hasError: false, message: "" },
+        },
+      }));
 
       handleClose();
     } else {
-      triggerRequiredFieldsAlert();
+      // triggerRequiredFieldsAlert();
     }
+  };
+
+  const handleCancel = () => {
+    setItem({
+      itemName: "",
+      unitPrice: "",
+      itemQuantity: "",
+      itemTotalPrice: "",
+      id: uuidv4(),
+    });
+
+    handleClose();
   };
 
   const handleItemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let formattedValue: string = value;
+    if (["unitPrice", "itemQuantity", "itemTotalPrice"].includes(name)) {
+      formattedValue = formatNumberInput(value!);
+      setItemError((prev) => ({
+        ...prev,
+        [name]:
+          formattedValue === ""
+            ? {
+                hasError: true,
+                message: "Invalid input. Only numbers are allowed.",
+              }
+            : {
+                hasError: false,
+                message: "",
+              },
+      }));
+    }
+
     setItem((prevItem) => ({
       ...prevItem,
-      [name]: value,
+      [name]: formattedValue ?? value,
     }));
   };
 
@@ -86,37 +157,45 @@ const AddItemModal = ({
             Add Item
           </Typography>
           <StandardLabeledInput
+            error={itemError.itemName.hasError}
+            errorText={itemError.itemName.message}
             handleInputChange={handleItemChange}
             label="Item Name"
             name="itemName"
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             value={itemName}
           />
           <StandardLabeledInput
+            error={itemError.unitPrice.hasError}
+            errorText={itemError.unitPrice.message}
             handleInputChange={handleItemChange}
             label="Unit Price"
             name="unitPrice"
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             value={unitPrice}
           />
           <StandardLabeledInput
+            error={itemError.itemQuantity.hasError}
+            errorText={itemError.itemQuantity.message}
             handleInputChange={handleItemChange}
             label="Quantity"
             name="itemQuantity"
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             value={itemQuantity}
           />
           <StandardLabeledInput
+            error={itemError.itemTotalPrice.hasError}
+            errorText={itemError.itemTotalPrice.message}
             handleInputChange={handleItemChange}
             label="Total Price"
             name="itemTotalPrice"
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             value={itemTotalPrice}
           />
           <Box sx={{ display: "flex", gap: 1 }} mt={2}>
             <CustomButton
               buttonStyle="secondaryOutline"
-              onClick={handleClose}
+              onClick={handleCancel}
               sx={{ flex: 1 }}
             >
               Cancel

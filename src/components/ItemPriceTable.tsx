@@ -12,7 +12,7 @@ import { newExpenseState } from "@store/expenseStore";
 import mockExpense from "@mock/receiptMock";
 
 const ItemPriceTable = () => {
-  //   const { itemOrderDetailsList } = useRecoilValue(newExpenseState);
+  // const { itemOrderDetailsList } = useRecoilValue(newExpenseState);
   const { itemOrderDetailsList } = mockExpense;
 
   return (
@@ -25,11 +25,11 @@ const ItemPriceTable = () => {
                 borderBottom: `2px solid ${theme.palette.primary.main}`,
                 fontWeight: "bold",
               },
-              "& > *:nth-child(odd)": {
+              "& > *:nth-of-type(odd)": {
                 backgroundColor: theme.palette.background.paper,
                 color: theme.palette.text.secondary,
               },
-              "& > *:nth-child(even)": {
+              "& > *:nth-of-type(even)": {
                 backgroundColor: "#EDEDED",
               },
             }}
@@ -46,11 +46,11 @@ const ItemPriceTable = () => {
               <TableRow
                 key={id}
                 sx={{
-                  "& > *:nth-child(odd)": {
+                  "& > *:nth-of-type(odd)": {
                     backgroundColor: theme.palette.background.paper,
                     color: theme.palette.text.secondary,
                   },
-                  "& > *:nth-child(even)": {
+                  "& > *:nth-of-type(even)": {
                     backgroundColor: "#EDEDED",
                   },
                 }}

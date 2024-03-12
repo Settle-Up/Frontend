@@ -84,12 +84,12 @@ const theme = createTheme({
             "& fieldset": {
               borderColor: "#D6CCFE",
             },
-            "&:hover fieldset": {
-              borderColor: "#6D53F3",
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#6D53F3",
-            },
+            "&:not(.Mui-error):hover fieldset": {
+              borderColor: "#D6CCFE", //"#6D53F3"
+             },
+            // "&.Mui-focused fieldset": {
+            //   borderColor: "red",
+            // },
             backgroundColor: "white",
             borderRadius: 10,
           },
@@ -181,6 +181,13 @@ const theme = createTheme({
           "& .MuiAutocomplete-input": {
             padding: "0px",
           },
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          marginLeft: 5,
         },
       },
     },

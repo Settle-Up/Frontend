@@ -15,6 +15,7 @@ import CustomIconButton from "./CustomIconButton";
 type ExpenseItemAccordionProps = {
   id: string;
   item: ItemOrderDetails;
+  itemErrors: ItemError;
   expanded: boolean;
   toggleAccordion: (event: React.SyntheticEvent, isExpanded: boolean) => void;
   handleItemDetailsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -23,6 +24,7 @@ type ExpenseItemAccordionProps = {
 const ExpenseItemAccordion = ({
   id,
   item,
+  itemErrors,
   expanded,
   toggleAccordion,
   handleItemDetailsChange,
@@ -79,24 +81,32 @@ const ExpenseItemAccordion = ({
       </AccordionSummary>
       <AccordionDetails>
         <StandardLabeledInput
+          error={itemErrors?.itemName.hasError}
+          errorText={itemErrors.itemName.message}
           handleInputChange={handleItemDetailsChange}
           label="Item Name"
           name="itemName"
           value={itemName}
         />
         <StandardLabeledInput
+          error={itemErrors?.unitPrice.hasError}
+          errorText={itemErrors.unitPrice.message}
           handleInputChange={handleItemDetailsChange}
           label="Unit Price"
           name="unitPrice"
           value={unitPrice}
         />
         <StandardLabeledInput
+          error={itemErrors?.itemQuantity.hasError}
+          errorText={itemErrors.itemQuantity.message}
           handleInputChange={handleItemDetailsChange}
           label="Quantity"
           name="itemQuantity"
           value={itemQuantity}
         />
         <StandardLabeledInput
+          error={itemErrors?.itemTotalPrice.hasError}
+          errorText={itemErrors.itemTotalPrice.message}
           handleInputChange={handleItemDetailsChange}
           label="Total Price"
           name="itemTotalPrice"

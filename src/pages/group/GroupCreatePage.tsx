@@ -103,7 +103,7 @@ const GroupCreatePage = () => {
         <Box>
           <StandardLabeledInput
             error={!!groupNameError}
-            helperText={groupNameError}
+            errorText={groupNameError}
             handleInputChange={handleGroupNameChange}
             label="Group Name *"
             name="groupName"
