@@ -1,4 +1,4 @@
-export const mockJoinedGroupSummaryData: JoinedGroupSummary[] = [
+export const mockJoinedGroupList: JoinedGroupSummary[] = [
   {
     groupId: "1",
     groupName: "Group 1",

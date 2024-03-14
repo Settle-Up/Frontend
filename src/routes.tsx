@@ -6,6 +6,7 @@ import {
   ReceiptUploadPage,
   ReceiptEditingPage,
   ProcessedReceiptInitialReviewPage,
+  ExpenseAllocationSettingsPage
 } from "@pages/expenseCreate";
 
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/processed-receipt/initial-review",
         element: <ProcessedReceiptInitialReviewPage />,
+      },
+      {
+        path: "/expense-allocation-setttings",
+        element: <ExpenseAllocationSettingsPage />,
       },
     ],
   },

@@ -32,6 +32,7 @@ type GroupExpenseBase = {
 
 type NewGroupExpense = GroupExpenseBase & {
   receiptImgFile: File | null
+  expenseParticipantList: GeneralUser[]
 };
 
 type ExisitingGroupExpense = GroupExpenseBase & {

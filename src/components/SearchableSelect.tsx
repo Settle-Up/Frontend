@@ -1,24 +1,26 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Stack, TextField, Typography } from "@mui/material";
 
 type Option = {
-  id: string;
+  id?: string;
   label: string;
 };
 
 type SearchableSelectProps<T extends Option> = {
   ariaLabelledby: string;
   handleSelectionChange: (value: T | T[] | null) => void;
-  multiselect?: boolean;
+  label?: string;
   possibleOptions: T[];
   selectedOptions: T | T[] | null;
+  multiselect?: boolean;
 };
 
 const SearchableSelect = <T extends Option>({
   ariaLabelledby,
   handleSelectionChange,
-  multiselect = false,
+  label,
   possibleOptions,
   selectedOptions,
+  multiselect = false,
 }: SearchableSelectProps<T>) => {
   let value;
   if (multiselect) {
@@ -34,26 +36,33 @@ const SearchableSelect = <T extends Option>({
   }
 
   return (
-    <Autocomplete
-      value={value}
-      onChange={(event, newValue) => handleSelectionChange(newValue)}
-      options={possibleOptions}
-      isOptionEqualToValue={(option: T, value) => option.id === value.id}
-      multiple={multiselect}
-      noOptionsText="There are no matching options."
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          aria-labelledby={ariaLabelledby}
-          variant="outlined"
-          fullWidth
-          InputProps={{
-            ...params.InputProps,
-          }}
-        />
+    <Stack spacing={2}>
+      {label && (
+        <Typography id="group" variant="subtitle2" >
+          {label}
+        </Typography>
       )}
-      renderOption={(props, option) => <li {...props}>{option.label}</li>}
-    />
+      <Autocomplete
+        value={value}
+        onChange={(event, newValue) => {handleSelectionChange(newValue)}}
+        options={possibleOptions}
+        isOptionEqualToValue={(option: T, value) => option.id === value.id}
+        multiple={multiselect}
+        noOptionsText="There are no matching options."
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            aria-labelledby={ariaLabelledby}
+            variant="outlined"
+            fullWidth
+            InputProps={{
+              ...params.InputProps,
+            }}
+          />
+        )}
+        renderOption={(props, option) => <li {...props}>{option.label}</li>}
+      />
+    </Stack>
   );
 };
 

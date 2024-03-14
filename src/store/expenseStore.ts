@@ -4,6 +4,7 @@ export const newExpenseState = atom<NewGroupExpense>({
   key: "newExpense",
   default: {
     receiptImgFile: null,
+    expenseParticipantList: [],
     groupId: "",
     groupName: "",
     payerId: "",
