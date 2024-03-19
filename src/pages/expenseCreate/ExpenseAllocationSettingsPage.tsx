@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Stack, TextField, Typography } from "@mui/material";
 import SearchableSelect from "@components/SearchableSelect";
 import { useQuery } from "react-query";
@@ -18,6 +19,7 @@ type AllocationOption = {
 };
 
 const ExpenseAllocationSettingsPage = () => {
+  const navigate = useNavigate();
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
 
   // const {
@@ -122,12 +124,19 @@ const ExpenseAllocationSettingsPage = () => {
       <CustomIconButton
         ariaLabel="Move on to next step"
         icon={<EastIcon sx={{ fontSize: "30px" }} />}
+        handleClick={() =>
+          navigate("/allocate-equal-quantity", {
+            state: { groupMemberList: mockGroupMemberList },
+          })
+          // navigate("/allocate-equal-quantity", {
+          //   state: { groupMemberList },
+          // })
+        }
         shape="round"
         sx={{
           alignSelf: "flex-end",
           mt: 5,
         }}
-        type="submit"
       />
     </Stack>
   );

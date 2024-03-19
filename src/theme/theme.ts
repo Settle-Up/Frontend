@@ -124,14 +124,16 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: "#6D53F3",
-          backgroundColor: "#ece9f7",
+          backgroundColor: "#D6CCFE",
           border: "1px solid #6D53F3",
           borderRadius: 30,
           padding: "8px 2px",
           fontWeight: "bold",
-          // "&:hover": {
-          //   backgroundColor: "#D6CCFE",
-          // },
+          "&.MuiChip-root": {
+            "&:hover": {
+              backgroundColor: "#ece9f7",
+            },
+          },
         },
         deleteIcon: {
           color: "#6D53F3",
@@ -180,6 +182,15 @@ const theme = createTheme({
           },
           "& .MuiAutocomplete-input": {
             padding: "0px",
+          },
+        },
+      },
+    },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          "&:hover": {
+            backgroundColor: "#ece9f7",
           },
         },
       },

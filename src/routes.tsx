@@ -6,7 +6,8 @@ import {
   ReceiptUploadPage,
   ReceiptEditingPage,
   ProcessedReceiptInitialReviewPage,
-  ExpenseAllocationSettingsPage
+  ExpenseAllocationSettingsPage,
+  EqualQuantityAllocationPage
 } from "@pages/expenseCreate";
 
 const router = createBrowserRouter([
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/expense-allocation-setttings",
         element: <ExpenseAllocationSettingsPage />,
+      },
+      {
+        path: "/allocate-equal-quantity",
+        element: <EqualQuantityAllocationPage />,
       },
     ],
   },
