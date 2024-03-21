@@ -13,7 +13,6 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import CustomIconButton from "./CustomIconButton";
 
 type ExpenseItemAccordionProps = {
-  id: string;
   item: ItemOrderDetails;
   itemErrors: ItemError;
   expanded: boolean;
@@ -22,7 +21,6 @@ type ExpenseItemAccordionProps = {
   handleDelete: () => void;
 };
 const ExpenseItemAccordion = ({
-  id,
   item,
   itemErrors,
   expanded,
@@ -30,7 +28,7 @@ const ExpenseItemAccordion = ({
   handleItemDetailsChange,
   handleDelete,
 }: ExpenseItemAccordionProps) => {
-  const { itemName, unitPrice, itemQuantity, itemTotalPrice } = item;
+  const { itemId, itemName, unitPrice, itemQuantity, itemTotalPrice } = item;
 
   return (
     <Accordion
@@ -56,8 +54,8 @@ const ExpenseItemAccordion = ({
             <ExpandMoreIcon fontSize="large" />
           </IconButton>
         }
-        aria-controls={`panel${id}-header`}
-        id={`panel${id}-header`}
+        aria-controls={`panel${itemId}-header`}
+        id={`panel${itemId}-header`}
         sx={{
           borderBottom: `1px solid ${theme.palette.tertiary.main}`,
           color: theme.palette.primary.main,

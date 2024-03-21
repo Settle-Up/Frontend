@@ -6,7 +6,10 @@ import {
   ReceiptUploadPage,
   ReceiptEditingPage,
   ProcessedReceiptInitialReviewPage,
-  ReceiptFinalReviewPage
+  ReceiptFinalReviewPage,
+  ExpenseAllocationSettingsPage,
+  EqualQuantityAllocationPage,
+  VariableQuantityAllocationPage,
 } from "@pages/expenseCreate";
 
 const router = createBrowserRouter([
@@ -46,6 +49,18 @@ const router = createBrowserRouter([
       {
         path: "/receipt/final-review",
         element: <ReceiptFinalReviewPage />,
+      },
+      {
+        path: "/expense-allocation-setttings",
+        element: <ExpenseAllocationSettingsPage />,
+      },
+      {
+        path: "/allocate-equal-quantity",
+        element: <EqualQuantityAllocationPage />,
+      },
+      {
+        path: "/allocate-variable-quantity",
+        element: <VariableQuantityAllocationPage />,
       },
     ],
   },

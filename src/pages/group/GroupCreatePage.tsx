@@ -124,7 +124,7 @@ const GroupCreatePage = () => {
           buttonStyle="default"
           disabled={newGroup.groupName.trim().length <= 1}
           onClick={handleCreateGroupClick}
-          sx={{ width: { xs: "100%", sm: "100%" } }}
+          sx={{ width: { xs: "100%", sm: "100%" }, mt: 5 }}
         >
           Create
         </CustomButton>

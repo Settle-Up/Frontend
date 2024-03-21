@@ -10,6 +10,6 @@ type CurrentUser = {
 type GeneralUser = {
   userId: string;
   userName?: string;
-  userEmail: string;
+  userEmail?: string;
 };
 

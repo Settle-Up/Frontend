@@ -28,7 +28,7 @@ const AddItemModal = ({
     unitPrice: "",
     itemQuantity: "",
     itemTotalPrice: "",
-    id: "",
+    itemId: "",
   });
   const [itemError, setItemError] = useState<ItemError>({
     itemName: { hasError: false, message: "" },
@@ -78,7 +78,7 @@ const AddItemModal = ({
         unitPrice: "",
         itemQuantity: "",
         itemTotalPrice: "",
-        id: "",
+        itemId: "",
       });
 
       setItemErrors((prev) => ({
@@ -103,7 +103,7 @@ const AddItemModal = ({
       unitPrice: "",
       itemQuantity: "",
       itemTotalPrice: "",
-      id: uuidv4(),
+      itemId: "",
     });
 
     handleClose();

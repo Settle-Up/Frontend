@@ -1,4 +1,4 @@
-type AllocationType = "VariableQuantity" | "EqualQuantity" | "";
+type AllocationType = "Variable Quantity" | "Equal Quantity" | "";
 
 type PurchaserDetails = {
   userId: string;
@@ -6,7 +6,7 @@ type PurchaserDetails = {
 };
 
 type ItemOrderDetails = {
-  id: string;
+  itemId: string;
   itemName: string;
   unitPrice: string;
   itemQuantity: string;
@@ -32,9 +32,17 @@ type GroupExpenseBase = {
 
 type NewGroupExpense = GroupExpenseBase & {
   receiptImgFile: File | null
+  expenseParticipantList: GeneralUser[]
 };
 
 type ExisitingGroupExpense = GroupExpenseBase & {
   id: string;
   submissionDate: string;
+};
+
+type ItemsAllocationStatusMap = {
+  [itemId: string]: {
+    totalAllocatedQuantity: number;
+    isItemFullyAllocated: boolean;
+  };
 };

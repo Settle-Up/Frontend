@@ -55,7 +55,7 @@ const ExpenseItemAccordionList = ({
     setNewExpense((prevExpense) => {
       const updatedItemList = prevExpense.itemOrderDetailsList.map(
         (item: ItemOrderDetails) => {
-          if (item.id === itemId) {
+          if (item.itemId === itemId) {
             return { ...item, [name]: formattedValue ?? value };
           }
           return item;
@@ -77,7 +77,7 @@ const ExpenseItemAccordionList = ({
   //   setNewExpense((prevExpense) => {
   //     const updatedItemList = prevExpense.itemOrderDetailsList.map(
   //       (item: ItemOrderDetails) => {
-  //         if (item.id === itemId) {
+  //         if (item.itemId === itemId) {
   //           let formattedValue: string = value;
   //           if (
   //             ["unitPrice", "itemQuantity", "itemTotalPrice"].includes(name)
@@ -101,7 +101,7 @@ const ExpenseItemAccordionList = ({
     setNewExpense((prevExpense) => ({
       ...prevExpense,
       itemOrderDetailsList: prevExpense.itemOrderDetailsList.filter(
-        (item: ItemOrderDetails) => item.id !== itemId
+        (item: ItemOrderDetails) => item.itemId !== itemId
       ),
     }));
   };
@@ -110,14 +110,13 @@ const ExpenseItemAccordionList = ({
     <div>
       {newExpense.itemOrderDetailsList.map((item) => (
         <ExpenseItemAccordion
-          key={item.id}
-          id={item.id}
+          key={item.itemId}
           item={item}
-          itemErrors={itemErrors[item.id]}
-          expanded={expanded === item.id}
-          toggleAccordion={toggleAccordion(item.id)}
-          handleItemDetailsChange={(e) => handleItemDetailsChange(item.id, e)}
-          handleDelete={() => handleDeleteItem(item.id)}
+          itemErrors={itemErrors[item.itemId]}
+          expanded={expanded === item.itemId}
+          toggleAccordion={toggleAccordion(item.itemId)}
+          handleItemDetailsChange={(e) => handleItemDetailsChange(item.itemId, e)}
+          handleDelete={() => handleDeleteItem(item.itemId)}
         />
       ))}
     </div>

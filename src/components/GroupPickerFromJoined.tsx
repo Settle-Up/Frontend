@@ -4,8 +4,7 @@ import { useRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import { useQuery } from "react-query";
 import { getGroupSummaryList } from "@apis/group/getGroupSummaryList";
-
-import { mockJoinedGroupSummaryData } from "@mock/groupMock";
+import { mockJoinedGroupList } from "@mock/groupMock";
 
 type GroupOption = {
   id: string;
@@ -27,7 +26,7 @@ const GroupPickerFromJoined = () => {
   //     label: group.groupName,
   //   })) ?? [];
 
-  const handleSelectedGroupChange = (
+  const handleGroupChange = (
     selectedGroup: GroupOption | GroupOption[] | null
   ) => {
     if (selectedGroup && !Array.isArray(selectedGroup)) {
@@ -39,27 +38,23 @@ const GroupPickerFromJoined = () => {
     }
   };
 
-  const extractedGroupData = mockJoinedGroupSummaryData.map((group) => ({
+  const mockGroupOptions = mockJoinedGroupList.map((group) => ({
     id: group.groupId,
     label: group.groupName,
   }));
 
   return (
-    <>
-      <Typography id="group" variant="subtitle2">
-        Choose Group
-      </Typography>
-      <SearchableSelect
-        ariaLabelledby="group"
-        // possibleOptions={possibleGroupOptions}
-        possibleOptions={extractedGroupData}
-        selectedOptions={{
-          id: newExpense.groupId,
-          label: newExpense.groupName,
-        }}
-        handleSelectionChange={handleSelectedGroupChange}
-      />
-    </>
+    <SearchableSelect
+      ariaLabelledby="group"
+      label="Choose Group"
+      // possibleOptions={possibleGroupOptions}
+      handleSelectionChange={handleGroupChange}
+      possibleOptions={mockGroupOptions}
+      selectedOptions={{
+        id: newExpense.groupId,
+        label: newExpense.groupName,
+      }}
+    />
   );
 };
 
