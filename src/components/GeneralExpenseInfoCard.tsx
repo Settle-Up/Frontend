@@ -18,7 +18,7 @@ const LabelValuePair = ({ label, value }: LabelValuePairProps) => (
   </>
 );
 
-const ReceiptDetailsPaper = () => {
+const GeneralExpenseInfoCard = () => {
   //   const {
   //     receiptName,
   //     address,
@@ -53,4 +53,4 @@ const ReceiptDetailsPaper = () => {
   );
 };
 
-export default ReceiptDetailsPaper;
+export default GeneralExpenseInfoCard;

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
 import CustomButton from "@components/CustomButton";
-import ReceiptDetailsPaper from "@components/ReceiptDetailsPaper";
+import GeneralExpenseInfoCard from "@components/GeneralExpenseInfoCard";
 import HeadingWithTip from "@components/HeadingWithTip";
 
 const ProcessReceiptInitialReviewPage = () => {
@@ -13,15 +13,14 @@ const ProcessReceiptInitialReviewPage = () => {
         sx={{
           flexGrow: 1,
           justifyContent: "space-between",
-          // border: "2px dotted red",
         }}
       >
-        <Stack sx={{ gap: 2}}>
+        <Stack sx={{ gap: 2 }}>
           <HeadingWithTip
             heading="Review Extracted Receipt Details"
             tipMessage="Ensure all details match your receipt. You can proceed if the information is accurate or edit if adjustments are needed."
           />
-          <ReceiptDetailsPaper />
+          <GeneralExpenseInfoCard />
         </Stack>
         <Box
           sx={{
