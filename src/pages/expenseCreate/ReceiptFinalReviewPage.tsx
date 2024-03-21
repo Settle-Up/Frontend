@@ -20,11 +20,12 @@ const ReceiptFinalReviewPage = () => {
       <GeneralExpenseInfoCard />
       <CustomIconButton
         ariaLabel="Move on to next step"
-        handleClick={() => navigate("/receipt/final-review")}
+        handleClick={() => navigate("/expense-allocation-setttings")}
         icon={<EastIcon sx={{ fontSize: "30px" }} />}
         shape="round"
         sx={{
           alignSelf: "flex-end",
+          mt: 5,
         }}
       />
     </Stack>

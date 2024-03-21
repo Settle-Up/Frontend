@@ -8,8 +8,9 @@ import PurchasedItemQuantityAdjustList from "@components/PurchasedItemQuantityAd
 import ItemDescription from "@components/ItemDescription";
 import { Box, Card, Stack, Typography } from "@mui/material";
 import CustomSnackbar from "@components/CustomSnackbar";
+import HeadingWithTip from "@components/HeadingWithTip";
 
-const initializeItemAllocationDetails = (
+const initializeItemsAllocationStatusMap = (
   itemOrderDetailsList: ItemOrderDetails[]
 ): ItemsAllocationStatusMap => {
   const initialItemsAllocationStatusMap: ItemsAllocationStatusMap = {};
@@ -62,7 +63,7 @@ const VariableQuantityAllocationPage = () => {
   };
 
   const [itemsAllocationStatusMap, setItemsAllocationStatusMap] = useState(() =>
-    initializeItemAllocationDetails(itemOrderDetailsList)
+    initializeItemsAllocationStatusMap(itemOrderDetailsList)
   );
 
   const updateItemsAllocationStatusMap = (
@@ -100,10 +101,10 @@ const VariableQuantityAllocationPage = () => {
   return (
     <>
       <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
-        {/* <PageHeading
-          headingText="Allocate Quantities of Items Per Member"
+        <HeadingWithTip
+          heading="Allocate Quantities of Items Per Member"
           tipMessage="For each item, specify the quantity each member purchased. Adjust the quantities using the plus and minus controls beside each name."
-        /> */}
+        />
         <Stack spacing={2}>
           <SelectableItemChipList
             itemsAllocationStatusMap={itemsAllocationStatusMap}
@@ -158,7 +159,7 @@ const VariableQuantityAllocationPage = () => {
       </Stack>
       <CustomSnackbar
         handleClose={() => setShowAllocationIncompleteAlert(false)}
-        message="Please ensure all items are fully allocated before proceeding. Every item must be allocated to its full quantity."
+        message="To proceed, please ensure that each item's quantity is fully allocated among participants."
         severity="warning"
         show={showAllocationIncompleteAlert}
       />

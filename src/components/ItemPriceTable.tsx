@@ -9,7 +9,7 @@ import {
 import theme from "@theme";
 import { useRecoilValue } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
-import mockExpense from "@mock/receiptMock";
+import mockExpense from "@mock/expenseMock";
 
 const ItemPriceTable = () => {
   // const { itemOrderDetailsList } = useRecoilValue(newExpenseState);
@@ -45,8 +45,8 @@ const ItemPriceTable = () => {
         </TableHead>
         <TableBody>
           {itemOrderDetailsList.map(
-            ({ id, itemName, unitPrice, itemQuantity, itemTotalPrice }) => (
-              <TableRow key={id}>
+            ({ itemId, itemName, unitPrice, itemQuantity, itemTotalPrice }) => (
+              <TableRow key={itemId}>
                 {[
                   itemName,
                   unitPrice.toLocaleString() + "₩",

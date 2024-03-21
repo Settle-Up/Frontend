@@ -2,7 +2,7 @@ import { Divider, Typography, Paper } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import ItemPriceTable from "@components/ItemPriceTable";
-import mockExpense from "@mock/receiptMock";
+import mockExpense from "@mock/expenseMock";
 
 type LabelValuePairProps = {
   label: string;

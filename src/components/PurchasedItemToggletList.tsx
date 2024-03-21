@@ -1,12 +1,8 @@
 import {
-  Box,
   List,
   ListItem,
   Checkbox,
-  Stack,
-  Typography,
 } from "@mui/material";
-import theme from "@theme";
 import ItemDescription from "./ItemDescription";
 
 type PurchasedItemToggletListProps = {
@@ -50,10 +46,8 @@ const PurchasedItemToggletList = ({
         }
         return itemOrderDetails;
       });
-
     handleNewExpenseChange("itemOrderDetailsList", updatedItemOrderDetailsList);
   };
-  
 
   return (
     <List>

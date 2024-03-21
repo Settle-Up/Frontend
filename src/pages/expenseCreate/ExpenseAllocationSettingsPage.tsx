@@ -126,7 +126,6 @@ const ExpenseAllocationSettingsPage = () => {
         ariaLabel="Move on to next step"
         icon={<EastIcon sx={{ fontSize: "30px" }} />}
         handleClick={() => {
-          console.log("heee")
           if (newExpense.allocationType === "Equal Quantity") {
             navigate("/allocate-equal-quantity", {
               state: { groupMemberList: mockGroupMemberList },
@@ -135,8 +134,6 @@ const ExpenseAllocationSettingsPage = () => {
             //   state: { groupMemberList },
             // })
           } else if (newExpense.allocationType === "Variable Quantity") {
-            console.log("yooo")
-
             navigate("/allocate-variable-quantity");
             // navigate("/allocate-variable-quantity", {
             //   state: { groupMemberList },

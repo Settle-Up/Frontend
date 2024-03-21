@@ -46,3 +46,7 @@ type ItemsAllocationStatusMap = {
     isItemFullyAllocated: boolean;
   };
 };
+
+type ParticipantItemLinkStatusMap = {
+  [key: string]: boolean;
+};

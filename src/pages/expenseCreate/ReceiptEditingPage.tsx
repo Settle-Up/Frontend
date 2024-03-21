@@ -39,7 +39,7 @@ const ReceiptEditingPage = () => {
   const initialItemErrors = itemOrderDetailsList.reduce(
     (acc, item) => ({
       ...acc,
-      [item.id]: {
+      [item.itemId]: {
         itemName: { hasError: false, message: "" },
         unitPrice: { hasError: false, message: "" },
         itemQuantity: { hasError: false, message: "" },
@@ -99,7 +99,7 @@ const ReceiptEditingPage = () => {
   const validateEachExpenseItem = () => {
     const newItemErrors = { ...itemErrors };
     itemOrderDetailsList.forEach((item) => {
-      newItemErrors[item.id] = {
+      newItemErrors[item.itemId] = {
         itemName: {
           hasError: !item.itemName,
           message: !item.itemName ? "Item name is required." : "",

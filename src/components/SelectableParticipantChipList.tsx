@@ -9,7 +9,7 @@ type SelectableParticipantChipListProps = {
   expenseParticipantList: GeneralUser[];
   groupMemberList: GeneralUser[];
   handleNewExpenseChange: (key: string, value: GeneralUser[]) => void;
-  itemOrderDetailsList: ItemOrderDetails[];
+  participantItemLinkStatus: ParticipantItemLinkStatusMap;
   selectedParticipantId: string;
   setSelectedParticipantId: (id: string) => void;
 };
@@ -18,19 +18,12 @@ const SelectableParticipantChipList = ({
   expenseParticipantList,
   groupMemberList,
   handleNewExpenseChange,
-  itemOrderDetailsList,
+  participantItemLinkStatus,
   selectedParticipantId,
   setSelectedParticipantId,
 }: SelectableParticipantChipListProps) => {
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] =
     useState<boolean>(false);
-
-  const isUserLinkedToAnyItems = (userId: string) =>
-    itemOrderDetailsList.some((itemOrderDetail) =>
-      itemOrderDetail.jointPurchaserList?.some(
-        (purchaser) => purchaser.userId === userId
-      )
-    );
 
   const getParticipantChipStyle = (userId: string) => {
     if (selectedParticipantId === userId) {
@@ -43,7 +36,7 @@ const SelectableParticipantChipList = ({
           },
         },
       };
-    } else if (!isUserLinkedToAnyItems(userId)) {
+    } else if (!participantItemLinkStatus[userId]) {
       return {
         background: grey[400],
         color: grey[600],
