@@ -15,7 +15,7 @@ const ExpenseItemAccordionList = () => {
         const { name, value } = e.target;
         setNewExpense((prevExpense) => {
           const updatedItemList = prevExpense.itemOrderDetailsList.map((item: ItemOrderDetails) => {
-            if (item.id === itemId) {
+            if (item.itemId === itemId) {
               return { ...item, [name]: value };
             }
             return item;
@@ -31,7 +31,7 @@ const ExpenseItemAccordionList = () => {
       const handleDeleteItem = (itemId: string) => {
         setNewExpense((prevExpense) => ({
           ...prevExpense,
-          itemOrderDetailsList: prevExpense.itemOrderDetailsList.filter((item: ItemOrderDetails) => item.id !== itemId)
+          itemOrderDetailsList: prevExpense.itemOrderDetailsList.filter((item: ItemOrderDetails) => item.itemId !== itemId)
         }));
       };
     
@@ -40,13 +40,12 @@ const ExpenseItemAccordionList = () => {
       <div>
         {newExpense.itemOrderDetailsList.map((item) => (
           <ExpenseItemAccordion
-            key={item.id}
-            id={item.id}
+            key={item.itemId}
             item={item}
-            expanded={expanded === item.id}
-            toggleAccordion={toggleAccordion(item.id)}
-            handleItemDetailsChange={(e) => handleItemDetailsChange(item.id, e)}
-            handleDelete={() => handleDeleteItem(item.id)}
+            expanded={expanded === item.itemId}
+            toggleAccordion={toggleAccordion(item.itemId)}
+            handleItemDetailsChange={(e) => handleItemDetailsChange(item.itemId, e)}
+            handleDelete={() => handleDeleteItem(item.itemId)}
           />
         ))}
       </div>

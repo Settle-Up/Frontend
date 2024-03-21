@@ -25,7 +25,7 @@ const AddItemModal = ({
     unitPrice: "",
     itemQuantity: "",
     itemTotalPrice: "",
-    id: uuidv4(),
+    itemId: uuidv4(),
   });
 
   const { itemName, unitPrice, itemQuantity, itemTotalPrice } = item;
@@ -47,7 +47,7 @@ const AddItemModal = ({
         unitPrice: "",
         itemQuantity: "",
         itemTotalPrice: "",
-        id: uuidv4(),
+        itemId: uuidv4(),
       });
 
       handleClose();
@@ -89,28 +89,28 @@ const AddItemModal = ({
             handleInputChange={handleItemChange}
             label="Item Name"
             name="itemName"
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             value={itemName}
           />
           <StandardLabeledInput
             handleInputChange={handleItemChange}
             label="Unit Price"
             name="unitPrice"
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             value={unitPrice}
           />
           <StandardLabeledInput
             handleInputChange={handleItemChange}
             label="Quantity"
             name="itemQuantity"
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             value={itemQuantity}
           />
           <StandardLabeledInput
             handleInputChange={handleItemChange}
             label="Total Price"
             name="itemTotalPrice"
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             value={itemTotalPrice}
           />
           <Box sx={{ display: "flex", gap: 1 }} mt={2}>
