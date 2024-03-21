@@ -15,6 +15,7 @@ type MemberOption = {
 };
 
 type AllocationOption = {
+  id: string;
   label: string;
 };
 
@@ -37,8 +38,8 @@ const ExpenseAllocationSettingsPage = () => {
   //   })) ?? [];
 
   const possibleAllocationOptions: AllocationOption[] = [
-    { label: "Allocate by Variable Quantity" },
-    { label: "Allocate by Equal Quantity" },
+    { id: "Variable Quantity", label: "Allocate by Variable Quantity" },
+    { id: "Equal Quantity", label: "Allocate by Equal Quantity" },
   ];
 
   const handlePayerChange = (
@@ -76,7 +77,7 @@ const ExpenseAllocationSettingsPage = () => {
       setNewExpense((prev) => {
         return {
           ...prev,
-          allocationType: selectedAllocationType?.label as AllocationType,
+          allocationType: selectedAllocationType?.id as AllocationType,
         };
       });
     }
@@ -118,20 +119,30 @@ const ExpenseAllocationSettingsPage = () => {
           label="How would you like to allocate the costs for items purchased?"
           handleSelectionChange={handleAllocationTypeChange}
           possibleOptions={possibleAllocationOptions}
-          selectedOptions={{ label: newExpense.allocationType }}
+          selectedOptions={{ id: newExpense.allocationType, label: `Allocate by ${newExpense.allocationType}` }}
         />
       </Stack>
       <CustomIconButton
         ariaLabel="Move on to next step"
         icon={<EastIcon sx={{ fontSize: "30px" }} />}
-        handleClick={() =>
-          navigate("/allocate-equal-quantity", {
-            state: { groupMemberList: mockGroupMemberList },
-          })
-          // navigate("/allocate-equal-quantity", {
-          //   state: { groupMemberList },
-          // })
-        }
+        handleClick={() => {
+          console.log("heee")
+          if (newExpense.allocationType === "Equal Quantity") {
+            navigate("/allocate-equal-quantity", {
+              state: { groupMemberList: mockGroupMemberList },
+            });
+            // navigate("/allocate-equal-quantity", {
+            //   state: { groupMemberList },
+            // })
+          } else if (newExpense.allocationType === "Variable Quantity") {
+            console.log("yooo")
+
+            navigate("/allocate-variable-quantity");
+            // navigate("/allocate-variable-quantity", {
+            //   state: { groupMemberList },
+            // })
+          }
+        }}
         shape="round"
         sx={{
           alignSelf: "flex-end",

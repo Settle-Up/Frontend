@@ -10,7 +10,7 @@ export const mergeReceiptInToExpense = (receiptData: NewReceipt, existingData: N
     discountApplied: receiptData.discountApplied,
     actualPaidPrice: receiptData.actualPaidPrice,
     itemOrderDetailsList: receiptData.itemList.map(item => ({
-      id: uuidv4(),  
+      itemId: uuidv4(),  
       itemName: item.itemName,
       unitPrice: item.unitPrice,
       itemQuantity: item.itemQuantity,

@@ -20,9 +20,9 @@ export const mockJoinedGroupList: JoinedGroupSummary[] = [
 ];
 
 export const mockGroupMemberList = [
-  { userId: "Id1", userEmail: "user1@example.com", userName: "User 1" },
-  { userId: "Id2", userEmail: "user2@example.com", userName: "User 2" },
-  { userId: "Id3", userEmail: "user3@example.com", userName: "User 3" },
+  { userId: "Id1", userEmail: "user1@example.com", userName: "Maximilian Alexander Bartholomew Fitzwilliam" },
+  { userId: "Id2", userEmail: "user2@example.com", userName: "Bartholomew Montgomery" },
+  { userId: "Id3", userEmail: "user3@example.com", userName: "Seraphina Isabella Alexandra Constantine" },
   { userId: "Id4", userEmail: "user4@example.com", userName: "User 4" },
   { userId: "Id5", userEmail: "user5@example.com", userName: "User 5" },
   { userId: "Id6", userEmail: "user6@example.com", userName: "User 6" },
