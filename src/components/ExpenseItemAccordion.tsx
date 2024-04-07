@@ -4,6 +4,7 @@ import {
   AccordionSummary,
   Box,
   IconButton,
+  Stack,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -78,38 +79,40 @@ const ExpenseItemAccordion = ({
         </Box>
       </AccordionSummary>
       <AccordionDetails>
-        <StandardLabeledInput
-          error={itemErrors?.itemName.hasError}
-          errorText={itemErrors.itemName.message}
-          handleInputChange={handleItemDetailsChange}
-          label="Item Name"
-          name="itemName"
-          value={itemName}
-        />
-        <StandardLabeledInput
-          error={itemErrors?.unitPrice.hasError}
-          errorText={itemErrors.unitPrice.message}
-          handleInputChange={handleItemDetailsChange}
-          label="Unit Price"
-          name="unitPrice"
-          value={unitPrice}
-        />
-        <StandardLabeledInput
-          error={itemErrors?.itemQuantity.hasError}
-          errorText={itemErrors.itemQuantity.message}
-          handleInputChange={handleItemDetailsChange}
-          label="Quantity"
-          name="itemQuantity"
-          value={itemQuantity}
-        />
-        <StandardLabeledInput
-          error={itemErrors?.itemTotalPrice.hasError}
-          errorText={itemErrors.itemTotalPrice.message}
-          handleInputChange={handleItemDetailsChange}
-          label="Total Price"
-          name="itemTotalPrice"
-          value={itemTotalPrice}
-        />
+        <Stack spacing={2}>
+          <StandardLabeledInput
+            error={itemErrors?.itemName.hasError}
+            errorText={itemErrors.itemName.message}
+            handleInputChange={handleItemDetailsChange}
+            label="Item Name"
+            name="itemName"
+            value={itemName}
+          />
+          <StandardLabeledInput
+            error={itemErrors?.unitPrice.hasError}
+            errorText={itemErrors.unitPrice.message}
+            handleInputChange={handleItemDetailsChange}
+            label="Unit Price"
+            name="unitPrice"
+            value={unitPrice}
+          />
+          <StandardLabeledInput
+            error={itemErrors?.itemQuantity.hasError}
+            errorText={itemErrors.itemQuantity.message}
+            handleInputChange={handleItemDetailsChange}
+            label="Quantity"
+            name="itemQuantity"
+            value={itemQuantity}
+          />
+          <StandardLabeledInput
+            error={itemErrors?.itemTotalPrice.hasError}
+            errorText={itemErrors.itemTotalPrice.message}
+            handleInputChange={handleItemDetailsChange}
+            label="Total Price"
+            name="itemTotalPrice"
+            value={itemTotalPrice}
+          />
+        </Stack>
       </AccordionDetails>
     </Accordion>
   );

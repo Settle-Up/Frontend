@@ -21,7 +21,7 @@ const ReceiptProcessingIndicator = () => {
         buttonStyle="primaryPlain"
         endIcon={<EastIcon />}
         onClick={() => {
-          navigate("/edit-receipt");
+          navigate("/expense/edit");
         }}
       >
         Go Enter Details Manually

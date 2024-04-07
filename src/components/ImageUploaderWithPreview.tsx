@@ -44,7 +44,7 @@ const ImageUploaderWithPreview = () => {
       variant="outlined"
       component="label"
       sx={{
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.tertiary.light,
         "&:hover": {
           color: theme.palette.primary.dark,
           backgroundColor: deepPurple[50],

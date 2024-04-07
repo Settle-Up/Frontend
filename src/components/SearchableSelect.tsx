@@ -1,4 +1,10 @@
-import { Autocomplete, Stack, TextField, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 type Option = {
   id?: string;
@@ -38,17 +44,27 @@ const SearchableSelect = <T extends Option>({
   return (
     <Stack spacing={2}>
       {label && (
-        <Typography id="group" variant="subtitle2" >
+        <Typography id="group" variant="subtitle2">
           {label}
         </Typography>
       )}
       <Autocomplete
         value={value}
-        onChange={(event, newValue) => {handleSelectionChange(newValue)}}
+        onChange={(event, newValue) => {
+          handleSelectionChange(newValue);
+        }}
         options={possibleOptions}
         isOptionEqualToValue={(option: T, value) => option.id === value.id}
         multiple={multiselect}
         noOptionsText="There are no matching options."
+        ListboxProps={{
+          className: "custom-scrollbar",
+        }}
+        PaperComponent={({ children }) => (
+          <Paper elevation={5}>
+            {children}
+          </Paper>
+        )}
         renderInput={(params) => (
           <TextField
             {...params}

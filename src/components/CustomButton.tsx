@@ -38,28 +38,32 @@ const SecondaryOutlineButton = styled(Button)({
 
 const DefaultButton = styled(Button)({
   color: "white",
-  backgroundColor: theme.palette.secondary.main,
+  backgroundColor: theme.palette.default.main,
   "&:hover": {
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.default.light,
   },
 });
 
 interface CustomButtonProps extends ButtonProps {
-  buttonStyle:
+  buttonStyle?:
     | "primary"
     | "secondary"
     | "primaryPlain"
     | "secondaryOutline"
     | "default";
+
   EndIcon?: React.ElementType<SvgIconProps> | undefined;
+  StartIcon?: React.ElementType<SvgIconProps> | undefined;
+
   sx?: SxProps;
   type?: "button" | "submit" | "reset";
 }
 
 const CustomButton = ({
-  buttonStyle,
+  buttonStyle = "default",
   children,
   EndIcon,
+  StartIcon,
   sx,
   type = "button",
   ...props
@@ -91,6 +95,7 @@ const CustomButton = ({
 
   return (
     <ButtonComponent
+      startIcon={StartIcon}
       endIcon={EndIcon}
       {...props}
       sx={{

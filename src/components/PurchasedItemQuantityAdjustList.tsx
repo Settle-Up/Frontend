@@ -132,7 +132,6 @@ const PurchasedItemQuantityAdjustList = ({
             >
               <Typography
                 sx={{ width: "65%", wordBreak: "break-all" }}
-                variant="body1"
               >
                 {userName}
               </Typography>

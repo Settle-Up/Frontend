@@ -31,15 +31,17 @@ const CustomIconButton = ({
   } else if (variant === "secondary") {
     backgroundColor = theme.palette.secondary.main;
     hoverBgColor = theme.palette.secondary.dark;
+  } else if (variant === "default") {
+    backgroundColor = theme.palette.default.main;
+    hoverBgColor = theme.palette.default.dark;
   }
 
   let borderRadius = shape === "round" ? "50%" : "20%";
 
   return (
     <IconButton
-      onClick={handleClick}
       aria-label={ariaLabel}
-      type={type}
+      onClick={handleClick}
       sx={{
         backgroundColor,
         color,
@@ -50,6 +52,7 @@ const CustomIconButton = ({
         },
         ...sx,
       }}
+      type={type}
     >
       {icon}
     </IconButton>

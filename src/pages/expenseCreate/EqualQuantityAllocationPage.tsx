@@ -7,7 +7,8 @@ import PurchasedItemToggletList from "@components/PurchasedItemToggletList";
 import { useRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import HeadingWithTip from "@components/HeadingWithTip";
-import CustomSnackbar from "@components/CustomSnackbar";
+import { useSetRecoilState } from "recoil";
+import { snackbarState } from "@store/snackbarStore";
 
 const initializeParticipantItemLinkStatus = (
   expenseParticipantList: GeneralUser[],
@@ -29,18 +30,19 @@ const EqualQuantityAllocationPage = () => {
   const location = useLocation();
   const { groupMemberList } = location.state;
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
-  const { expenseParticipantList, itemOrderDetailsList } = newExpense;
+  const { allocationType, expenseParticipantList, itemOrderDetailsList } =
+    newExpense;
   const [selectedParticipantId, setSelectedParticipantId] = useState<string>(
     expenseParticipantList[0].userId
   );
-  const [showAllocationIncompleteAlert, setShowAllocationIncompleteAlert] =
-    useState(false);
   const [participantItemLinkStatus, setParticipantItemLinkStatus] = useState(
     initializeParticipantItemLinkStatus(
       expenseParticipantList,
       itemOrderDetailsList
     )
   );
+
+  const setSnackbar = useSetRecoilState(snackbarState);
 
   const isUserLinkedToAnyItems = (userId: string) =>
     itemOrderDetailsList.some((itemOrderDetail) =>
@@ -68,9 +70,15 @@ const EqualQuantityAllocationPage = () => {
       (status) => status
     );
     if (allUsersLinked) {
-      navigate("/expense-summary-review");
+      navigate("/expense/submission/review");
     } else {
-      setShowAllocationIncompleteAlert(true);
+      // setShowAllocationIncompleteAlert(true);
+      setSnackbar({
+        show: true,
+        message:
+          "To proceed, please ensure that each participant has items allocated to them.",
+        severity: "warning",
+      });
     }
   };
 
@@ -113,19 +121,13 @@ const EqualQuantityAllocationPage = () => {
           onClick={handleConfirmClick}
           sx={{
             alignSelf: "flex-end",
-            width: "100%",
+            width: { xs: "100%", sm: "auto" },
             mt: 5,
           }}
         >
           Confirm
         </CustomButton>
       </Stack>
-      <CustomSnackbar
-        handleClose={() => setShowAllocationIncompleteAlert(false)}
-        message="To proceed, please ensure that each participant has items allocated to them."
-        severity="warning"
-        show={showAllocationIncompleteAlert}
-      />
     </>
   );
 };

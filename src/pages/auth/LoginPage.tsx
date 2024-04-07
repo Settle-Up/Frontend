@@ -1,6 +1,9 @@
 import kakaoLoginImg from "@assets/kakaoLoginImg.png";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import theme from "@theme";
 
 const LoginPage = () => {
   const REST_API_KEY = process.env.REACT_APP_KAKAO_API_KEY;
@@ -12,44 +15,58 @@ const LoginPage = () => {
   };
 
   return (
-    <Box
+    <Stack
+      className="gradient-background"
       sx={{
-        height: "100vh",
-        maxWidth: "1000px",
-        justifyContent: "center",
-        alignSelf: "center",
-        m: "auto",
+        height: "100%",
+        maxWidth: "600px",
+        mx: "auto",
+        px: 2,
+        py: 4,
         gap: 2,
-        border: "10px dotted red",
+        backgroundColor: theme.palette.background.default,
       }}
     >
-     
-        <Box>
-          <Typography>Let's</Typography>
-          <Typography variant="h4">Settle Up</Typography>
-          <Typography>Simplify. Split. Settle.</Typography>
-        </Box>
-
-        <Stack spacing={2} sx={{width: "100%"}}>
-          {/* <img
+      <Stack
+        spacing={1}
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          color: "white",
+        }}
+      >
+        <Typography variant="h5">Let's</Typography>
+        <Typography variant="h3">SettleUp</Typography>
+        <Typography variant="subtitle1" sx={{ pt: 5 }}>
+          Simplify. Split. Settle.
+        </Typography>
+      </Stack>
+      <Stack spacing={2}>
+        {/* <img
             onClick={() => handleKakaoLogin()}
             src={kakaoLoginImg}
             alt="kakao-login-button"
           /> */}
-          <Button
-            onClick={() => handleKakaoLogin()}
-            sx={{ backgroundColor: "#fee500", color: "black" }}
-          >
-            Kakao Login
-          </Button>
-          <CustomButton
-            buttonStyle="primary"
-            sx={{ borderRadius: 1, height: "45px" }}
-          >
-            How to use
-          </CustomButton>
-        </Stack>
-    </Box>
+        <CustomButton
+          onClick={() => handleKakaoLogin()}
+          startIcon={<ChatBubbleIcon />}
+          sx={{
+            fontSize: 15,
+            backgroundColor: "#fee500",
+            color: "black",
+            "&:hover": {
+              backgroundColor: "#FFED47",
+            },
+          }}
+        >
+          Kakao Login
+        </CustomButton>
+        <CustomButton startIcon={<TipsAndUpdatesIcon />} sx={{ fontSize: 15 }}>
+          How To Use
+        </CustomButton>
+      </Stack>
+    </Stack>
   );
 };
 

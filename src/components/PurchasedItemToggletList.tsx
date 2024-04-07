@@ -79,9 +79,10 @@ const PurchasedItemToggletList = ({
               />
               <ItemDescription
                 itemName={itemName}
-                unitPrice={unitPrice}
-                itemQuantity={itemQuantity}
-                itemTotalPrice={itemTotalPrice}
+                initialAmount={unitPrice}
+                quantity={itemQuantity}
+                calculatedTotal={itemTotalPrice}
+                mode="itemDetail"
               />
             </ListItem>
           );

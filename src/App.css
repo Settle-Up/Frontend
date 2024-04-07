@@ -1,43 +1,31 @@
-.App {
-  text-align: center;
+
+/* Linear Gradient Background Animation */
+.gradient-background {
+  background: linear-gradient(42deg, #ff9000, #6d53f3, #d6ccfe);
+  background-size: 600% 600%;
+
+  -webkit-animation: AnimationName 23s ease infinite;
+  -o-animation: AnimationName 23s ease infinite;
+  animation: AnimationName 23s ease infinite;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+@-webkit-keyframes AnimationName {
+  0%{background-position:94% 0%}
+  50%{background-position:7% 100%}
+  100%{background-position:94% 0%}
+}
+@-o-keyframes AnimationName {
+  0%{background-position:94% 0%}
+  50%{background-position:7% 100%}
+  100%{background-position:94% 0%}
+}
+@keyframes AnimationName {
+  0%{background-position:94% 0%}
+  50%{background-position:7% 100%}
+  100%{background-position:94% 0%}
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* 스크롤 바 */
+/* Scroll Bar */
 .custom-scrollbar {
   padding: 5px 0;
 }
@@ -52,12 +40,10 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #D6CCFE;
+  background: #e0e0e0;
   border-radius: 50px;
-
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #958eb1;
+  background: #CCCCCC;
 }
-

@@ -9,9 +9,7 @@ const theme = createTheme({
       dark: "#4c3aaa",
     },
     secondary: {
-      main: "#484041",
-      light: "#757171",
-      dark: "#322c2d",
+      main: "#FF9000",
       contrastText: "#fff",
     },
     tertiary: {
@@ -20,9 +18,11 @@ const theme = createTheme({
       dark: "#958eb1",
       contrastText: "#fff",
     },
-    black: {
-      main: "#000000",
-      light: "#333333",
+    default: {
+      main: "#484041",
+      light: "#757171",
+      dark: "#322c2d",
+      contrastText: "#fff",
     },
     error: {
       main: "#ce3838",
@@ -34,6 +34,7 @@ const theme = createTheme({
     text: {
       secondary: "#6D53F3",
       primary: "#484041",
+      tertiary: "#484041",
     },
     divider: "#D6CCFE",
     warning: {
@@ -49,6 +50,12 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ["Rubik", "Arial", "sans-serif"].join(","),
+    h3: {
+      fontWeight: "bolder",
+    },
+    h4: {
+      fontWeight: "bolder",
+    },
     h5: {
       fontSize: "1.7rem",
       fontWeight: "bolder",
@@ -67,6 +74,13 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          wordBreak: "break-word",
+        },
+      },
+    },
     MuiDivider: {
       styleOverrides: {
         root: {
@@ -86,7 +100,7 @@ const theme = createTheme({
             },
             "&:not(.Mui-error):hover fieldset": {
               borderColor: "#D6CCFE", //"#6D53F3"
-             },
+            },
             // "&.Mui-focused fieldset": {
             //   borderColor: "red",
             // },
@@ -116,7 +130,6 @@ const theme = createTheme({
           fontWeight: 600,
           borderRadius: 8,
           padding: "20px 20px",
-          width: "300px",
         },
       },
     },
@@ -190,8 +203,8 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           marginLeft: 5,
-        }
-      }
+        },
+      },
     },
     MuiListItem: {
       styleOverrides: {

@@ -24,7 +24,7 @@ const ReceiptUploadPage = () => {
           mergedData
         );
         setNewExpense(mergedData);
-        navigate("/processed-receipt/initial-review");
+        navigate("/expense/review/initial");
       }
     },
   });
@@ -59,19 +59,19 @@ const ReceiptUploadPage = () => {
               flexDirection: { xs: "column", sm: "row" },
               justifyContent: { xs: "flex-end" },
               gap: 2,
+              mt: 5
             }}
           >
             <CustomButton
-              buttonStyle="default"
+              buttonStyle="primary"
               onClick={handleProcessReceiptClick}
             >
               Process Receipt
             </CustomButton>
             <CustomButton
-              buttonStyle="primaryPlain"
-              endIcon={<EastIcon />}
+              buttonStyle="secondary"
               onClick={() => {
-                navigate("/edit-receipt");
+                navigate("/expense/edit");
               }}
             >
               Go Enter Details Manually

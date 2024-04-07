@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Backdrop, Fade, IconButton, Tooltip } from "@mui/material";
+import { useRef, useEffect, useState } from "react";
+import { Fade, IconButton, Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { SxProps } from "@mui/material/styles";
+import CustomBackdrop from "@components/CustomBackdrop";
 
 type UsageTipProps = {
   tipMessage: string;
@@ -10,37 +11,49 @@ type UsageTipProps = {
 
 const UsageTip = ({ tipMessage, sx }: UsageTipProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const iconButtonRef = useRef<HTMLButtonElement>(null);
 
-  const handleTooltipToggle = () => {
+  const handleClick = () => {
     setShowTooltip((prev) => !prev);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      iconButtonRef.current &&
+      !iconButtonRef.current.contains(event.target as Node)
+    ) {
+      setShowTooltip(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
-      <Backdrop
-        open={showTooltip}
-        sx={{
-          zIndex: 1200,
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
-          pointerEvents: "none",
-        }}
-      />
+      <CustomBackdrop isOpen={showTooltip} zIndex={2000}/>
       <Tooltip
         title={tipMessage}
         open={showTooltip}
-        onClose={() => setShowTooltip(false)}
         arrow
         TransitionComponent={Fade}
-        TransitionProps={{ timeout: 500 }}
+        TransitionProps={{ timeout: 300 }}
         leaveTouchDelay={5000}
+        sx={{
+          width: "300px",
+          ...sx,
+        }}
       >
         <IconButton
           color="primary"
           aria-label="quick guide"
-          // onClick={() => setShowTooltip(true)}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-          sx={{ ...sx, p: 0.5 }}
+          onClick={handleClick}
+          ref={iconButtonRef}
+          sx={{ p: 0.5 }}
         >
           <InfoIcon fontSize="small" />
         </IconButton>

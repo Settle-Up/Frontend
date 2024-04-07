@@ -6,7 +6,7 @@ import theme from "@theme";
 import { useSetRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import { v4 as uuidv4 } from "uuid";
-import { formatNumberInput } from "@utils/numberStringConversions";
+import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
 
 type AddItemModalProps = {
   handleClose: () => void;
@@ -81,15 +81,7 @@ const AddItemModal = ({
         itemId: "",
       });
 
-      setItemErrors((prev) => ({
-        ...prev,
-        [randomId]: {
-          itemName: { hasError: false, message: "" },
-          unitPrice: { hasError: false, message: "" },
-          itemQuantity: { hasError: false, message: "" },
-          itemTotalPrice: { hasError: false, message: "" },
-        },
-      }));
+
 
       handleClose();
     } else {
@@ -113,7 +105,7 @@ const AddItemModal = ({
     const { name, value } = e.target;
     let formattedValue: string = value;
     if (["unitPrice", "itemQuantity", "itemTotalPrice"].includes(name)) {
-      formattedValue = formatNumberInput(value!);
+      formattedValue = formatNumberWithLocaleAndNegatives(value!);
       setItemError((prev) => ({
         ...prev,
         [name]:

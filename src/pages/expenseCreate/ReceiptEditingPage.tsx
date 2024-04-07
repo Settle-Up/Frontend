@@ -11,7 +11,7 @@ import { newExpenseState } from "@store/expenseStore";
 import DateSelector from "@components/DateSelector";
 import CustomIconButton from "@components/CustomIconButton";
 import ExpenseItemAccordionList from "@components/ExpenseItemAccordionList";
-import { formatNumberInput } from "@utils/numberStringConversions";
+import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
 
 const ReceiptEditingPage = () => {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ const ReceiptEditingPage = () => {
     if (
       ["receiptTotalPrice", "discountApplied", "actualPaidPrice"].includes(name)
     ) {
-      formattedValue = formatNumberInput(value!);
+      formattedValue = formatNumberWithLocaleAndNegatives(value!);
       setFieldErrors((prev) => ({
         ...prev,
         [name]:
@@ -139,7 +139,7 @@ const ReceiptEditingPage = () => {
     );
 
     if (noFieldErrors && noItemErrors) {
-      navigate("/receipt/final-review");
+      navigate("/expense/review/final");
     }
   };
 
@@ -225,13 +225,14 @@ const ReceiptEditingPage = () => {
             />
           </Stack>
         </Stack>
-        <Stack sx={{ mt: 8 }}>
+        <Stack>
           <CustomIconButton
             ariaLabel="Move on to next step"
             icon={<EastIcon sx={{ fontSize: "30px" }} />}
             shape="round"
             sx={{
               alignSelf: "flex-end",
+              mt: 5,
             }}
             type="submit"
           />

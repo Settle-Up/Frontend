@@ -2,11 +2,13 @@ import { IconButton, Modal, Stack } from "@mui/material";
 import { ReactNode } from "react";
 import theme from "@theme";
 import CloseIcon from "@mui/icons-material/Close";
+import CustomBackdrop from "@components/CustomBackdrop";
+import { SxProps } from "@mui/material";
 
 type CustomModalProps = {
   ariaLabel: string;
   children: ReactNode;
-  handleClose: (isOpen: boolean) => void;
+  handleClose?: () => void;
   isOpen: boolean;
   showCloseButton?: boolean;
 };
@@ -20,15 +22,20 @@ const CustomModal = ({
 }: CustomModalProps) => {
   return (
     <>
+      <CustomBackdrop isOpen={isOpen} zIndex={2000} />
       <Modal
+        componentsProps={{
+          backdrop: {
+            style: { backgroundColor: "transparent" },
+          },
+        }}
         open={isOpen}
-        onClose={handleClose}
         aria-label={ariaLabel}
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          m: 2
+          m: 2,
         }}
       >
         <Stack
@@ -50,7 +57,7 @@ const CustomModal = ({
               edge="end"
               color="primary"
               aria-label="Close Modal"
-              onClick={() => handleClose(false)}
+              onClick={handleClose}
               sx={{ alignSelf: "flex-end", p: 1 }}
             >
               <CloseIcon />

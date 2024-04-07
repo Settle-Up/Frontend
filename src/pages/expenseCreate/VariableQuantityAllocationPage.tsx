@@ -9,22 +9,41 @@ import ItemDescription from "@components/ItemDescription";
 import { Box, Card, Stack, Typography } from "@mui/material";
 import CustomSnackbar from "@components/CustomSnackbar";
 import HeadingWithTip from "@components/HeadingWithTip";
+import { useSetRecoilState } from "recoil";
+import { snackbarState } from "@store/snackbarStore";
+
 
 const initializeItemsAllocationStatusMap = (
   itemOrderDetailsList: ItemOrderDetails[]
 ): ItemsAllocationStatusMap => {
+
   const initialItemsAllocationStatusMap: ItemsAllocationStatusMap = {};
+
   itemOrderDetailsList.forEach((item) => {
+    // Calculate the sum of purchasedQuantity for each item
+    const totalAllocatedQuantity =
+      item.jointPurchaserList?.reduce((total, purchaser) => {
+        return total + (Number(purchaser.purchasedQuantity) || 0);
+      }, 0) || 0;
+
+    // Check if the sum equals the itemQuantity
+    const isItemFullyAllocated =
+      totalAllocatedQuantity === Number(item.itemQuantity);
+
     initialItemsAllocationStatusMap[item.itemId] = {
-      totalAllocatedQuantity: 0,
-      isItemFullyAllocated: false,
+      totalAllocatedQuantity,
+      isItemFullyAllocated,
     };
   });
+
   return initialItemsAllocationStatusMap;
 };
 
 const VariableQuantityAllocationPage = () => {
   const navigate = useNavigate();
+  
+  const setSnackbar = useSetRecoilState(snackbarState);
+
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
 
   const { expenseParticipantList, itemOrderDetailsList } = newExpense;
@@ -92,9 +111,11 @@ const VariableQuantityAllocationPage = () => {
 
   const handleConfirmClick = () => {
     if (areAllItemsFullyAllocated()) {
-      navigate("/expense-summary-review");
+      navigate("/expense/submission/review");
     } else {
-      setShowAllocationIncompleteAlert(true);
+      // setShowAllocationIncompleteAlert(true);
+      setSnackbar({ show: true, message: "To proceed, please ensure that each item's quantity is fully allocated among participants.", severity: 'warning' });
+
     }
   };
 
@@ -115,9 +136,10 @@ const VariableQuantityAllocationPage = () => {
           <Card sx={{ p: 2 }}>
             <ItemDescription
               itemName={itemName}
-              unitPrice={unitPrice}
-              itemQuantity={itemQuantity}
-              itemTotalPrice={itemTotalPrice}
+              initialAmount={unitPrice}
+              quantity={itemQuantity}
+              calculatedTotal={itemTotalPrice}
+              mode="itemDetail"
             />
           </Card>
           <PurchasedItemQuantityAdjustList
@@ -150,19 +172,19 @@ const VariableQuantityAllocationPage = () => {
           onClick={handleConfirmClick}
           sx={{
             alignSelf: "flex-end",
-            width: "100%",
+            width: { xs: "100%", sm: "auto" },
             mt: 5,
           }}
         >
           Confirm
         </CustomButton>
       </Stack>
-      <CustomSnackbar
+      {/* <CustomSnackbar
         handleClose={() => setShowAllocationIncompleteAlert(false)}
         message="To proceed, please ensure that each item's quantity is fully allocated among participants."
         severity="warning"
         show={showAllocationIncompleteAlert}
-      />
+      /> */}
     </>
   );
 };

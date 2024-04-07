@@ -1,12 +1,22 @@
-import '@mui/material/styles';
+import "@mui/material/styles";
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Palette {
     tertiary?: PaletteColor;
-    black?: PaletteColor;
+    default?: PaletteColor;
+    text: {
+      tertiary?: string;
+    };
   }
   interface PaletteOptions {
     tertiary?: PaletteColorOptions;
-    black?: PaletteColor;
+    default?: PaletteColorOptions;
+    text?: TypeText;
+  }
+
+  interface TypeText {
+    primary?: string;
+    secondary?: string;
+    tertiary?: string;
   }
 }

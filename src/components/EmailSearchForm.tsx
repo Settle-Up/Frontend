@@ -3,16 +3,19 @@ import { useQuery } from "react-query";
 import {
   Box,
   Chip,
+  IconButton,
+  InputAdornment,
   List,
   ListItem,
+  Paper,
   Skeleton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import CustomButton from "@components/CustomButton";
 import { searchUserEmailList } from "@apis/search/searchUserEmailList";
 import theme from "@theme";
+import SearchIcon from "@mui/icons-material/Search";
 
 export type EmailSearchFormProps = {
   selectedEmailList: GeneralUser[];
@@ -32,7 +35,7 @@ const EmailSearchForm = ({
     isFetching,
     error,
     refetch,
-    remove
+    remove,
   } = useQuery("userEmailList", () => searchUserEmailList(email), {
     enabled: false,
     staleTime: 0,
@@ -45,11 +48,30 @@ const EmailSearchForm = ({
     }
   }, [email, remove]);
 
-  const shouldDisplayContent = isFetching || (email.trim().length > 0 && userEmailList !== undefined); 
+  const handleSearch = (
+    event:
+      | React.KeyboardEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    if (
+      (event as React.KeyboardEvent<HTMLDivElement>).key === "Enter" ||
+      event.type === "click"
+    ) {
+      event.preventDefault();
+      if (hasEmailInput) {
+        refetch();
+      }
+    }
+  };
+
+  const shouldDisplayContent =
+    isFetching || (email.trim().length > 0 && userEmailList !== undefined);
+
+  const hasEmailInput = email.trim().length !== 0;
 
   return (
     <>
-      <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: 1, gap: 2 }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", mb: 1, gap: 2, mt: 0 }}>
         {selectedEmailList?.map((user: GeneralUser) => (
           <Chip
             key={user.userId}
@@ -63,44 +85,66 @@ const EmailSearchForm = ({
           <TextField
             aria-labelledby="email-input"
             fullWidth
-            variant="outlined"
+            placeholder="Search by Email"
             sx={{ mb: 2 }}
             value={email}
             onChange={(event) => {
               setEmail(event.target.value);
             }}
+            variant="outlined"
+            onKeyDown={handleSearch}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    type="button"
+                    sx={{
+                      p: 0.5,
+                      color: hasEmailInput ? theme.palette.primary.main : null,
+                    }}
+                    aria-label="search"
+                    disabled={!hasEmailInput}
+                    onClick={handleSearch}
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           {shouldDisplayContent && (
-        <Box
-          className="custom-scrollbar"
-          sx={{
-            p: 2,
-            m: 2,
-            backgroundColor: "white",
-            borderRadius: 3,
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            maxHeight: "400px",
-            overflow: "auto",
-          }}
-        >
-          {isFetching ? (
-            <List>
-              {[...new Array(5)].map((_, index) => (
-                <ListItem key={index}>
-                  <Skeleton variant="text" width={200} height={40} animation="wave" />
-                </ListItem>
-              ))}
-            </List>
-          ) : userEmailList && userEmailList?.length > 0 ? (
-            <List >
+            <Paper
+              elevation={5}
+              className="custom-scrollbar"
+              sx={{
+                borderRadius: 3,
+                maxHeight: "400px",
+                overflow: "auto",
+              }}
+            >
+              {isFetching ? (
+                <List>
+                  {[...new Array(5)].map((_, index) => (
+                    <ListItem key={index}>
+                      <Skeleton
+                        variant="text"
+                        width={200}
+                        height={40}
+                        animation="wave"
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              ) : userEmailList && userEmailList?.length > 0 ? (
+                <List>
                   {userEmailList.map((user) => (
                     <ListItem
                       key={user.userId}
                       onClick={() => handleEmailSelection(user)}
                       sx={{
-                        cursor: 'pointer', 
-                        '&:hover': {
-                          backgroundColor: theme.palette.tertiary.light, 
+                        cursor: "pointer",
+                        "&:hover": {
+                          backgroundColor: theme.palette.tertiary.light,
                         },
                       }}
                     >
@@ -109,23 +153,11 @@ const EmailSearchForm = ({
                   ))}
                 </List>
               ) : (
-                <Typography>No matching users found.</Typography>
+                <Typography sx={{ p: 2 }}>No matching users found</Typography>
               )}
-            </Box>
+            </Paper>
           )}
         </Stack>
-        <CustomButton
-          type="submit"
-          buttonStyle="default"
-          disabled={email.trim().length === 0}
-          sx={{ alignSelf: "flex-start", px: 2 }}
-          onClick={(event) => {
-            event.preventDefault();
-            refetch();
-          }}
-        >
-          Search
-        </CustomButton>
       </Box>
     </>
   );

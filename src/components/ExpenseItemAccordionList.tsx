@@ -2,7 +2,7 @@ import { useState } from "react";
 import ExpenseItemAccordion from "@components/ExpenseItemAccordion";
 import { useRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
-import { formatNumberInput } from "@utils/numberStringConversions";
+import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
 
 type ExpenseItemAccordionListProps = {
   itemErrors: ItemOrderDetailsListError;
@@ -30,7 +30,7 @@ const ExpenseItemAccordionList = ({
     const { name, value } = e.target;
     let formattedValue: string = value;
     if (["unitPrice", "itemQuantity", "itemTotalPrice"].includes(name)) {
-      formattedValue = formatNumberInput(value!);
+      formattedValue = formatNumberWithLocaleAndNegatives(value!);
       setItemErrors((prevErrors) => {
         const updatedErrors = { ...prevErrors };
         if (updatedErrors[itemId]) {
@@ -82,7 +82,7 @@ const ExpenseItemAccordionList = ({
   //           if (
   //             ["unitPrice", "itemQuantity", "itemTotalPrice"].includes(name)
   //           ) {
-  //             formattedValue = formatNumberInput(value!);
+  //             formattedValue = formatNumberWithLocaleAndNegatives(value!);
   //           }
   //           return { ...item, [name]: formattedValue ?? value };
   //         }

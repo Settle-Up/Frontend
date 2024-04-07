@@ -48,8 +48,8 @@ const ExpenseAllocationSettingsPage = () => {
     if (selectedMember && !Array.isArray(selectedMember)) {
       setNewExpense((prev) => ({
         ...prev,
-        payerId: selectedMember.id,
-        payerName: selectedMember.label,
+        payerUserId: selectedMember.id,
+        payerUserName: selectedMember.label,
       }));
     }
   };
@@ -98,8 +98,8 @@ const ExpenseAllocationSettingsPage = () => {
           // possibleOptions={possibleMemberOptions}
           possibleOptions={mockGroupMemberOptions}
           selectedOptions={{
-            id: newExpense.payerId,
-            label: newExpense.payerName,
+            id: newExpense.payerUserId,
+            label: newExpense.payerUserName,
           }}
         />
         <SearchableSelect
@@ -127,14 +127,14 @@ const ExpenseAllocationSettingsPage = () => {
         icon={<EastIcon sx={{ fontSize: "30px" }} />}
         handleClick={() => {
           if (newExpense.allocationType === "Equal Quantity") {
-            navigate("/allocate-equal-quantity", {
+            navigate("/expense/allocation/equal", {
               state: { groupMemberList: mockGroupMemberList },
             });
             // navigate("/allocate-equal-quantity", {
             //   state: { groupMemberList },
             // })
           } else if (newExpense.allocationType === "Variable Quantity") {
-            navigate("/allocate-variable-quantity");
+            navigate("/expense/allocation/variable");
             // navigate("/allocate-variable-quantity", {
             //   state: { groupMemberList },
             // })

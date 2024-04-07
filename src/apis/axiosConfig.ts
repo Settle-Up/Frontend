@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: " https://a5d3-125-132-224-129.ngrok-free.app/",
-  headers: {
-    "ngrok-skip-browser-warning": "true",
-  },
+  baseURL: "http://3.34.147.95:8080/",
+  // headers: {
+  //   "ngrok-skip-browser-warning": "true",
+  // },
   withCredentials: true
 });
 

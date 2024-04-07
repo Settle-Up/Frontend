@@ -3,16 +3,21 @@ import theme from "@theme";
 
 type ItemDescriptionProps = {
   itemName: string;
-  unitPrice: string;
-  itemQuantity: string;
-  itemTotalPrice: string;
+  mode: "itemDetail" | "variableQuantity" | "equalQuantity";
+  initialAmount: string;
+  quantity: string;
+  calculatedTotal: string;
 };
+
 const ItemDescription = ({
   itemName,
-  unitPrice,
-  itemQuantity,
-  itemTotalPrice,
+  mode,
+  initialAmount,
+  quantity,
+  calculatedTotal,
 }: ItemDescriptionProps) => {
+  const operator = mode === "equalQuantity" ? "/" : "x";
+
   return (
     <Box
       sx={{
@@ -27,12 +32,11 @@ const ItemDescription = ({
         sx={{
           wordBreak: "break-all",
           flexWrap: "wrap",
-          width: "80%",
         }}
       >
         <Typography>{itemName}</Typography>
         <Typography variant="caption" color="textSecondary">
-          ({unitPrice.toLocaleString()}₩ x {itemQuantity})
+          {initialAmount}₩ {operator} {quantity}
         </Typography>
       </Stack>
       <Typography
@@ -44,7 +48,7 @@ const ItemDescription = ({
           py: 0.2,
         }}
       >
-        {`${itemTotalPrice.toLocaleString()}₩`}
+        {`${calculatedTotal}₩`}
       </Typography>
     </Box>
   );

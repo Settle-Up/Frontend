@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Stack } from "@mui/material";
+import { Box, Paper, Stack } from "@mui/material";
 import CustomButton from "@components/CustomButton";
-import GeneralExpenseInfoCard from "@components/GeneralExpenseInfoCard";
+import GeneralExpenseDescription from "@components/GeneralExpenseDescription";
 import HeadingWithTip from "@components/HeadingWithTip";
 
 const ProcessReceiptInitialReviewPage = () => {
@@ -20,7 +20,9 @@ const ProcessReceiptInitialReviewPage = () => {
             heading="Review Extracted Receipt Details"
             tipMessage="Ensure all details match your receipt. You can proceed if the information is accurate or edit if adjustments are needed."
           />
-          <GeneralExpenseInfoCard />
+          <Paper sx={{ backgroundColor: "white", borderRadius: 3, padding: 3 }}>
+            <GeneralExpenseDescription />
+          </Paper>
         </Stack>
         <Box
           sx={{
@@ -28,7 +30,7 @@ const ProcessReceiptInitialReviewPage = () => {
             flexDirection: { xs: "column", sm: "row" },
             justifyContent: { xs: "flex-end" },
             gap: 2,
-            my: 3,
+            mt: 5,
           }}
         >
           <CustomButton
@@ -42,7 +44,7 @@ const ProcessReceiptInitialReviewPage = () => {
           <CustomButton
             buttonStyle="secondary"
             onClick={() => {
-              navigate("/edit-receipt");
+              navigate("/add/receipt/edit");
             }}
           >
             Edit Receipt Details

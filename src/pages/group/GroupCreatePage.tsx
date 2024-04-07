@@ -99,8 +99,11 @@ const GroupCreatePage = () => {
 
   return (
     <>
+      <Typography variant="h6" sx={{ alignSelf: "center" }}>
+        Create Group
+      </Typography>
       <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
-        <Box>
+        <Stack spacing={4}>
           <StandardLabeledInput
             error={!!groupNameError}
             errorText={groupNameError}
@@ -119,12 +122,16 @@ const GroupCreatePage = () => {
               handleEmailUnselection={handleEmailUnselection}
             />
           </Box>
-        </Box>
+        </Stack>
         <CustomButton
           buttonStyle="default"
           disabled={newGroup.groupName.trim().length <= 1}
           onClick={handleCreateGroupClick}
-          sx={{ width: { xs: "100%", sm: "100%" }, mt: 5 }}
+          sx={{
+            alignSelf: "flex-end",
+            width: { xs: "100%", sm: "auto" },
+            mt: 5,
+          }}
         >
           Create
         </CustomButton>

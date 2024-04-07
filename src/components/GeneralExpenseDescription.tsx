@@ -1,8 +1,7 @@
-import { Divider, Typography, Paper } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
-import ItemPriceTable from "@components/ItemPriceTable";
-import mockExpense from "@mock/expenseMock";
+import AllItemSummaryTable from "@components/AllItemSummaryTable";
 
 type LabelValuePairProps = {
   label: string;
@@ -18,29 +17,18 @@ const LabelValuePair = ({ label, value }: LabelValuePairProps) => (
   </>
 );
 
-const GeneralExpenseInfoCard = () => {
-  //   const {
-  //     receiptName,
-  //     address,
-  //     receiptDate,
-  //     receiptTotalPrice,
-  //     discountApplied,
-  //     actualPaidPrice,
-  //   } = useRecoilValue(newExpenseState);
-  const {
-    receiptName,
-    address,
-    receiptDate,
-    receiptTotalPrice,
-    discountApplied,
-    actualPaidPrice,
-  } = mockExpense;
+const GeneralExpenseDescription = () => {
+    const {
+      receiptName,
+      address,
+      receiptDate,
+      receiptTotalPrice,
+      discountApplied,
+      actualPaidPrice,
+    } = useRecoilValue(newExpenseState);
 
   return (
-    <Paper
-      elevation={3}
-      sx={{ backgroundColor: "white", borderRadius: 3, p: 4 }}
-    >
+   <>
       <LabelValuePair label="Receipt Name" value={receiptName} />
       <LabelValuePair label="Merchant Address" value={address} />
       <LabelValuePair label="Transaction Date" value={receiptDate} />
@@ -48,9 +36,9 @@ const GeneralExpenseInfoCard = () => {
       <LabelValuePair label="Discount Applied" value={`${discountApplied}₩`} />
       <LabelValuePair label="Actual Paid Price" value={`${actualPaidPrice}₩`} />
       <Divider />
-      <ItemPriceTable />
-    </Paper>
+      <AllItemSummaryTable />
+    </>
   );
 };
 
-export default GeneralExpenseInfoCard;
+export default GeneralExpenseDescription;

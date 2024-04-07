@@ -9,11 +9,9 @@ import {
 import theme from "@theme";
 import { useRecoilValue } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
-import mockExpense from "@mock/expenseMock";
 
-const ItemPriceTable = () => {
-  // const { itemOrderDetailsList } = useRecoilValue(newExpenseState);
-  const { itemOrderDetailsList } = mockExpense;
+const AllItemSummaryTable = () => {
+  const { itemOrderDetailsList } = useRecoilValue(newExpenseState);
 
   return (
     <TableContainer className="custom-scrollbar">
@@ -79,4 +77,4 @@ const ItemPriceTable = () => {
   );
 };
 
-export default ItemPriceTable;
+export default AllItemSummaryTable;

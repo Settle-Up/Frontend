@@ -1,15 +1,16 @@
 import React from "react";
-import { Typography, TextField, SxProps } from "@mui/material";
+import { Box, Typography, TextField, SxProps } from "@mui/material";
 
-interface StandardLabeledInputProps {
+type StandardLabeledInputProps = {
   error?: boolean;
   errorText?: string;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  label: string;
+  label?: string;
   name: string;
+  placeholder?: string;
   sx?: SxProps;
-  value: string | number;
-}
+  value: string | number | null;
+};
 
 const StandardLabeledInput = ({
   error = false,
@@ -17,14 +18,17 @@ const StandardLabeledInput = ({
   handleInputChange,
   label,
   name,
+  placeholder,
   sx,
   value,
 }: StandardLabeledInputProps) => {
   return (
-    <>
-      <Typography id={name} variant="subtitle2" gutterBottom>
-        {label}
-      </Typography>
+    <Box>
+      {label && (
+        <Typography id={name} variant="subtitle2" gutterBottom>
+          {label}
+        </Typography>
+      )}
       <TextField
         aria-labelledby={name}
         error={error}
@@ -32,12 +36,13 @@ const StandardLabeledInput = ({
         fullWidth
         name={name}
         onChange={handleInputChange}
+        placeholder={placeholder}
         required={true}
         sx={sx}
         value={value}
         variant="outlined"
       />
-    </>
+    </Box>
   );
 };
 

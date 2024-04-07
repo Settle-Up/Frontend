@@ -1,45 +1,36 @@
+// import dayjs from "dayjs";
+
 type NewGroup = {
-    groupName: string | null;
-    groupMemberCount: number | null;
-    groupUserList: string[] | null;
-  };
-  
-  type TransactionDetails = {
-    CounterPartyID: string,
-    CounterPartyName: string,
-    transactionDirection: "owed" | "owe"
-    transactionAmount: string,
-    transactionId: string
-  }
-  
-  type JoinedGroupDetails = {
-    groupId: string;
-    groupName: string;
-    groupUrl: string;
-    settlementBalance?: string;
-    lastActive?: string;
-    isMontlyReportUpdateOn?: boolean;
-    userList?: User[]
-    neededTransactionList?: TransactionDetails[];
-    lastWeekSettledTransactionList?: TransactionDetails[];
-    expenseList?: {
-      payerID: string,
-      payerName: string,
-      receiptID: string,
-      receiptName: string,
-      receiptTotalPrice: string,
-      userOwedAmount: string,
-    }
-  };
-  
-  type JoinedGroupDetailsList = JoinedGroupDetails[]
-  
-  type JoinedGroupSummary = {
-    groupId: string;
-    groupName: string;
-    settlementBalance?: string;
-    lastActive?: string;
-  }
-  
-  type JoniedGroupSummaryList = JoinedGroupSummary[]
-  
+  groupName: string | null;
+  groupMemberCount: number | null;
+  groupUserList: string[] | null;
+};
+
+type UserSpecificExpenseSummary = {
+  payerUserId: string;
+  payerUserName: string;
+  receiptId: string;
+  receiptName: string;
+  totalAmount: string;
+  userOwedAmount: string;
+  createdAt: string;
+};
+
+type JoinedGroupDetails = {
+  groupId: string;
+  groupName: string;
+  // groupUrl: string;
+  settlementBalance: string;
+  isMonthlyReportUpdateOn: boolean;
+  neededTransactionList: RequiredTransaction[];
+  lastWeekSettledTransactionList: ClearedTransaction[];
+  expenseList: UserSpecificExpenseSummary[];
+};
+
+type JoinedGroupSummary = {
+  groupId: string;
+  groupName: string;
+  groupMemberCount: string;
+  settlementBalance?: string | null;
+  lastActive?: dayjs.Dayjs | null;
+};
