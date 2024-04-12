@@ -2,6 +2,7 @@ type AllocationType = "Variable Quantity" | "Equal Quantity" | ""; // if it's "V
 
 type PurchaserDetails = {
   userId: string;
+  userName?: string; 
   purchasedQuantity?: string | undefined;
 };
 
@@ -16,6 +17,7 @@ type ItemOrderDetails = {
 };
 
 type CoreGroupExpenseDetails = {
+  expenseParticipantList: GeneralUser[]; // -> don't need to include in the request body
   groupId: string; 
   groupName: string; 
   payerUserId: string; 
@@ -32,12 +34,11 @@ type CoreGroupExpenseDetails = {
 
 type NewGroupExpense = CoreGroupExpenseDetails & {
   receiptImgFile: File | null; // -> don't need to include in the request body
-  expenseParticipantList: GeneralUser[]; // -> don't need to include in the request body
 };
 
 type ExisitingGroupExpense = CoreGroupExpenseDetails & {
-  id: string;
-  submissionDate: string;
+  expenseId: string; // --> receiptUUID
+  createdAt: string; 
 };
 
 type ItemsAllocationStatusMap = {

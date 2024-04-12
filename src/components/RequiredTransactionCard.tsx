@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Checkbox, ListItem, Stack, Typography } from "@mui/material";
 import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
 import theme from "@theme";
 import { useRecoilState } from "recoil";
-import { requiredTxModalState } from "@store/requiredTxModalStore";
+import { settleTxModalState } from "@store/settleTxModalStore";
 import { grey } from "@mui/material/colors";
 
 type RequiredTransactionCardProps = {
@@ -17,26 +17,22 @@ const RequiredTransactionCard = ({
     transaction;
   const [checked, setChecked] = useState(hasSentOrReceived);
 
-  const [{ transactionUpdateSuccess }, setRequiredTxModal] =
-    useRecoilState(requiredTxModalState);
+  const [{ transactionUpdateSuccess }, setSettleTxModal] =
+    useRecoilState(settleTxModalState);
 
   useEffect(() => {
     if (transactionUpdateSuccess === transaction.transactionId) {
       setChecked((prevChecked) => !prevChecked);
-      setRequiredTxModal((prevState) => ({
+      setSettleTxModal((prevState) => ({
         ...prevState,
         transactionUpdateSuccess: null,
       }));
     }
-  }, [
-    transactionUpdateSuccess,
-    transaction.transactionId,
-    setRequiredTxModal,
-  ]);
+  }, [transactionUpdateSuccess, transaction.transactionId, setSettleTxModal]);
 
-  const handleItemClick = () => {
+  const openSettleTxModal = () => {
     if (!checked) {
-      setRequiredTxModal((prevState) => ({
+      setSettleTxModal((prevState) => ({
         ...prevState,
         isOpen: true,
         selectedTransaction: transaction,
@@ -47,16 +43,16 @@ const RequiredTransactionCard = ({
   return (
     <ListItem
       dense
-      onClick={handleItemClick}
+      onClick={openSettleTxModal}
       sx={{
         cursor: "pointer",
-        backgroundColor: hasSentOrReceived
+        backgroundColor: checked
           ? isRejected
             ? theme.palette.tertiary.main
             : grey[100]
           : null,
         "&:hover": {
-          backgroundColor: hasSentOrReceived
+          backgroundColor: checked
             ? isRejected
               ? theme.palette.tertiary.main
               : grey[100]
@@ -69,7 +65,7 @@ const RequiredTransactionCard = ({
           <Typography
             sx={{
               width: "55%",
-              color: hasSentOrReceived
+              color: checked
                 ? isRejected
                   ? theme.palette.text.secondary
                   : grey[600]
@@ -83,7 +79,7 @@ const RequiredTransactionCard = ({
               width: "40%",
               wordBreak: "normal",
               textAlign: "left",
-              color: hasSentOrReceived
+              color: checked
                 ? isRejected
                   ? theme.palette.text.secondary
                   : grey[600]

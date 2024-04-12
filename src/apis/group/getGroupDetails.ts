@@ -1,14 +1,24 @@
 import axiosInstance from "@apis/axiosConfig";
 
-export const getGroupDetails = async (
-  groupId: string
-): Promise<JoinedGroupDetails> => {
+type GroupDetailsRequest = {
+  groupId: string;
+};
+
+type GroupDetailsResponse = {
+  groupDetails: JoinedGroupDetails;
+};
+
+
+export const getGroupDetails = async ({
+  groupId,
+}: GroupDetailsRequest): Promise<GroupDetailsResponse> => {
   try {
     const response = await axiosInstance.get(
-      `/group/list/detail?groupId=${groupId}`
+      `/group/overview?groupId=${groupId}`
     );
     console.log(response.data);
-    return response.data.data;
+    
+    return {groupDetails: response.data.data};
   } catch (error) {
     throw new Error("Failed to get Group Details");
   }

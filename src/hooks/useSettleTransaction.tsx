@@ -1,78 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import CustomModal from "@components/CustomModal";
 import { Box, Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import { updateRequiredTransactionStatus } from "@apis/transaction/updateRequiredTransactionStatus";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { requiredTxModalState } from "@store/requiredTxModalStore";
+import { settleTxModalState } from "@store/settleTxModalStore";
 import { snackbarState } from "@store/snackbarStore";
 import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
 import theme from "@theme";
 
-const useUpdateRequiredTransactionStatusModal = (groupId: string) => {
+const useSettleTransaction = (groupId: string) => {
   const setSnackbar = useSetRecoilState(snackbarState);
-  const [{ isOpen, selectedTransaction }, setRequiredTxModalState] =
-    useRecoilState(requiredTxModalState);
+  const [{ isOpen, selectedTransaction }, setSettleTxModal] =
+    useRecoilState(settleTxModalState);
 
-  const { mutate, isLoading } = useMutation(updateRequiredTransactionStatus, {
-    onSuccess: () => {
-      setRequiredTxModalState({
+  const {
+    mutate: executeUpdateRequiredTransactionStatus,
+    isError,
+    isSuccess,
+    isLoading,
+  } = useMutation(updateRequiredTransactionStatus);
+
+  const confirmSettlement = () => {
+    if (selectedTransaction) {
+      const { transactionId, transactionDirection, hasSentOrReceived } =
+        selectedTransaction;
+
+      executeUpdateRequiredTransactionStatus({
+        groupId: groupId,
+        transactionId: transactionId,
+        approvalUser: transactionDirection === "OWE" ? "sender" : "recipient",
+        approvalStatus: "CLEAR",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setSettleTxModal({
         isOpen: false,
         selectedTransaction: null,
         transactionUpdateSuccess: selectedTransaction?.transactionId!,
       });
       setSnackbar({
         show: true,
-        message: `You've marked the transaction with ${selectedTransaction?.counterPartyName} as settled. Awaiting their confirmation.`,
+        message: `Transaction with ${selectedTransaction?.counterPartyName} marked as settled. Awaiting their confirmation.`,
         severity: "success",
       });
-    },
-    onError: () => {
-      handleCloseModal();
+    }
+  }, [isSuccess, setSnackbar, selectedTransaction]);
+
+  useEffect(() => {
+    if (isError) {
+      closeSettleTxModal();
       setSnackbar({
         show: true,
-        message: `Failed to mark the transaction with ${selectedTransaction?.counterPartyName} as settled. Please try again later.`,
+        message: `Sorry, failed to mark the transaction with ${selectedTransaction?.counterPartyName} as settled. Please try again later.`,
         severity: "error",
       });
-    },
-  });
+    }
+  }, [isError, setSnackbar, selectedTransaction]);
 
-  const handleCloseModal = () => {
-    setRequiredTxModalState({
+  const closeSettleTxModal = () => {
+    setSettleTxModal({
       isOpen: false,
       selectedTransaction: null,
       transactionUpdateSuccess: null,
     });
   };
 
-  const handleConfirmSettlement = () => {
-    if (selectedTransaction) {
-      const { transactionId, transactionDirection, hasSentOrReceived } =
-        selectedTransaction;
-
-      //   mutate({
-      //     groupId: groupId,
-      //     transactionId: transactionId,
-      //     approvalUser: transactionDirection === "owe" ? "sender" : "recipient",
-      //     approvalStatus: "CLEAR",
-      //   });
-
-      // PR 올리기 전 지워야 함; 테스트 용도
-      setRequiredTxModalState({
-        isOpen: false,
-        selectedTransaction: null,
-        transactionUpdateSuccess: selectedTransaction?.transactionId!,
-      });
-      setSnackbar({
-        show: true,
-        message: `You've marked the transaction with ${selectedTransaction?.counterPartyName} as settled. Awaiting their confirmation.`,
-        severity: "success",
-      });
-    }
-  };
-
-  const RenderModal = () => {
+  const RenderSettleTxModal = () => {
     if (!isOpen || !selectedTransaction) return null;
 
     const { transactionAmount, counterPartyName } = selectedTransaction;
@@ -81,7 +79,7 @@ const useUpdateRequiredTransactionStatusModal = (groupId: string) => {
       <CustomModal
         ariaLabel="UPdate Required Transaction Status Modal"
         isOpen={isOpen}
-        handleClose={handleCloseModal}
+        closeModal={closeSettleTxModal}
       >
         <Stack spacing={3}>
           <Typography variant="subtitle1">
@@ -122,14 +120,14 @@ const useUpdateRequiredTransactionStatusModal = (groupId: string) => {
               buttonStyle="primary"
               sx={{ width: "100%" }}
               disabled={isLoading}
-              onClick={handleConfirmSettlement}
+              onClick={confirmSettlement}
             >
               Yes, it's settled!
             </CustomButton>
             <CustomButton
               buttonStyle="secondary"
               sx={{ width: "100%" }}
-              onClick={handleCloseModal}
+              onClick={closeSettleTxModal}
             >
               No, not yet
             </CustomButton>
@@ -139,7 +137,7 @@ const useUpdateRequiredTransactionStatusModal = (groupId: string) => {
     );
   };
 
-  return { RenderModal };
+  return { RenderSettleTxModal };
 };
 
-export default useUpdateRequiredTransactionStatusModal;
+export default useSettleTransaction;

@@ -3,9 +3,20 @@ import { Box, Paper, Stack } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import GeneralExpenseDescription from "@components/GeneralExpenseDescription";
 import HeadingWithTip from "@components/HeadingWithTip";
+import { useRecoilValue } from "recoil";
+import { newExpenseState } from "@store/expenseStore";
 
 const ProcessReceiptInitialReviewPage = () => {
   const navigate = useNavigate();
+  const newExpense = useRecoilValue(newExpenseState);
+
+  const {
+    receiptName,
+    address,
+    receiptDate,
+    receiptTotalPrice,
+    itemOrderDetailsList
+  } = newExpense;
 
   return (
     <>
@@ -21,7 +32,7 @@ const ProcessReceiptInitialReviewPage = () => {
             tipMessage="Ensure all details match your receipt. You can proceed if the information is accurate or edit if adjustments are needed."
           />
           <Paper sx={{ backgroundColor: "white", borderRadius: 3, padding: 3 }}>
-            <GeneralExpenseDescription />
+          <GeneralExpenseDescription receiptName={receiptName} address={address} receiptDate={receiptDate} receiptTotalPrice={receiptTotalPrice} itemOrderDetailsList={itemOrderDetailsList} />
           </Paper>
         </Stack>
         <Box
@@ -36,7 +47,7 @@ const ProcessReceiptInitialReviewPage = () => {
           <CustomButton
             buttonStyle="primary"
             onClick={() => {
-              navigate("/set-additional-expense-details");
+              navigate("/expense/allocation/settings");
             }}
           >
             Confirm and Proceed
@@ -44,7 +55,7 @@ const ProcessReceiptInitialReviewPage = () => {
           <CustomButton
             buttonStyle="secondary"
             onClick={() => {
-              navigate("/add/receipt/edit");
+              navigate("/expense/edit");
             }}
           >
             Edit Receipt Details

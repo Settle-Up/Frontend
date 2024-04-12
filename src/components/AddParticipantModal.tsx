@@ -75,7 +75,7 @@ const AddParticipantModal = ({
   return (
     <CustomModal
       ariaLabel="Add New Member"
-      handleClose={handleClose}
+      closeModal={handleClose}
       isOpen={isOpen}
       showCloseButton
     >

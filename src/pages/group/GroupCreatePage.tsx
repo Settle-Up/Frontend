@@ -1,43 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
 import { useMutation } from "react-query";
 import CustomButton from "@components/CustomButton";
 import StandardLabeledInput from "@components/StandardLabeledInput";
-import { createNewGroup } from "@apis/group/createNewGroup";
-import CustomModal from "@components/CustomModal";
+import { createGroup } from "@apis/group/createGroup";
 import EmailSearchForm from "@components/EmailSearchForm";
+import { useSetRecoilState } from "recoil";
+import { snackbarState } from "@store/snackbarStore";
 
 const GroupCreatePage = () => {
   const navigate = useNavigate();
-  const [newGroup, setNewGroup] = useState<{
-    groupName: string;
-    groupUserList: GeneralUser[];
-  }>({
+  const [newGroup, setNewGroup] = useState<NewGroup>({
     groupName: "",
     groupUserList: [],
   });
 
+  const setSnackbar = useSetRecoilState(snackbarState);
+
   const [groupNameError, setGroupNameError] = useState("");
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-  const createNewGroupMutation = useMutation(createNewGroup, {
-    onSuccess: () => {
-      setIsSuccessModalOpen(true);
-    },
-  });
+  const {
+    mutate: executeCreateGroup,
+    isSuccess,
+    isError,
+  } = useMutation(createGroup);
 
-  const handleModalClose = () => {
-    setIsSuccessModalOpen(false);
-    navigate("/");
-  };
+  useEffect(() => {
+    if (isSuccess) {
+      setSnackbar({
+        show: true,
+        message: `Awesome! ${newGroup.groupName} is all set up and invites are on their way to your members.`,
+        severity: "success",
+      });
+      navigate("/");
+    }
+  }, [isSuccess, navigate, setSnackbar, newGroup]);
 
-  // const { data: userEmailList, isLoading, error } = userEmailListQuery;
-  // const userEmailList: User[] = [
-  //   { userId: "1", userEmail: "soo@gmail.com" },
-  //   { userId: "2", userEmail: "soop@gmail.com" },
-  //   { userId: "3", userEmail: "soopa@gmail.com" },
-  // ];
+  useEffect(() => {
+    if (isError) {
+      setSnackbar({
+        show: true,
+        message: `Sorry, something went wrong while creating the group "${newGroup.groupName}". Please try again later.`,
+        severity: "error",
+      });
+    }
+  }, [isError, setSnackbar]);
 
   const validateGroupName = (groupName: string) => {
     if (groupName.trim().length < 2) {
@@ -49,52 +57,36 @@ const GroupCreatePage = () => {
     }
   };
 
-  const handleGroupNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const val = event.target.value;
-    setNewGroup((prevGroup) => ({
-      ...prevGroup,
-      groupName: val,
-    }));
-    validateGroupName(val);
+  type UpdateGroupFn = {
+    (
+      action: "changeGroupName",
+      event: React.ChangeEvent<HTMLInputElement>
+    ): void;
+    (action: "selectEmail", user: GeneralUser): void;
+    (action: "unselectEmail", user: GeneralUser): void;
   };
 
-  const handleEmailSelection = (user: GeneralUser) => {
-    setNewGroup((prevGroup) => ({
-      ...prevGroup,
-      groupUserList: [
-        ...prevGroup.groupUserList,
-        { userId: user!.userId!, userEmail: user!.userEmail! },
-      ],
-    }));
-  };
+  const updateGroup: UpdateGroupFn = (action, eventOrUser) => {
+    setNewGroup((prevGroup) => {
+      let updatedGroup = { ...prevGroup };
 
-  const handleEmailUnselection = (user: GeneralUser) => {
-    setNewGroup((prevGroup) => ({
-      ...prevGroup,
-      groupUserList: prevGroup.groupUserList.filter(
-        (groupUser) => groupUser.userId !== user.userId
-      ),
-    }));
-  };
-
-  const handleCreateGroupClick = () => {
-    const currentUserId = sessionStorage.getItem("userId")!;
-
-    let userIds = newGroup.groupUserList.map((user) => user.userId);
-
-    if (!userIds.includes(currentUserId)) {
-      userIds = [currentUserId, ...userIds];
-    }
-
-    const requestData = {
-      ...newGroup,
-      groupMemberCount: userIds.length,
-      groupUserList: userIds,
-    };
-
-    createNewGroupMutation.mutate(requestData);
+      if (action === "changeGroupName") {
+        const event = eventOrUser as React.ChangeEvent<HTMLInputElement>;
+        const groupName = event.target.value;
+        updatedGroup.groupName = groupName;
+        validateGroupName(groupName);
+      } else if (action === "selectEmail" || action === "unselectEmail") {
+        const user = eventOrUser as GeneralUser;
+        if (action === "selectEmail") {
+          updatedGroup.groupUserList = [...prevGroup.groupUserList, user];
+        } else {
+          updatedGroup.groupUserList = prevGroup.groupUserList.filter(
+            (u) => u.userId !== user.userId
+          );
+        }
+      }
+      return updatedGroup;
+    });
   };
 
   return (
@@ -107,7 +99,9 @@ const GroupCreatePage = () => {
           <StandardLabeledInput
             error={!!groupNameError}
             errorText={groupNameError}
-            handleInputChange={handleGroupNameChange}
+            handleInputChange={(e) => {
+              updateGroup("changeGroupName", e);
+            }}
             label="Group Name *"
             name="groupName"
             value={newGroup.groupName}
@@ -118,15 +112,19 @@ const GroupCreatePage = () => {
             </Typography>
             <EmailSearchForm
               selectedEmailList={newGroup.groupUserList}
-              handleEmailSelection={handleEmailSelection}
-              handleEmailUnselection={handleEmailUnselection}
+              selectEmail={(user: GeneralUser) => {
+                updateGroup("selectEmail", user);
+              }}
+              unselectEmail={(user: GeneralUser) => {
+                updateGroup("unselectEmail", user);
+              }}
             />
           </Box>
         </Stack>
         <CustomButton
           buttonStyle="default"
           disabled={newGroup.groupName.trim().length <= 1}
-          onClick={handleCreateGroupClick}
+          onClick={() => executeCreateGroup(newGroup)}
           sx={{
             alignSelf: "flex-end",
             width: { xs: "100%", sm: "auto" },
@@ -136,10 +134,10 @@ const GroupCreatePage = () => {
           Create
         </CustomButton>
       </Stack>
-      <CustomModal
+      {/* <CustomModal
         ariaLabel="Add New Member"
         isOpen={isSuccessModalOpen}
-        handleClose={handleModalClose}
+        closeModal={closeModal}
       >
         <Typography variant="subtitle1">Awesome!</Typography>
         <Typography variant="h6" color="text.secondary">
@@ -154,11 +152,11 @@ const GroupCreatePage = () => {
         <CustomButton
           buttonStyle="default"
           sx={{ width: "100%" }}
-          onClick={handleModalClose}
+          onClick={closeModal}
         >
           Go Home
         </CustomButton>
-      </CustomModal>
+      </CustomModal> */}
     </>
   );
 };

@@ -1,9 +1,7 @@
-import kakaoLoginImg from "@assets/kakaoLoginImg.png";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
-import theme from "@theme";
 
 const LoginPage = () => {
   const REST_API_KEY = process.env.REACT_APP_KAKAO_API_KEY;
@@ -13,20 +11,9 @@ const LoginPage = () => {
   const handleKakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
   };
-
+  
   return (
-    <Stack
-      className="gradient-background"
-      sx={{
-        height: "100%",
-        maxWidth: "600px",
-        mx: "auto",
-        px: 2,
-        py: 4,
-        gap: 2,
-        backgroundColor: theme.palette.background.default,
-      }}
-    >
+    <>
       <Stack
         spacing={1}
         sx={{
@@ -43,11 +30,6 @@ const LoginPage = () => {
         </Typography>
       </Stack>
       <Stack spacing={2}>
-        {/* <img
-            onClick={() => handleKakaoLogin()}
-            src={kakaoLoginImg}
-            alt="kakao-login-button"
-          /> */}
         <CustomButton
           onClick={() => handleKakaoLogin()}
           startIcon={<ChatBubbleIcon />}
@@ -66,7 +48,7 @@ const LoginPage = () => {
           How To Use
         </CustomButton>
       </Stack>
-    </Stack>
+    </>
   );
 };
 

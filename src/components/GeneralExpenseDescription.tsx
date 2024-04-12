@@ -1,6 +1,4 @@
 import { Divider, Typography } from "@mui/material";
-import { useRecoilValue } from "recoil";
-import { newExpenseState } from "@store/expenseStore";
 import AllItemSummaryTable from "@components/AllItemSummaryTable";
 
 type LabelValuePairProps = {
@@ -17,26 +15,31 @@ const LabelValuePair = ({ label, value }: LabelValuePairProps) => (
   </>
 );
 
-const GeneralExpenseDescription = () => {
-    const {
-      receiptName,
-      address,
-      receiptDate,
-      receiptTotalPrice,
-      discountApplied,
-      actualPaidPrice,
-    } = useRecoilValue(newExpenseState);
-
+type GeneralExpenseDescriptionProps = {
+  createdAt?: string;
+  receiptName: string;
+  address: string;
+  receiptDate: string;
+  receiptTotalPrice: string;
+  itemOrderDetailsList: ItemOrderDetails[];
+};
+const GeneralExpenseDescription = ({
+  createdAt,
+  receiptName,
+  address,
+  receiptDate,
+  receiptTotalPrice,
+  itemOrderDetailsList,
+}: GeneralExpenseDescriptionProps) => {
   return (
-   <>
+    <>
+      {createdAt && (<LabelValuePair label="Submission Date" value={createdAt.split("T")[0]} />)}
       <LabelValuePair label="Receipt Name" value={receiptName} />
       <LabelValuePair label="Merchant Address" value={address} />
       <LabelValuePair label="Transaction Date" value={receiptDate} />
       <LabelValuePair label="Total Price" value={`${receiptTotalPrice}₩`} />
-      <LabelValuePair label="Discount Applied" value={`${discountApplied}₩`} />
-      <LabelValuePair label="Actual Paid Price" value={`${actualPaidPrice}₩`} />
       <Divider />
-      <AllItemSummaryTable />
+      <AllItemSummaryTable itemOrderDetailsList={itemOrderDetailsList} />
     </>
   );
 };

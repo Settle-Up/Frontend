@@ -1,13 +1,13 @@
 import { atom } from "recoil";
 
-type RequiredTxModalState = {
+type SettleTxModalState = {
   isOpen: boolean;
   selectedTransaction: RequiredTransaction | null;
   transactionUpdateSuccess: string | null;
 };
 
-export const requiredTxModalState = atom<RequiredTxModalState>({
-  key: "requiredTxModalState",
+export const settleTxModalState = atom<SettleTxModalState>({
+  key: "settleTxModalState",
   default: {
     isOpen: false,
     selectedTransaction: null,

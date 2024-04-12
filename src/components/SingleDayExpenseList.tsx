@@ -24,17 +24,19 @@ const SingleDayExpenseList = ({
   const navigate = useNavigate();
   const { groupId } = useParams();
 
+  console.log("single day expense list", singleDayExpenseList)
+
   return (
     <Stack spacing={1}>
       <Typography variant="subtitle1">{date}</Typography>
       <Paper elevation={1} sx={{ backgroundColor: "white", borderRadius: 3 }}>
         <List>
-          {singleDayExpenseList.map(
+          {singleDayExpenseList?.map(
             ({
               receiptId,
               receiptName,
               payerUserName,
-              totalAmount,
+              totalPrice,
               userOwedAmount,
             }: UserSpecificExpenseSummary) => (
               <ListItem
@@ -52,11 +54,10 @@ const SingleDayExpenseList = ({
                     <span
                       style={{ color: grey[500] }}
                     >{`${payerUserName} paid ${formatNumberWithLocaleAndNegatives(
-                      totalAmount
+                      totalPrice
                     )}₩`}</span>
                   }
                 />
-
                 <Typography
                   variant="subtitle2"
                   sx={{

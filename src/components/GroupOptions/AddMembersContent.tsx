@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -12,36 +12,72 @@ import EmailSearchForm from "@components/EmailSearchForm";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import theme from "@theme";
 import { grey } from "@mui/material/colors";
+import { useMutation } from "react-query";
+import { addGroupMembers } from "@apis/group/addGroupMembers";
+import { useSetRecoilState } from "recoil";
+import { snackbarState } from "@store/snackbarStore";
 
 type AddMembersContentProps = {
   groupId: string;
   groupName: string;
+  closeModal: () => void;
 };
 
-const AddMembersContent = ({ groupId, groupName }: AddMembersContentProps) => {
-  const [newGroupUserList, setNewGroupUserList] = useState<GeneralUser[]>([]);
-  const [copySuccess, setCopySuccess] = useState("");
+const AddMembersContent = ({ groupId, groupName, closeModal }: AddMembersContentProps) => {
+  const setSnackbar = useSetRecoilState(snackbarState);
 
-  const handleEmailSelection = (user: GeneralUser) => {
-    setNewGroupUserList((prevList) => [...prevList, user]);
+  const [groupUserList, setGroupUserList] = useState<GeneralUser[]>([]);
+  // const [copySuccess, setCopySuccess] = useState("");
+
+  const selectEmail = (user: GeneralUser) => {
+    setGroupUserList((prevList) => [...prevList, user]);
   };
 
-  const handleEmailUnselection = (user: GeneralUser) => {
-    setNewGroupUserList((prevList) =>
+  const unselectEmail = (user: GeneralUser) => {
+    setGroupUserList((prevList) =>
       prevList.filter((groupUser) => groupUser.userId !== user.userId)
     );
   };
 
-  const handleCopyClick = async () => {
-    try {
-      await navigator.clipboard.writeText(
-        "https://settle-up/groupInvitation/1254"
-      );
-      setCopySuccess("Copied!");
-    } catch (err) {
-      setCopySuccess("Failed to copy!");
+  // const handleCopyClick = async () => {
+  //   try {
+  //     await navigator.clipboard.writeText(
+  //       "https://settle-up/groupInvitation/1254"
+  //     );
+  //     setCopySuccess("Copied!");
+  //   } catch (err) {
+  //     setCopySuccess("Failed to copy!");
+  //   }
+  // };
+
+  const {
+    mutate: executeAddGroupMembers,
+    isSuccess,
+    isError,
+    isLoading,
+  } = useMutation(() => addGroupMembers({groupId, groupName, groupUserList: groupUserList.map(user => user.userId)}));
+
+  useEffect(() => {
+    if (isSuccess) {
+      closeModal();
+      setSnackbar({
+        show: true,
+        message: `You have successfully added new members to ${groupName}`,
+        severity: "success",
+      });
     }
-  };
+  }, [isSuccess, setSnackbar, groupName, closeModal]);
+
+  useEffect(() => {
+    if (isError) {
+      closeModal();
+      setSnackbar({
+        show: true,
+        message: `Sorry, an error occurred while adding new members to ${groupName}. Please try again later.`,
+        severity: "error",
+      });
+    }
+  }, [isError, setSnackbar, groupName, closeModal]);
 
   return (
     <Stack spacing={6}>
@@ -56,19 +92,20 @@ const AddMembersContent = ({ groupId, groupName }: AddMembersContentProps) => {
           Enter the email address of the person you'd like to invite
         </Typography>
         <EmailSearchForm
-          selectedEmailList={newGroupUserList}
-          handleEmailSelection={handleEmailSelection}
-          handleEmailUnselection={handleEmailUnselection}
+         selectedItemsSectionHeight="100px"
+          selectedEmailList={groupUserList}
+          selectEmail={selectEmail}
+          unselectEmail={unselectEmail}
         />
         <CustomButton
-          // disabled={}
+          disabled={groupUserList.length === 0}
           sx={{ width: "100%" }}
-          onClick={() => {}}
-        >
+          onClick={() => executeAddGroupMembers()}
+          >
           Invite Members
         </CustomButton>
       </Stack>
-      <Stack spacing={1}>
+      {/* <Stack spacing={1}>
         <Typography variant="subtitle2">
           Or, share the invitation link directly
         </Typography>
@@ -96,7 +133,7 @@ const AddMembersContent = ({ groupId, groupName }: AddMembersContentProps) => {
             </IconButton>
           </Tooltip>
         </Box>
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 };

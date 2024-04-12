@@ -7,12 +7,13 @@ import {
   TableRow,
 } from "@mui/material";
 import theme from "@theme";
-import { useRecoilValue } from "recoil";
-import { newExpenseState } from "@store/expenseStore";
 
-const AllItemSummaryTable = () => {
-  const { itemOrderDetailsList } = useRecoilValue(newExpenseState);
-
+type AllItemSummaryTableProps = {
+  itemOrderDetailsList: ItemOrderDetails[];
+};
+const AllItemSummaryTable = ({
+  itemOrderDetailsList,
+}: AllItemSummaryTableProps) => {
   return (
     <TableContainer className="custom-scrollbar">
       <Table sx={{ minWidth: 650 }} aria-label="Receipt Items Summary Table">
@@ -43,13 +44,13 @@ const AllItemSummaryTable = () => {
         </TableHead>
         <TableBody>
           {itemOrderDetailsList.map(
-            ({ itemId, itemName, unitPrice, itemQuantity, itemTotalPrice }) => (
+            ({ itemId, itemName, unitPrice, itemQuantity }) => (
               <TableRow key={itemId}>
                 {[
                   itemName,
-                  unitPrice.toLocaleString() + "₩",
+                  unitPrice + "₩",
                   itemQuantity,
-                  itemTotalPrice.toLocaleString() + "₩",
+                  `${parseFloat(unitPrice) * parseInt(itemQuantity)}₩`,
                 ].map((cellData, index) => {
                   const isOdd = index % 2 === 0;
                   return (

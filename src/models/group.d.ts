@@ -1,9 +1,8 @@
 // import dayjs from "dayjs";
 
 type NewGroup = {
-  groupName: string | null;
-  groupMemberCount: number | null;
-  groupUserList: string[] | null;
+  groupName: string;
+  groupUserList: GeneralUser[];
 };
 
 type UserSpecificExpenseSummary = {
@@ -11,7 +10,7 @@ type UserSpecificExpenseSummary = {
   payerUserName: string;
   receiptId: string;
   receiptName: string;
-  totalAmount: string;
+  totalPrice: string;
   userOwedAmount: string;
   createdAt: string;
 };
@@ -19,12 +18,10 @@ type UserSpecificExpenseSummary = {
 type JoinedGroupDetails = {
   groupId: string;
   groupName: string;
-  // groupUrl: string;
   settlementBalance: string;
   isMonthlyReportUpdateOn: boolean;
   neededTransactionList: RequiredTransaction[];
   lastWeekSettledTransactionList: ClearedTransaction[];
-  expenseList: UserSpecificExpenseSummary[];
 };
 
 type JoinedGroupSummary = {

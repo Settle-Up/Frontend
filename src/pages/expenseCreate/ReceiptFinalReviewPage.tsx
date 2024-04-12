@@ -1,11 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { Paper, Stack, Typography } from "@mui/material";
-import GeneralExpenseInfoCard from "@components/GeneralExpenseDescription";
+import GeneralExpenseDescription from "@components/GeneralExpenseDescription";
 import CustomIconButton from "@components/CustomIconButton";
 import EastIcon from "@mui/icons-material/East";
+import { useRecoilValue } from "recoil";
+import { newExpenseState } from "@store/expenseStore";
 
 const ReceiptFinalReviewPage = () => {
   const navigate = useNavigate();
+  const newExpense = useRecoilValue(newExpenseState);
+
+  const {
+    receiptName,
+    address,
+    receiptDate,
+    receiptTotalPrice,
+    itemOrderDetailsList
+  } = newExpense;
 
   return (
     <Stack
@@ -18,7 +29,7 @@ const ReceiptFinalReviewPage = () => {
         Here's How Your Final Receipt Looks
       </Typography>
       <Paper sx={{ backgroundColor: "white", borderRadius: 3, padding: 3 }}>
-        <GeneralExpenseInfoCard />
+      <GeneralExpenseDescription receiptName={receiptName} address={address} receiptDate={receiptDate} receiptTotalPrice={receiptTotalPrice} itemOrderDetailsList={itemOrderDetailsList} />
       </Paper>
       <CustomIconButton
         ariaLabel="Move on to next step"

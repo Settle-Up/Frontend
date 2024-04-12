@@ -1,15 +1,15 @@
 import { atom } from "recoil";
-import { mockUpdatedTransactions } from "@mock/transactionMock";
 
-type UpdatedTransactionsAlertState  = {
+type RespondToUpdatedTxsModalState  = {
   isOpen: boolean;
   updatedTransactionList: UpdatedTransaction[] | null,
 };
 
-export const updatedTransactionsAlertState = atom<UpdatedTransactionsAlertState>({
+export const respondToUpdatedTxsModalState = atom<RespondToUpdatedTxsModalState>({
   key: "updatedTransactionsAlertState",
   default: {
     isOpen: false,
     updatedTransactionList: null,
   },
 });
+

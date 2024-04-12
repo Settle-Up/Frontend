@@ -77,17 +77,23 @@ const GroupSettings = ({
           <ViewMembersContent
             groupId={groupId}
             groupName={groupName}
-            handleCloseModal={() => setIsModalOpen(false)}
+            closeModal={() => setIsModalOpen(false)}
           />
         );
       case "addMembers":
-        return <AddMembersContent groupId={groupId} groupName={groupName} />;
+        return (
+          <AddMembersContent
+            groupId={groupId}
+            groupName={groupName}
+            closeModal={() => setIsModalOpen(false)}
+          />
+        );
       case "monthlyReport":
         return (
           <MonthlyReportContent
             groupId={groupId}
             groupName={groupName}
-            handleCloseModal={() => setIsModalOpen(false)}
+            closeModal={() => setIsModalOpen(false)}
             isMonthlyReportUpdateOn={isMonthlyReportUpdateOn}
           />
         );
@@ -96,7 +102,7 @@ const GroupSettings = ({
           <LeaveGroupContent
             groupId={groupId}
             groupName={groupName}
-            handleCloseModal={() => setIsModalOpen(false)}
+            closeModal={() => setIsModalOpen(false)}
           />
         );
       default:
@@ -187,7 +193,7 @@ const GroupSettings = ({
       </SpeedDial>
       <CustomModal
         ariaLabel="Modal Title based on action"
-        handleClose={() => setIsModalOpen(false)}
+        closeModal={() => setIsModalOpen(false)}
         isOpen={isModalOpen}
         showCloseButton={true}
       >

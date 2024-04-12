@@ -1,55 +1,61 @@
+import { useEffect } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import { useMutation } from "react-query";
 import { toggleGroupMonthlyReport } from "@apis/group/toggleGroupMonthlyReport";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
-import Spinner from "@components/Spinner";
 
 type MonthlyReportContentProps = {
   groupId: string;
   groupName: string;
-  handleCloseModal: () => void;
+  closeModal: () => void;
   isMonthlyReportUpdateOn: boolean;
 };
 
 const MonthlyReportContent = ({
   groupId,
   groupName,
-  handleCloseModal,
+  closeModal,
   isMonthlyReportUpdateOn,
 }: MonthlyReportContentProps) => {
   const setSnackbar = useSetRecoilState(snackbarState);
 
-  const { mutate: handleToggleGroupMonthlyReport, isLoading } = useMutation(
-    () => toggleGroupMonthlyReport(groupId, !isMonthlyReportUpdateOn),
-    {
-      onSuccess: () => {
-        handleCloseModal();
-        const message = isMonthlyReportUpdateOn
-          ? `You will no longer receive monthly reports from "${groupName}".`
-          : `You will receive monthly reports from "${groupName}" starting now.`;
-        setSnackbar({
-          show: true,
-          message: message,
-          severity: "success",
-        });
-      },
-      onError: () => {
-        handleCloseModal();
-        setSnackbar({
-          show: true,
-          message:
-            "An error occurred while updating the monthly report settings. Please try again later.",
-          severity: "error",
-        });
-      },
-    }
+  const {
+    mutate: executeToggleGroupMonthlyReport,
+    isError,
+    isSuccess,
+  } = useMutation(() => {
+    console.log("??????????????????")
+    return toggleGroupMonthlyReport(groupId, !isMonthlyReportUpdateOn)
+  }
   );
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      closeModal();
+      const message = isMonthlyReportUpdateOn
+        ? `You will no longer receive monthly reports from "${groupName}".`
+        : `You will receive monthly reports from "${groupName}" starting now.`;
+      setSnackbar({
+        show: true,
+        message: message,
+        severity: "success",
+      });
+    }
+  }, [isSuccess, setSnackbar, groupName, closeModal, isMonthlyReportUpdateOn]);
+
+  useEffect(() => {
+    if (isError) {
+      closeModal();
+      setSnackbar({
+        show: true,
+        message:
+          "An error occurred while updating the monthly report settings. Please try again later.",
+        severity: "error",
+      });
+    }
+  }, [isError, setSnackbar, groupName, closeModal]);
 
   return (
     <>
@@ -71,14 +77,14 @@ const MonthlyReportContent = ({
             <CustomButton
               buttonStyle="primary"
               sx={{ width: "100%" }}
-              onClick={() => handleToggleGroupMonthlyReport}
+              onClick={() => executeToggleGroupMonthlyReport()}
             >
               Yes, Disable Summaries
             </CustomButton>
             <CustomButton
               buttonStyle="secondary"
               sx={{ width: "100%" }}
-              onClick={handleCloseModal}
+              onClick={closeModal}
             >
               No, Keep Them
             </CustomButton>
@@ -103,14 +109,14 @@ const MonthlyReportContent = ({
             <CustomButton
               buttonStyle="primary"
               sx={{ width: "100%" }}
-              onClick={() => handleToggleGroupMonthlyReport}
+              onClick={() => executeToggleGroupMonthlyReport()}
             >
               Yes, Enable Summaries
             </CustomButton>
             <CustomButton
               buttonStyle="secondary"
               sx={{ width: "100%" }}
-              onClick={handleCloseModal}
+              onClick={closeModal}
             >
               No, Thanks
             </CustomButton>

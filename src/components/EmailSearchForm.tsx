@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { useInfiniteQuery } from "react-query";
 import {
   Box,
   Chip,
   IconButton,
   InputAdornment,
   List,
-  ListItem,
+  ListItemButton,
   Paper,
   Skeleton,
   Stack,
@@ -15,40 +15,60 @@ import {
 } from "@mui/material";
 import { searchUserEmailList } from "@apis/search/searchUserEmailList";
 import theme from "@theme";
+import { grey } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
+import useIntersectionObserver from "@hooks/useIntersectionObserver";
+import { useSetRecoilState } from "recoil";
+import { snackbarState } from "@store/snackbarStore";
 
 export type EmailSearchFormProps = {
+  selectedItemsSectionHeight?: string;
   selectedEmailList: GeneralUser[];
-  handleEmailSelection: (user: GeneralUser) => void;
-  handleEmailUnselection: (user: GeneralUser) => void;
+  selectEmail: (user: GeneralUser) => void;
+  unselectEmail: (user: GeneralUser) => void;
 };
 
 const EmailSearchForm = ({
+  selectedItemsSectionHeight = "200px",
   selectedEmailList,
-  handleEmailSelection,
-  handleEmailUnselection,
+  selectEmail,
+  unselectEmail,
 }: EmailSearchFormProps) => {
+  const setSnackbar = useSetRecoilState(snackbarState);
+
   const [email, setEmail] = useState("");
+  const selectedEmailListContainerRef = useRef<HTMLDivElement>(null);
+  const [prevLength, setPrevLength] = useState(0);
 
   const {
-    data: userEmailList,
+    data,
+    isLoading,
+    isError,
     isFetching,
-    error,
-    refetch,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
     remove,
-  } = useQuery("userEmailList", () => searchUserEmailList(email), {
-    enabled: false,
-    staleTime: 0,
-    cacheTime: 0,
-  });
-
-  useEffect(() => {
-    if (email.trim() === "") {
-      remove();
+    refetch,
+  } = useInfiniteQuery(
+    "userEmailList",
+    ({ pageParam = 1 }) =>
+      searchUserEmailList({ page: pageParam, query: email }),
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        if (lastPage.hasNextPage) {
+          return allPages.length + 1;
+        } else {
+          return undefined;
+        }
+      },
+      enabled: false,
+      staleTime: 0,
+      cacheTime: 0,
     }
-  }, [email, remove]);
+  );
 
-  const handleSearch = (
+  const executeEmailSearch = (
     event:
       | React.KeyboardEvent<HTMLDivElement>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -64,19 +84,68 @@ const EmailSearchForm = ({
     }
   };
 
-  const shouldDisplayContent =
-    isFetching || (email.trim().length > 0 && userEmailList !== undefined);
+  const lastElementRef = useIntersectionObserver({
+    containerId: "searchListContainer",
+    isError,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  });
+
+  const renderSkeletons = () =>
+    [...Array(10)].map((_, index) => (
+      <ListItemButton key={index}>
+        <Skeleton
+          variant="text"
+          width={170}
+          sx={{ fontSize: "16px" }}
+          animation="wave"
+        />
+      </ListItemButton>
+    ));
+
+  useEffect(() => {
+    if (email.trim() === "") {
+      remove();
+    }
+  }, [email, remove]);
 
   const hasEmailInput = email.trim().length !== 0;
 
+  const lastSuccessfullyFetchedPage = data?.pages.length || 0;
+
+  useEffect(() => {
+    if (isError && lastSuccessfullyFetchedPage > 0) {
+      setSnackbar({
+        show: true,
+        message:
+          "Sorry, we encountered an issue loading more results. Please try again later.",
+        severity: "error",
+      });
+    }
+  }, [isError, setSnackbar, lastSuccessfullyFetchedPage]);
+
+  const shouldShowDropdown =
+    isFetching || isError || (email.trim().length > 0 && data !== undefined);
+
+    useEffect(() => {
+      const currentLength = selectedEmailList.length;
+      if (selectedEmailListContainerRef.current && currentLength > prevLength) {
+        const element = selectedEmailListContainerRef.current;
+        element.scrollTop = element.scrollHeight;
+      }
+      setPrevLength(currentLength);
+    }, [selectedEmailList]); 
+
   return (
     <>
-      <Box sx={{ display: "flex", flexWrap: "wrap", mb: 1, gap: 2, mt: 0 }}>
+      <Box ref={selectedEmailListContainerRef} className="custom-scrollbar" sx={{ display: "flex", flexWrap: "wrap", mb: 1, gap: 2, mt: 0, maxHeight: selectedItemsSectionHeight, overflow:"auto"}}>
         {selectedEmailList?.map((user: GeneralUser) => (
           <Chip
             key={user.userId}
             label={user.userEmail}
-            onDelete={() => handleEmailUnselection(user)}
+            onDelete={() => unselectEmail(user)}
           />
         ))}
       </Box>
@@ -92,7 +161,7 @@ const EmailSearchForm = ({
               setEmail(event.target.value);
             }}
             variant="outlined"
-            onKeyDown={handleSearch}
+            onKeyDown={executeEmailSearch}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -104,7 +173,7 @@ const EmailSearchForm = ({
                     }}
                     aria-label="search"
                     disabled={!hasEmailInput}
-                    onClick={handleSearch}
+                    onClick={executeEmailSearch}
                   >
                     <SearchIcon />
                   </IconButton>
@@ -112,48 +181,74 @@ const EmailSearchForm = ({
               ),
             }}
           />
-          {shouldDisplayContent && (
+          {shouldShowDropdown && (
             <Paper
+              id="searchListContainer"
               elevation={5}
               className="custom-scrollbar"
               sx={{
                 borderRadius: 3,
-                maxHeight: "400px",
+                height: "400px",
                 overflow: "auto",
               }}
             >
-              {isFetching ? (
+              {lastSuccessfullyFetchedPage === 0 && isError && (
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: grey[500],
+                    textAlign: "center",
+                    m: 2,
+                  }}
+                >
+                  Sorry, we encountered an issue retrieving the search results.
+                  <br />
+                  Please try again later.
+                </Typography>
+              )}
+              {data && data.pages[0].searchList.length === 0 && (
+                <Typography variant="subtitle2" sx={{ p: 2 }}>
+                  No matching users found
+                </Typography>
+              )}
+              {data && data.pages.length > 0 && (
                 <List>
-                  {[...new Array(5)].map((_, index) => (
-                    <ListItem key={index}>
-                      <Skeleton
-                        variant="text"
-                        width={200}
-                        height={40}
-                        animation="wave"
-                      />
-                    </ListItem>
+                  {data.pages?.map((page, i) => (
+                    <Fragment key={i}>
+                      {page.searchList.map((user) => (
+                        <ListItemButton
+                          key={user.userId}
+                          disabled={
+                            selectedEmailList.findIndex(
+                              (email) => email.userId === user.userId
+                            ) !== -1
+                          }
+                          onClick={() => selectEmail(user)}
+                          sx={{
+                            cursor: "pointer",
+                            "&:hover": {
+                              backgroundColor: theme.palette.tertiary.light,
+                            },
+                          }}
+                        >
+                          <Typography variant="subtitle2">
+                            {user.userEmail}
+                          </Typography>
+                        </ListItemButton>
+                      ))}
+                    </Fragment>
                   ))}
                 </List>
-              ) : userEmailList && userEmailList?.length > 0 ? (
-                <List>
-                  {userEmailList.map((user) => (
-                    <ListItem
-                      key={user.userId}
-                      onClick={() => handleEmailSelection(user)}
-                      sx={{
-                        cursor: "pointer",
-                        "&:hover": {
-                          backgroundColor: theme.palette.tertiary.light,
-                        },
-                      }}
-                    >
-                      {user.userEmail}
-                    </ListItem>
-                  ))}
-                </List>
-              ) : (
-                <Typography sx={{ p: 2 }}>No matching users found</Typography>
+              )}
+              {(isLoading || isFetchingNextPage) && renderSkeletons()}
+              {!isError && (
+                <div
+                  ref={hasNextPage ? lastElementRef : undefined}
+                  style={{
+                    display: hasNextPage ? "inline" : "none",
+                    border: "1px solid blue",
+                  }}
+                />
               )}
             </Paper>
           )}

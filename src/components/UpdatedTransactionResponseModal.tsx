@@ -9,78 +9,107 @@ import { getUpdatedTransactionList } from "@apis/transaction/getUpdatedTransacti
 import { updateRequiredTransactionStatus } from "@apis/transaction/updateRequiredTransactionStatus";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
-import { mockUpdatedTransactions } from "@mock/transactionMock";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import theme from "@theme";
-import { updatedTransactionsAlertState } from "@store/TxUpdateAlertsModalStore";
+import { respondToUpdatedTxsModalState } from "@store/respondToUpdatedTxsModalStore";
 import Spinner from "@components/Spinner";
 
-const TransactionUpdateAlert = () => {
+const UpdatedTransactionReponseModal = () => {
   const setSnackbar = useSetRecoilState(snackbarState);
   const [isInitialFetch, setIsInitialFetch] = useState(true);
 
   const [{ isOpen, updatedTransactionList }, setUpdatedTransactionsAlert] =
-    useRecoilState(updatedTransactionsAlertState);
+    useRecoilState(respondToUpdatedTxsModalState);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const { isLoading, isFetching, error } = useQuery(
-    "updatedTransactionList",
-    () => getUpdatedTransactionList(),
-    {
-      onSuccess: (data) => {
-        if (isInitialFetch) {
-          setUpdatedTransactionsAlert((prev) => ({
-            ...prev,
-            isOpen: data.length > 0 ? true: false,
-            updatedTransactionList: data,
-          }));
-          setIsInitialFetch(false);
-        } else {
-          setUpdatedTransactionsAlert((prev) => ({
-            ...prev,
-            isOpen: false,
-            updatedTransactionList: data,
-          }));
-        }
-      },
-    }
-  );
+  const {
+    data: fetchedUpdatedTransactionList,
+    isLoading: isFetchingUpdatedTxLoading,
+    isError: isFetchingUpdatedTxListError,
+    isSuccess: isFetchingUpdatedTxListSuccess,
+    isFetching,
+  } = useQuery("updatedTransactionList", () => getUpdatedTransactionList());
 
-  const { mutate } = useMutation(updateRequiredTransactionStatus, {
-    onSuccess: (data, variables: TransactionDecision) => {
+  useEffect(() => {
+    if (isFetchingUpdatedTxListSuccess) {
+      if (isInitialFetch && fetchedUpdatedTransactionList) {
+        setUpdatedTransactionsAlert((prev) => ({
+          ...prev,
+          isOpen: fetchedUpdatedTransactionList?.length > 0 ? true : false,
+          updatedTransactionList: fetchedUpdatedTransactionList,
+        }));
+        setIsInitialFetch(false);
+      } else {
+        setUpdatedTransactionsAlert((prev) => ({
+          ...prev,
+          isOpen: false,
+          updatedTransactionList: fetchedUpdatedTransactionList,
+        }));
+      }
+    }
+  }, [
+    isFetchingUpdatedTxListSuccess,
+    setSnackbar,
+    fetchedUpdatedTransactionList,
+  ]);
+
+  useEffect(() => {
+    if (isFetchingUpdatedTxListError) {
       setSnackbar({
         show: true,
-        message: ``,
+        message: `Sorry, an error occurred while loading updated transactions. Please try again later.`,
+        severity: "error",
+      });
+    }
+  }, [isFetchingUpdatedTxListError, setSnackbar]);
+
+  const {
+    mutate: executeUpdateRequiredTransactionStatus,
+    isError: isUpdatingRequiredTxStatusError,
+    isSuccess: isUpdatingRequiredTxStatusSuccess,
+    isLoading: isUpdatingTxRequiredStatusLoading,
+  } = useMutation(updateRequiredTransactionStatus);
+
+  useEffect(() => {
+    if (updatedTransactionList && isUpdatingRequiredTxStatusSuccess) {
+      setSnackbar({
+        show: true,
+        message: `Settlement acknowledged with ${counterPartyName} from '${groupName}'.`,
         severity: "success",
       });
       setUpdatedTransactionsAlert((prev) => ({
         ...prev,
         updatedTransactionList: prev.updatedTransactionList!.filter(
-          (t) => t.transactionId !== variables.transactionId
+          (t) =>
+            t.transactionId !==
+            updatedTransactionList[currentIndex].transactionId
         ),
       }));
       if (currentIndex >= updatedTransactionList!.length - 1) {
         setCurrentIndex((current) => Math.max(current - 1, 0));
       }
-    },
-    onError: (error, variables, context) => {
+    }
+  }, [isUpdatingRequiredTxStatusSuccess, setSnackbar]);
+
+  useEffect(() => {
+    if (isUpdatingRequiredTxStatusError) {
       setSnackbar({
         show: true,
-        message: ``,
+        message: `Sorry, we couldn't update the transaction status with ${counterPartyName} from '${groupName}'. Please try again later.`,
         severity: "error",
       });
-    },
-  });
+    }
+  }, [isUpdatingRequiredTxStatusError, setSnackbar]);
 
-  const handleResponse = (
+  const resondToUpdatedTransaction = (
     transactionId: string,
     groupId: string,
     transactionDirection: "OWED" | "OWE",
     approvalDecision: "CLEAR" | "REJECT"
   ) => {
-    mutate({
+    executeUpdateRequiredTransactionStatus({
       groupId,
       transactionId,
       approvalUser: transactionDirection === "OWE" ? "sender" : "recipient",
@@ -88,11 +117,11 @@ const TransactionUpdateAlert = () => {
     } as TransactionDecision);
   };
 
-  const handleNext = () => {
+  const moveToNextTransaction = () => {
     setCurrentIndex((prev) => (prev + 1) % updatedTransactionList!.length);
   };
 
-  const handlePrevious = () => {
+  const moveToPreviousTransaction = () => {
     setCurrentIndex((prev) =>
       prev === 0 ? updatedTransactionList!.length - 1 : prev - 1
     );
@@ -120,17 +149,15 @@ const TransactionUpdateAlert = () => {
     transactionAmount,
   } = updatedTransactionList[currentIndex];
 
-  if(isOpen && (isLoading || isFetching)) {
-    return (
-      <Spinner isOverlay={true}/>
-    )
-  }
+  // if (isOpen && (isLoading || isFetching)) {
+  //   return <Spinner isOverlay={true} />;
+  // }
 
   if (updatedTransactionList.length === 0) {
     return (
       <CustomModal
         ariaLabel="No Transaction Updates"
-        handleClose={() =>
+        closeModal={() =>
           setUpdatedTransactionsAlert((prev) => ({ ...prev, isOpen: false }))
         }
         isOpen={isOpen}
@@ -150,7 +177,7 @@ const TransactionUpdateAlert = () => {
   return (
     <CustomModal
       ariaLabel="Transaction Update Alerts"
-      handleClose={() =>
+      closeModal={() =>
         setUpdatedTransactionsAlert((prev) => ({ ...prev, isOpen: false }))
       }
       isOpen={isOpen}
@@ -160,7 +187,7 @@ const TransactionUpdateAlert = () => {
         <IconButton
           color="primary"
           aria-label="previous button"
-          onClick={handlePrevious}
+          onClick={moveToPreviousTransaction}
           sx={{
             height: "40px",
             width: "40px",
@@ -208,7 +235,7 @@ const TransactionUpdateAlert = () => {
               }}
             >
               {`${formatNumberWithLocaleAndNegatives(transactionAmount)}₩`}
-            </span>{" "}
+            </span>
             with you from '
             <span
               style={{
@@ -226,7 +253,7 @@ const TransactionUpdateAlert = () => {
               buttonStyle="primary"
               sx={{ width: "100%" }}
               onClick={() =>
-                handleResponse(
+                resondToUpdatedTransaction(
                   transactionId,
                   groupId,
                   transactionDirection,
@@ -240,7 +267,7 @@ const TransactionUpdateAlert = () => {
               buttonStyle="secondary"
               sx={{ width: "100%" }}
               onClick={() =>
-                handleResponse(
+                resondToUpdatedTransaction(
                   transactionId,
                   groupId,
                   transactionDirection,
@@ -255,7 +282,7 @@ const TransactionUpdateAlert = () => {
         <IconButton
           color="primary"
           aria-label="next button"
-          onClick={handleNext}
+          onClick={moveToNextTransaction}
           sx={{
             height: "40px",
             width: "40px",
@@ -273,4 +300,4 @@ const TransactionUpdateAlert = () => {
   );
 };
 
-export default TransactionUpdateAlert;
+export default UpdatedTransactionReponseModal;

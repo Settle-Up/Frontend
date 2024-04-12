@@ -1,69 +1,66 @@
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import HeadingWithTip from "@components/HeadingWithTip";
-import React from "react";
-import { useLocation } from "react-router-dom";
-import GroupListPage from "./GroupListPage";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Stack,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Box, Divider, Stack, Paper, Typography } from "@mui/material";
 import theme from "@theme";
 import { useParams } from "react-router-dom";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupSettings from "@components/GroupSettings";
-import { useQuery } from "react-query";
 import { getGroupDetails } from "@apis/group/getGroupDetails";
-import { mockJoinedGroupDetails } from "@mock/groupMock";
 import GroupExpenseList from "@components/GroupExpenseList";
 import RequiredSettlementsOverview from "@components/RequiredSettlementsOverview";
 import RecentSettlementsList from "@components/RecentSettlementsList";
 import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
-import useUpdateRequiredTransactionStatusModal from "@hooks/useUpdateRequiredTransactionStatusModal";
+import useSettleTransaction from "@hooks/useSettleTransaction";
+import { useSetRecoilState } from "recoil";
+import { snackbarState } from "@store/snackbarStore";
+import { grey } from "@mui/material/colors";
+import { useQuery } from "react-query";
 
 const GroupDetailsPage = () => {
-  const { groupId } = useParams();
+  const navigate = useNavigate();
+  const { groupId } = useParams() as { groupId: string };
+  const setSnackbar = useSetRecoilState(snackbarState);
 
   const [isGroupOptionsVisible, setIsGroupOptionsVisible] = useState(false);
 
-  const {
-    data: groupDetails,
-    isLoading,
-    error,
-  } = useQuery(
-    ["groupDetails", groupId],
-    () => (groupId ? getGroupDetails(groupId) : undefined),
-    {
-      enabled: !!groupId,
-      // onSuccess: (data) => {
-      //   const { groupName } = data;
-      // },
-    }
+  const { RenderSettleTxModal } = useSettleTransaction(groupId!);
+
+  const { data, isLoading, isError } = useQuery(["groupDetails", groupId], () =>
+    getGroupDetails({ groupId })
   );
 
-  if (isLoading) {
-    // show skeleton ui
+  // if there's no expesne recorded, then there could be no data
+  if (!data?.groupDetails) {
+    // Handle this case appropriately, maybe show a loading indicator or a message
+    return null; // or your loading component/message
   }
 
-  // if group does not exist, i gotta show the snackbar message
+  // show skeleton while loading
 
-  // const { groupName, isMonthlyReportUpdateOn } = groupDetails!;
   const {
     groupName,
-    settlementBalance,
     isMonthlyReportUpdateOn,
-    expenseList,
+    settlementBalance,
     neededTransactionList,
-    lastWeekSettledTransactionList
-  } = mockJoinedGroupDetails!;
+    lastWeekSettledTransactionList,
+  } = data.groupDetails;
 
-  const { RenderModal } = useUpdateRequiredTransactionStatusModal(groupId!);
+  console.log(groupName, isMonthlyReportUpdateOn);
 
   return (
-    <>
+    <Stack sx={{ my: 2 }}>
+      {isError && (
+        <Typography
+          sx={{
+            color: grey[500],
+            textAlign: "center",
+            m: 5,
+          }}
+        >
+          The group you're looking for doesn't seem to exist. Please check the
+          URL or browse our groups from the home page.
+        </Typography>
+      )}
       <Box
         sx={{
           position: "relative",
@@ -83,7 +80,7 @@ const GroupDetailsPage = () => {
           show={isGroupOptionsVisible}
         />
       </Box>
-      <Stack spacing={7} sx={{ minHeight: "100%" }}>
+      <Stack spacing={7} sx={{ minHeight: "100%", mt: 2 }}>
         <Stack>
           <HeadingWithTip
             heading="Final Settlement Balance"
@@ -97,20 +94,34 @@ const GroupDetailsPage = () => {
               p: 3,
             }}
           >
-            <Typography variant="subtitle1">
-              {`${formatNumberWithLocaleAndNegatives(settlementBalance)}₩`}
-            </Typography>
+            {settlementBalance !== null && settlementBalance !== undefined ? (
+              <Typography variant="subtitle1">
+                {`${formatNumberWithLocaleAndNegatives(settlementBalance)}₩`}
+              </Typography>
+            ) : (
+              <Typography variant="body2" sx={{ textAlign: "center" }}>
+                No settlement balance to display.
+              </Typography>
+            )}
           </Paper>
         </Stack>
-        <RequiredSettlementsOverview
-          neededTransactionList={neededTransactionList}
-        />
-        <RecentSettlementsList lastWeekSettledTransactionList={lastWeekSettledTransactionList}/>
+        {neededTransactionList && (
+          <RequiredSettlementsOverview
+            isLoading={isLoading}
+            neededTransactionList={neededTransactionList}
+          />
+        )}
+        {lastWeekSettledTransactionList && (
+          <RecentSettlementsList
+            isLoading={isLoading}
+            lastWeekSettledTransactionList={lastWeekSettledTransactionList}
+          />
+        )}
         <Divider />
-        <GroupExpenseList expenseList={expenseList} />
+        <GroupExpenseList groupId={groupId} />
       </Stack>
-      <RenderModal />
-    </>
+      <RenderSettleTxModal />
+    </Stack>
   );
 };
 

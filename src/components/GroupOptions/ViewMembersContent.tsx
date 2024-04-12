@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import { Skeleton, Stack, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { getGroupMemberList } from "@apis/group/getGroupMemberList";
-import { mockGroupMemberList } from "@mock/groupMock";
 import { grey } from "@mui/material/colors";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
@@ -9,29 +9,32 @@ import { snackbarState } from "@store/snackbarStore";
 type ViewMembersContentProps = {
   groupId: string;
   groupName: string;
-  handleCloseModal: () => void;
+  closeModal: () => void;
 };
 
 const ViewMembersContent = ({
   groupId,
   groupName,
-  handleCloseModal,
+  closeModal,
 }: ViewMembersContentProps) => {
   const setSnackbar = useSetRecoilState(snackbarState);
 
-  const { data: groupMemberList, isLoading } = useQuery(
-    "groupMemberList",
-    () => getGroupMemberList(groupId),
-    {
-      onError: () => {
-        handleCloseModal();
-        setSnackbar({
-          show: true,
-          message: `Failed to load members of '${groupName}'. Please try again later.`,          severity: "error",
-        });
-      },
+  const {
+    data: groupMemberList,
+    isError,
+    isLoading,
+  } = useQuery("groupMemberList", () => getGroupMemberList(groupId), {});
+
+  useEffect(() => {
+    if (isError) {
+      closeModal();
+      setSnackbar({
+        show: true,
+        message: `Failed to load members of '${groupName}'. Please try again later.`,
+        severity: "error",
+      });
     }
-  );
+  }, [isError, setSnackbar, groupName, closeModal]);
 
   const renderSkeletons = () => {
     return Array.from({ length: 5 }).map((_, index) => (

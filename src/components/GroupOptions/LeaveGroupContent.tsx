@@ -1,63 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import StandardLabeledInput from "@components/StandardLabeledInput";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { leaveGroup } from "@apis/group/leaveGroup";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
-import Spinner from "@components/Spinner";
 
 type LeaveGroupContentProps = {
   groupId: string;
   groupName: string;
-  handleCloseModal: () => void;
+  closeModal: () => void;
 };
 
 const LeaveGroupContent = ({
   groupId,
   groupName,
-  handleCloseModal,
+  closeModal,
 }: LeaveGroupContentProps) => {
+  const navigate = useNavigate();
+  const setSnackbar = useSetRecoilState(snackbarState);
+
   const [groupNameConfirmation, setGroupNameConfirmation] = useState<
     string | null
   >(null);
-  const setSnackbar = useSetRecoilState(snackbarState);
-
-  // const {
-  //   data: canLeaveGroup,
-  //   isLoading,
-  //   error,
-  // } = useQuery(
-  //   "checkRemainingTransactionsInGroup",
-  //   checkRemainingTransactionsInGroup
-  // );
 
   const {
-    mutate: handleLeaveGroup,
+    mutate: executeLeaveGroup,
+    isSuccess,
+    isError,
     isLoading,
-  } = useMutation(() => leaveGroup(groupId), {
-    onSuccess: () => {
-      handleCloseModal();
+  } = useMutation(() => leaveGroup(groupId));
+
+  useEffect(() => {
+    if (isSuccess) {
+      closeModal();
       setSnackbar({
         show: true,
         message: `You have successfully left ${groupName}`,
         severity: "success",
       });
-    },
-    onError: () => {
-      handleCloseModal();
+    }
+  }, [isSuccess, navigate, setSnackbar, groupName]);
+
+  useEffect(() => {
+    if (isError) {
+      closeModal();
       setSnackbar({
         show: true,
-        message: `An error occurred while leaving ${groupName}. Please try again later.`,
+        message: `Sorry, an error occurred while leaving ${groupName}. Please try again later.`,
         severity: "error",
       });
-    },
-  });
-
-  if (isLoading) {
-    return <Spinner />;
-  }
+    }
+  }, [isError, setSnackbar, groupName]);
 
   return (
     <>
@@ -84,7 +80,7 @@ const LeaveGroupContent = ({
           <CustomButton
             disabled={groupName !== groupNameConfirmation}
             sx={{ width: "100%" }}
-            onClick={() => handleLeaveGroup()}
+            onClick={() => executeLeaveGroup()}
           >
             Leave
           </CustomButton>
@@ -102,7 +98,7 @@ const LeaveGroupContent = ({
           <Typography>
             Please settle any outstanding amounts before leaving the group.
           </Typography>
-          <CustomButton sx={{ width: "100%" }} onClick={handleCloseModal}>
+          <CustomButton sx={{ width: "100%" }} onClick={closeModal}>
             Got it
           </CustomButton>
         </Stack>

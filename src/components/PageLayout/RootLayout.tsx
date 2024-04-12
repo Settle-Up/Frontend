@@ -5,44 +5,35 @@ import theme from "@theme";
 import { useRef, useState } from "react";
 import RootContainerContext from "@context/RootContainerContext";
 import CustomSnackbar from "@components/CustomSnackbar";
-import TransactionUpdateAlert from "@components/TransactionUpdateAlert";
 import { useRecoilValue } from "recoil";
-import { updatedTransactionsAlertState } from "@store/TxUpdateAlertsModalStore";
+import {respondToUpdatedTxsModalState } from "@store/respondToUpdatedTxsModalStore";
 
 const PageLayout = () => {
   const rootContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const showTitle =
-    location.pathname === "/" ||
-    location.pathname.startsWith("/add/receipt/upload");
-
-  // location.pathname === "/add/receipt", show "Add Receipt" typography
-  // location.pathname === "/create/group", show "Create Group" typography
-  // location.pathname === "/", show "Create Group" typography
 
   const [currentRef, setCurrentRef] = useState<HTMLElement | null>(null);
-  
-  const { isOpen, updatedTransactionList } =
-    useRecoilValue(updatedTransactionsAlertState);
 
+  const { isOpen, updatedTransactionList } = useRecoilValue(
+    respondToUpdatedTxsModalState
+  );
 
+  const loginPageBackground =
+    location.pathname === "/login" ? "gradient-background" : "";
   // useEffect(() => {
   //   setCurrentRef(rootContainerRef.current);
   // }, []);
   return (
     <RootContainerContext.Provider value={rootContainerRef}>
-      {/* <TransactionUpdateAlert /> */}
       <CustomSnackbar />
       <Stack
         ref={rootContainerRef}
-        className="custom-scrollbar"
+        className={`custom-scrollbar ${loginPageBackground}`}
         sx={{
           height: "100%",
-          border: "2px solid red",
           maxWidth: "600px",
-          //   alignItems: "center",
           mx: "auto",
-          px: 2,
+          px: 3,
           py: 4,
           gap: 2,
           backgroundColor: theme.palette.background.default,

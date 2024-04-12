@@ -4,10 +4,12 @@ import { Stack } from "@mui/material";
 import RequiredTransactionList from "@components/RequiredTransactionList";
 
 type RequiredSettlementsOverviewProps = {
+  isLoading: boolean;
   neededTransactionList: RequiredTransaction[];
 };
 
 const RequiredSettlementsOverview = ({
+  isLoading,
   neededTransactionList,
 }: RequiredSettlementsOverviewProps) => {
   const { owedList, oweList } = useMemo(() => {
@@ -32,8 +34,16 @@ const RequiredSettlementsOverview = ({
         tipMessage="Check off a transaction in this section once you've settled it outside the app. This will notify the other party for their confirmation."
       />
       <Stack spacing={4}>
-        <RequiredTransactionList title="You Owe" transactionList={oweList} />
-        <RequiredTransactionList title="You Are Owed" transactionList={owedList} />
+        <RequiredTransactionList
+          isLoading={isLoading}
+          title="You Owe"
+          transactionList={oweList}
+        />
+        <RequiredTransactionList
+          isLoading={isLoading}
+          title="You Are Owed"
+          transactionList={owedList}
+        />
       </Stack>
     </Stack>
   );

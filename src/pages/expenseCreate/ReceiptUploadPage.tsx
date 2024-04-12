@@ -46,7 +46,6 @@ const ReceiptUploadPage = () => {
           sx={{
             flexGrow: 1,
             justifyContent: "space-between",
-            // border: "2px dotted red",
           }}
         >
           <Stack spacing={2}>

@@ -3,7 +3,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko"; 
 
 dayjs.extend(relativeTime);
-dayjs.locale('ko'); 
+dayjs.locale('en');
+// dayjs.locale('ko'); 
 
 const formatTimeAgo = (date: dayjs.Dayjs | null) => {
   if (!date) return null;

@@ -13,7 +13,6 @@ axiosInstance.interceptors.request.use(
     const excludeEndpoints = ["/auth/kakao/callback"];
     if (!excludeEndpoints.includes(config.url!)) {
       const accessToken = sessionStorage.getItem("accessToken");
-      console.log("*************ACCESS TOKEN***************", accessToken);
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }

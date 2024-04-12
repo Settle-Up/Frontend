@@ -3,12 +3,11 @@ import { ReactNode } from "react";
 import theme from "@theme";
 import CloseIcon from "@mui/icons-material/Close";
 import CustomBackdrop from "@components/CustomBackdrop";
-import { SxProps } from "@mui/material";
 
 type CustomModalProps = {
   ariaLabel: string;
   children: ReactNode;
-  handleClose?: () => void;
+  closeModal?: () => void;
   isOpen: boolean;
   showCloseButton?: boolean;
 };
@@ -16,7 +15,7 @@ type CustomModalProps = {
 const CustomModal = ({
   ariaLabel,
   children,
-  handleClose,
+  closeModal,
   isOpen,
   showCloseButton = false,
 }: CustomModalProps) => {
@@ -39,6 +38,7 @@ const CustomModal = ({
         }}
       >
         <Stack
+          className="custom-scrollbar"
           sx={{
             backgroundColor: theme.palette.background.paper,
             borderRadius: 4,
@@ -47,8 +47,11 @@ const CustomModal = ({
             pb: 4,
             px: 4,
             width: 400,
+            minHeight: "50vh",
+            maxHeight: "80vh",
+            overflowY: "auto",
             textAlign: "center",
-            gap: 2,
+            gap: 1,
           }}
         >
           {showCloseButton && (
@@ -57,8 +60,8 @@ const CustomModal = ({
               edge="end"
               color="primary"
               aria-label="Close Modal"
-              onClick={handleClose}
-              sx={{ alignSelf: "flex-end", p: 1 }}
+              onClick={closeModal}
+              sx={{ alignSelf: "flex-end", p: 0 }}
             >
               <CloseIcon />
             </IconButton>

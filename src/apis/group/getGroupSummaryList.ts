@@ -5,12 +5,21 @@ type GroupSummaryListRequest = {
   page: number;
 };
 
-const GROUP_PER_PAGE = 7;
+type GroupSummaryListResponse = {
+  groupList: JoinedGroupSummary[];
+  hasNextPage: boolean;
+};
+
+const GROUP_PER_PAGE = 11;
 
 export const getGroupSummaryList = async ({
   page,
 }: GroupSummaryListRequest): Promise<GroupSummaryListResponse> => {
   try {
+    // if (page === 1) {
+    //   throw new Error("Simulated error");
+    // }
+
     const response = await axiosInstance.get(
       `/group/list/summary?page=${page}&size=${GROUP_PER_PAGE}`
     );
@@ -23,7 +32,6 @@ export const getGroupSummaryList = async ({
       })
     );
 
-    console.log(processedGroupList);
     return { ...extractedResponse, groupList: processedGroupList };
   } catch (error) {
     throw new Error("Failed to get Group Summary List");
