@@ -10,8 +10,6 @@ const transformExpenseForServer = (newExpense: NewGroupExpense) => {
     address,
     receiptDate,
     receiptTotalPrice,
-    discountApplied,
-    actualPaidPrice,
     allocationType,
     itemOrderDetailsList,
     // Omit the fields not required for the server
@@ -55,8 +53,6 @@ const transformExpenseForServer = (newExpense: NewGroupExpense) => {
     address,
     receiptDate,
     totalPrice: receiptTotalPrice,
-    discountApplied,
-    actualPaidPrice,
     allocationType: serverAllocationType,
     receiptItemList,
     ...rest,

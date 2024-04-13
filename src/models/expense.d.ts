@@ -26,8 +26,8 @@ type CoreGroupExpenseDetails = {
   address: string; 
   receiptDate: string; //
   receiptTotalPrice: string; // --> change field name to totalPrice
-  discountApplied: string; 
-  actualPaidPrice: string; 
+  // discountApplied: string; 
+  // actualPaidPrice: string; 
   allocationType: AllocationType; 
   itemOrderDetailsList: ItemOrderDetails[]; // --> change field name to receiptItemList
 };

@@ -15,7 +15,7 @@ import theme from "@theme";
 import { respondToUpdatedTxsModalState } from "@store/respondToUpdatedTxsModalStore";
 import Spinner from "@components/Spinner";
 
-const UpdatedTransactionReponseModal = () => {
+const UpdatedTransactionReponseHandler = () => {
   const setSnackbar = useSetRecoilState(snackbarState);
   const [isInitialFetch, setIsInitialFetch] = useState(true);
 
@@ -300,4 +300,4 @@ const UpdatedTransactionReponseModal = () => {
   );
 };
 
-export default UpdatedTransactionReponseModal;
+export default UpdatedTransactionReponseHandler;

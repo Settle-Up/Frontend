@@ -21,8 +21,6 @@ const ReceiptEditingPage = () => {
     address,
     receiptDate,
     receiptTotalPrice,
-    discountApplied,
-    actualPaidPrice,
     itemOrderDetailsList,
   } = newExpense;
 
@@ -32,8 +30,6 @@ const ReceiptEditingPage = () => {
     address: { hasError: false, message: "" },
     receiptDate: { hasError: false, message: "" },
     receiptTotalPrice: { hasError: false, message: "" },
-    discountApplied: { hasError: false, message: "" },
-    actualPaidPrice: { hasError: false, message: "" },
   });
 
   const initialItemErrors = itemOrderDetailsList.reduce(
@@ -60,7 +56,7 @@ const ReceiptEditingPage = () => {
     const { name, value } = e.target;
     let formattedValue: string;
     if (
-      ["receiptTotalPrice", "discountApplied", "actualPaidPrice"].includes(name)
+      ["receiptTotalPrice"].includes(name)
     ) {
       formattedValue = formatNumberWithLocaleAndNegatives(value!);
       setFieldErrors((prev) => ({
@@ -122,7 +118,7 @@ const ReceiptEditingPage = () => {
     return newItemErrors;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const moveToNextStep = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const updatedFieldErrors = validateGeneralExpenseFields();
     setFieldErrors(updatedFieldErrors);
@@ -145,7 +141,7 @@ const ReceiptEditingPage = () => {
 
   return (
     <Fragment>
-      <form onSubmit={handleSubmit} noValidate autoComplete="off">
+      <form onSubmit={moveToNextStep} noValidate autoComplete="off">
         <Stack divider={<Divider />}>
           <Typography
             variant="subtitle1"
@@ -186,22 +182,6 @@ const ReceiptEditingPage = () => {
             name="receiptTotalPrice"
             value={receiptTotalPrice}
           />
-          <ComponentToRender
-            error={fieldErrors.discountApplied.hasError}
-            errorText={fieldErrors.discountApplied.message}
-            handleInputChange={handleExpenseChange}
-            label="Discount Applied *"
-            name="discountApplied"
-            value={discountApplied}
-          />
-          <ComponentToRender
-            error={fieldErrors.actualPaidPrice.hasError}
-            errorText={fieldErrors.actualPaidPrice.message}
-            handleInputChange={handleExpenseChange}
-            label="Actual Paid Price *"
-            name="actualPaidPrice"
-            value={actualPaidPrice}
-          />
           <Stack>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
               <Typography variant="subtitle2">Items</Typography>
@@ -214,7 +194,7 @@ const ReceiptEditingPage = () => {
                 variant="primary"
               />
               <AddItemModal
-                handleClose={() => setShowAddItemModal(false)}
+                closeModal={() => setShowAddItemModal(false)}
                 open={showAddItemModal}
                 setItemErrors={setItemErrors}
               />

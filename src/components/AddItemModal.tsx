@@ -7,9 +7,10 @@ import { useSetRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import { v4 as uuidv4 } from "uuid";
 import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
+import CustomModal from "@components/CustomModal";
 
 type AddItemModalProps = {
-  handleClose: () => void;
+  closeModal: () => void;
   open: boolean;
   setItemErrors: React.Dispatch<
     React.SetStateAction<ItemOrderDetailsListError>
@@ -17,7 +18,7 @@ type AddItemModalProps = {
 };
 
 const AddItemModal = ({
-  handleClose,
+  closeModal,
   open,
   setItemErrors,
 }: AddItemModalProps) => {
@@ -39,26 +40,66 @@ const AddItemModal = ({
 
   const { itemName, unitPrice, itemQuantity, itemTotalPrice } = item;
 
-  const validateItem = () => {
-    const newItemErrors = { ...itemError };
-    Object.keys(newItemErrors).forEach((key) => {
-      if (key in item) {
-        newItemErrors[key as keyof typeof newItemErrors].hasError =
-          !item[key as keyof typeof item];
-      }
+  // const validateAllFieldsHaveNoErrors = () => {
+  //   const newItemErrors = { ...itemError };
+  //   Object.keys(newItemErrors).forEach((key) => {
+  //     if (key in item) {
+  //       newItemErrors[key as keyof typeof newItemErrors].hasError =
+  //         !item[key as keyof typeof item];
+  //     }
+  //   });
+
+  //   return newItemErrors;
+  // };
+
+  const verifyAllFieldsAreFilled = () => {
+    const newItemErrors: ItemError = { ...itemError };
+
+    Object.keys(itemError).forEach((key) => {
+      const isEmpty = !item[key as keyof typeof item];
+      console.log(key, isEmpty, item[key as keyof typeof item]);
+      newItemErrors[key as keyof typeof newItemErrors] = {
+        hasError: isEmpty,
+        message: isEmpty ? "This field is required." : "",
+      };
     });
 
-    return newItemErrors;
+    console.log("_____________________", newItemErrors);
+
+    setItemError(newItemErrors);
   };
 
-  const handleAddItem = (e: React.FormEvent<HTMLFormElement>) => {
+  const verifyQuantityTimesUnitPriceEqualsTotalPrice = () => {
+    const price = parseFloat(unitPrice.replace(/,/g, ""));
+    const quantity = parseFloat(itemQuantity.replace(/,/g, ""));
+    const totalPrice = parseFloat(itemTotalPrice.replace(/,/g, ""));
+
+    if (!isNaN(price) && !isNaN(quantity) && !isNaN(totalPrice)) {
+      const calculatedTotal = price * quantity;
+      if (calculatedTotal !== totalPrice) {
+        setItemError((prev) => ({
+          ...prev,
+          itemTotalPrice: {
+            hasError: true,
+            message:
+              "Total price does not match unit price multiplied by quantity.",
+          },
+        }));
+      }
+    }
+  };
+
+  const addItem = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const updatedItemError = validateItem();
-    setItemError(updatedItemError);
+    verifyAllFieldsAreFilled();
+    verifyQuantityTimesUnitPriceEqualsTotalPrice();
 
-    const noItemErrors = Object.values(updatedItemError).every(
+    // const updatedItemError = validateAllFieldsHaveNoErrors();
+    // setItemError(updatedItemError);
+
+    const noItemErrors = Object.values(itemError).every(
       (value) => value.hasError === false
     );
 
@@ -81,15 +122,11 @@ const AddItemModal = ({
         itemId: "",
       });
 
-
-
-      handleClose();
-    } else {
-      // triggerRequiredFieldsAlert();
+      closeModal();
     }
   };
 
-  const handleCancel = () => {
+  const cancelAddItem = () => {
     setItem({
       itemName: "",
       unitPrice: "",
@@ -98,7 +135,14 @@ const AddItemModal = ({
       itemId: "",
     });
 
-    handleClose();
+    setItemError({
+      itemName: { hasError: false, message: "" },
+      unitPrice: { hasError: false, message: "" },
+      itemQuantity: { hasError: false, message: "" },
+      itemTotalPrice: { hasError: false, message: "" },
+    });
+
+    closeModal();
   };
 
   const handleItemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,23 +172,13 @@ const AddItemModal = ({
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="add-item-modal"
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-    >
+    <CustomModal ariaLabel="Add Item" closeModal={closeModal} isOpen={open}>
       <Box
         sx={{
-          backgroundColor: theme.palette.background.paper,
-          borderRadius: 4,
-          border: `1px solid ${theme.palette.primary.main}`,
-          p: 4,
-          m: 2,
-          width: 400,
+          textAlign: "left",
         }}
       >
-        <form onSubmit={handleAddItem} noValidate autoComplete="off">
+        <form onSubmit={addItem} noValidate autoComplete="off">
           <Typography variant="h6" gutterBottom color="text.secondary">
             Add Item
           </Typography>
@@ -187,7 +221,7 @@ const AddItemModal = ({
           <Box sx={{ display: "flex", gap: 1 }} mt={2}>
             <CustomButton
               buttonStyle="secondaryOutline"
-              onClick={handleCancel}
+              onClick={cancelAddItem}
               sx={{ flex: 1 }}
             >
               Cancel
@@ -202,7 +236,7 @@ const AddItemModal = ({
           </Box>
         </form>
       </Box>
-    </Modal>
+    </CustomModal>
   );
 };
 

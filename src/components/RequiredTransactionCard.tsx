@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Checkbox, ListItem, Stack, Typography } from "@mui/material";
+import { Box, Checkbox, ListItemButton, Stack, Typography } from "@mui/material";
 import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
 import theme from "@theme";
 import { useRecoilState } from "recoil";
@@ -41,7 +41,8 @@ const RequiredTransactionCard = ({
   };
 
   return (
-    <ListItem
+    <ListItemButton
+    disabled={checked}
       dense
       onClick={openSettleTxModal}
       sx={{
@@ -74,7 +75,7 @@ const RequiredTransactionCard = ({
           >
             {counterPartyName}
           </Typography>
-          <Typography
+ba          <Typography
             sx={{
               width: "40%",
               wordBreak: "normal",
@@ -108,7 +109,7 @@ const RequiredTransactionCard = ({
           </Typography>
         )}
       </Stack>
-    </ListItem>
+    </ListItemButton>
   );
 };
 

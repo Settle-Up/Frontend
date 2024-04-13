@@ -147,8 +147,6 @@ const mockExpense: NewGroupExpense = {
   address: "123 Example St",
   receiptDate: "2024-03-09",
   receiptTotalPrice: "269000",
-  discountApplied: "0",
-  actualPaidPrice: "269000",
   allocationType: "Equal Quantity",
   itemOrderDetailsList: [
     {
