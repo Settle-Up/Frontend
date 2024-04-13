@@ -1,5 +1,4 @@
 import {
-  Box,
   List,
   ListItem,
   Paper,
@@ -7,32 +6,18 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import RequiredTransactionCard from "@components/RequiredTransactionCard";
+import IncomingPaymentCard from "@components/IncomingPaymentCard";
 
 type RequiredTransactionListProps = {
   isLoading: boolean;
   title: string;
   transactionList: RequiredTransaction[];
 };
-const RequiredTransactionList = ({
+const IncomingPaymentList = ({
   isLoading,
   title,
   transactionList,
 }: RequiredTransactionListProps) => {
-  const transactionsRejected = transactionList.filter(
-    (transaction) =>
-      transaction.hasSentOrReceived && transaction.isRejected === true
-  );
-
-  const transactionsAwaitingDecisions = transactionList.filter(
-    (transaction) =>
-      transaction.hasSentOrReceived && transaction.isRejected === null
-  );
-
-  const transactionsToBeHandled = transactionList.filter(
-    (transaction) =>
-      !transaction.hasSentOrReceived && transaction.isRejected === null
-  );
 
   const renderSkeletons = () => {
     return Array.from({ length: 3 }).map((_, index) => (
@@ -45,8 +30,7 @@ const RequiredTransactionList = ({
         }}
       >
         <Skeleton variant="text" width={100} />
-        <Skeleton variant="text" width={90} />
-        <Skeleton variant="rectangular" width={20} height={20} />
+        <Skeleton variant="text" width={80} />
       </ListItem>
     ));
   };
@@ -66,14 +50,8 @@ const RequiredTransactionList = ({
         {isLoading && renderSkeletons()}
         {transactionList.length > 0 ? (
           <List>
-            {transactionsRejected.map((transaction, index) => (
-              <RequiredTransactionCard key={index} transaction={transaction} />
-            ))}
-            {transactionsAwaitingDecisions.map((transaction, index) => (
-              <RequiredTransactionCard key={index} transaction={transaction} />
-            ))}
-            {transactionsToBeHandled.map((transaction, index) => (
-              <RequiredTransactionCard key={index} transaction={transaction} />
+            {transactionList.map((transaction, index) => (
+              <IncomingPaymentCard key={index} transaction={transaction} />
             ))}
           </List>
         ) : (
@@ -89,4 +67,4 @@ const RequiredTransactionList = ({
   );
 };
 
-export default RequiredTransactionList;
+export default IncomingPaymentList;

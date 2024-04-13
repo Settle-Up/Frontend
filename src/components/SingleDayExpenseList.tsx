@@ -24,7 +24,6 @@ const SingleDayExpenseList = ({
   const navigate = useNavigate();
   const { groupId } = useParams();
 
-  console.log("single day expense list", singleDayExpenseList)
 
   return (
     <Stack spacing={1}>

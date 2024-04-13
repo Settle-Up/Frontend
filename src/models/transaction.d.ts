@@ -6,14 +6,9 @@ type BaseTransaction = {
   transactionAmount: string;
 };
 
-type RequiredTransaction = BaseTransaction & {
-  hasSentOrReceived: boolean;
-  isRejected: true | null;
-};
+type RequiredTransaction = BaseTransaction;
 
 type UpdatedTransaction = BaseTransaction & {
-  hasSentOrReceived: boolean;
-  isRejected: true | null;
   groupId: string;
   groupName: string;
 };
@@ -22,9 +17,4 @@ type ClearedTransaction = BaseTransaction & {
   clearedAt: string;
 };
 
-type TransactionDecision = {
-  groupId: string;
-  transactionId: string;
-  approvalUser: "sender" | "recipient";
-  approvalStatus: "CLEAR" | "REJECT";
-};
+

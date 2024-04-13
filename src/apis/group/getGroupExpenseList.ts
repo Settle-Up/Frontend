@@ -21,7 +21,6 @@ export const getGroupExpenseList = async ({
     const response = await axiosInstance.get(
       `/group/overview/expense/list?groupId=${groupId}&page=${page}&size=${EXPENSE_PER_PAGE}`
     );
-    console.log(response.data.data);
 
     return response.data.data;
   } catch (error) {

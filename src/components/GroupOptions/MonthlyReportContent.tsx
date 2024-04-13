@@ -26,7 +26,6 @@ const MonthlyReportContent = ({
     isError,
     isSuccess,
   } = useMutation(() => {
-    console.log("??????????????????")
     return toggleGroupMonthlyReport(groupId, !isMonthlyReportUpdateOn)
   }
   );

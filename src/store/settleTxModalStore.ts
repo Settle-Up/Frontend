@@ -3,7 +3,7 @@ import { atom } from "recoil";
 type SettleTxModalState = {
   isOpen: boolean;
   selectedTransaction: RequiredTransaction | null;
-  transactionUpdateSuccess: string | null;
+  isTransactionSuccessfullySettled: boolean | null;
 };
 
 export const settleTxModalState = atom<SettleTxModalState>({
@@ -11,6 +11,6 @@ export const settleTxModalState = atom<SettleTxModalState>({
   default: {
     isOpen: false,
     selectedTransaction: null,
-    transactionUpdateSuccess: null,
+    isTransactionSuccessfullySettled: null,
   },
 });

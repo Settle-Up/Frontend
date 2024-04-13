@@ -5,7 +5,6 @@ export const toggleGroupMonthlyReport = async (
   isEnabled: boolean
 ): Promise<boolean> => {
   try {
-    console.log("+++++++++++++++++++++ 보내짐")
     const response = await axiosInstance.patch(
       `/group/alarm?groupId=${groupId}`, {
         isMonthlyReportUpdateOn: isEnabled

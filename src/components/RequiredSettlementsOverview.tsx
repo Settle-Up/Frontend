@@ -1,7 +1,10 @@
-import { useMemo } from "react";
-import HeadingWithTip from "@components/HeadingWithTip";
+import { useEffect, useMemo } from "react";
 import { Stack } from "@mui/material";
-import RequiredTransactionList from "@components/RequiredTransactionList";
+import OutgoingPaymentList from "./OutgoingPaymentList";
+import { useRecoilState } from "recoil";
+import { settleTxModalState } from "@store/settleTxModalStore";
+import { outgoingPaymentListState } from "@store/transactionStore";
+import IncomingPaymentList from "@components/IncomingPaymentList";
 
 type RequiredSettlementsOverviewProps = {
   isLoading: boolean;
@@ -12,6 +15,15 @@ const RequiredSettlementsOverview = ({
   isLoading,
   neededTransactionList,
 }: RequiredSettlementsOverviewProps) => {
+  // const [
+  //   { selectedTransaction, isTransactionSuccessfullySettled },
+  //   setSettleTxModal,
+  // ] = useRecoilState(settleTxModalState);
+
+  const [outgoingPaymentList, setOutgoingPaymentList] = useRecoilState(
+    outgoingPaymentListState
+  );
+
   const { owedList, oweList } = useMemo(() => {
     let owedList: RequiredTransaction[] = [];
     let oweList: RequiredTransaction[] = [];
@@ -27,21 +39,42 @@ const RequiredSettlementsOverview = ({
     return { owedList, oweList };
   }, [neededTransactionList]);
 
+  useEffect(() => {
+    setOutgoingPaymentList(oweList);
+  }, [oweList, setOutgoingPaymentList]);
+
+  // useEffect(() => {
+  //   if (selectedTransaction && isTransactionSuccessfullySettled) {
+  //     setOutgoingPaymentList((prevList: BaseTransaction[] | null) => {
+  //       if (prevList === null) {
+  //         return null;
+  //       }
+  //       return prevList.filter(
+  //         (transaction) =>
+  //           transaction.transactionId !== selectedTransaction.transactionId
+  //       );
+  //     });
+
+  //     setSettleTxModal({
+  //       isOpen: false,
+  //       selectedTransaction: null,
+  //       isTransactionSuccessfullySettled: null,
+  //     });
+  //     // remove the transaction from required transaction section and add it to the transactions settled in the past week
+  //   }
+  // }, [isTransactionSuccessfullySettled, setSettleTxModal]);
+
   return (
     <Stack>
-      <HeadingWithTip
-        heading="Needed Transactions"
-        tipMessage="Check off a transaction in this section once you've settled it outside the app. This will notify the other party for their confirmation."
-      />
       <Stack spacing={4}>
-        <RequiredTransactionList
+        <OutgoingPaymentList
           isLoading={isLoading}
-          title="You Owe"
-          transactionList={oweList}
+          title="Payments To Make"
+          transactionList={outgoingPaymentList || undefined}
         />
-        <RequiredTransactionList
+        <IncomingPaymentList
           isLoading={isLoading}
-          title="You Are Owed"
+          title="Payments To Receive"
           transactionList={owedList}
         />
       </Stack>

@@ -140,8 +140,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t101",
       transactionDirection: "OWED",
       transactionAmount: "55000000",
-      hasSentOrReceived: false,
-      isRejected: null,
     },
     {
       counterPartyId: "cp102",
@@ -149,8 +147,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t102",
       transactionDirection: "OWE",
       transactionAmount: "-40000",
-      hasSentOrReceived: true,
-      isRejected: true,
     },
     {
       counterPartyId: "cp103",
@@ -158,8 +154,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t103",
       transactionDirection: "OWED",
       transactionAmount: "30000",
-      hasSentOrReceived: true,
-      isRejected: null,
     },
     {
       counterPartyId: "cp104",
@@ -167,8 +161,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t104",
       transactionDirection: "OWED",
       transactionAmount: "20000",
-      hasSentOrReceived: false,
-      isRejected: null,
     },
     {
       counterPartyId: "cp105",
@@ -176,8 +168,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t105",
       transactionDirection: "OWED",
       transactionAmount: "15000",
-      hasSentOrReceived: true,
-      isRejected: null,
     },
     {
       counterPartyId: "cp106",
@@ -185,8 +175,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t106",
       transactionDirection: "OWED",
       transactionAmount: "5000",
-      hasSentOrReceived: false,
-      isRejected: null,
     },
     {
       counterPartyId: "cp107",
@@ -194,8 +182,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t107",
       transactionDirection: "OWED",
       transactionAmount: "8000",
-      hasSentOrReceived: true,
-      isRejected: null,
     },
     {
       counterPartyId: "cp108",
@@ -203,8 +189,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t108",
       transactionDirection: "OWED",
       transactionAmount: "10000",
-      hasSentOrReceived: false,
-      isRejected: null,
     },
     {
       counterPartyId: "cp109",
@@ -212,8 +196,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t109",
       transactionDirection: "OWE",
       transactionAmount: "-6000",
-      hasSentOrReceived: true,
-      isRejected: null,
     },
     {
       counterPartyId: "cp110",
@@ -221,8 +203,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t110",
       transactionDirection: "OWE",
       transactionAmount: "-20000",
-      hasSentOrReceived: true,
-      isRejected: true,
     },
     {
       counterPartyId: "cp111",
@@ -230,8 +210,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t111",
       transactionDirection: "OWE",
       transactionAmount: "-12000",
-      hasSentOrReceived: true,
-      isRejected: null,
     },
     {
       counterPartyId: "cp112",
@@ -239,8 +217,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t112",
       transactionDirection: "OWE",
       transactionAmount: "-3000",
-      hasSentOrReceived: false,
-      isRejected: null,
     },
     {
       counterPartyId: "cp113",
@@ -248,8 +224,6 @@ export const mockJoinedGroupDetails: JoinedGroupDetails = {
       transactionId: "t113",
       transactionDirection: "OWE",
       transactionAmount: "-7000",
-      hasSentOrReceived: true,
-      isRejected: null,
     },
   ],
   lastWeekSettledTransactionList: [

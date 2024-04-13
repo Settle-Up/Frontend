@@ -4,7 +4,6 @@ export const leaveGroup = async (
   groupId: string
 ): Promise<boolean> => {
   try {
-    console.log("leave group")
     const response = await axiosInstance.delete(
       `group/remove?groupId=${groupId}`
     );

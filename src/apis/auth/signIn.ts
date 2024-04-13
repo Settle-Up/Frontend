@@ -3,7 +3,6 @@ import { AxiosError } from "axios";
 
 export const signIn = async (authCode: string): Promise<CurrentUser> => {
   try {
-    console.log("sign in api fired");
     const response = await axiosInstance.get(
       `/auth/kakao/callback?code=${authCode}`
     );

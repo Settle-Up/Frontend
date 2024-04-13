@@ -1,7 +1,11 @@
+import { useEffect } from "react";
 import HeadingWithTip from "@components/HeadingWithTip";
 import { Box, Paper, Stack, Skeleton, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
+import { useRecoilState } from "recoil";
+import { recentSettlementListState } from "@store/transactionStore";
+import { settleTxModalState } from "@store/settleTxModalStore";
 
 type RecentSettlementListProps = {
   lastWeekSettledTransactionList: ClearedTransaction[];
@@ -12,6 +16,43 @@ const RecentSettlementsList = ({
   lastWeekSettledTransactionList,
   isLoading,
 }: RecentSettlementListProps) => {
+  // const [
+  //   { selectedTransaction, isTransactionSuccessfullySettled },
+  //   setSettleTxModal,
+  // ] = useRecoilState(settleTxModalState);
+
+  const [recentSettlementList, setRecentSettlementList] = useRecoilState(
+    recentSettlementListState
+  );
+
+  useEffect(() => {
+    setRecentSettlementList(lastWeekSettledTransactionList);
+  }, [lastWeekSettledTransactionList, setRecentSettlementList]);
+
+  // useEffect(() => {
+  //   if (selectedTransaction && isTransactionSuccessfullySettled) {
+  //     setRecentSettlementList((prevList: ClearedTransaction[] | null) => {
+  //       const newClearedTx: ClearedTransaction = {
+  //         ...selectedTransaction,
+  //         clearedAt: dayjs().format("YYYY-MM-DD"),
+  //       };
+      
+  //       if (prevList === null) {
+  //         return [newClearedTx];
+  //       }
+      
+  //       return [...prevList, newClearedTx];
+  //     });
+      
+
+  //     setSettleTxModal({
+  //       isOpen: false,
+  //       selectedTransaction: null,
+  //       isTransactionSuccessfullySettled: null,
+  //     });
+  //   }
+  // }, [isTransactionSuccessfullySettled, setSettleTxModal]);
+
   const renderSkeletons = () => {
     return Array.from({ length: 3 }).map((_, index) => (
       <Box
@@ -42,8 +83,7 @@ const RecentSettlementsList = ({
         }}
       >
         <Stack spacing={2}>
-          {isLoading && renderSkeletons()}
-          {lastWeekSettledTransactionList.length === 0 ? (
+          {recentSettlementList && recentSettlementList.length === 0 ? (
             <Typography
               variant="body2"
               sx={{ textAlign: "center", color: "text.secondary" }}
@@ -51,7 +91,7 @@ const RecentSettlementsList = ({
               No transactions were settled in the past week.
             </Typography>
           ) : (
-            lastWeekSettledTransactionList.map(
+            recentSettlementList?.map(
               ({ counterPartyName, transactionAmount, clearedAt }) => {
                 const dateOnly = clearedAt.split("T")[0];
                 return (

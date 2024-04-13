@@ -16,7 +16,6 @@ export const getGroupDetails = async ({
     const response = await axiosInstance.get(
       `/group/overview?groupId=${groupId}`
     );
-    console.log(response.data);
     
     return {groupDetails: response.data.data};
   } catch (error) {

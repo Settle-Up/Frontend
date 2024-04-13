@@ -5,8 +5,6 @@ export const mockUpdatedTransactions: UpdatedTransaction[] = [
       transactionId: "TX1001",
       transactionDirection: "OWE",
       transactionAmount: "150.00",
-      hasSentOrReceived: true,
-      isRejected: null,
       groupId: "G1",
       groupName: "Family Expenses"
     },
@@ -16,8 +14,6 @@ export const mockUpdatedTransactions: UpdatedTransaction[] = [
       transactionId: "TX1002",
       transactionDirection: "OWED",
       transactionAmount: "75.50",
-      hasSentOrReceived: false,
-      isRejected: true,
       groupId: "G2",
       groupName: "Friends Outing"
     },
@@ -27,8 +23,6 @@ export const mockUpdatedTransactions: UpdatedTransaction[] = [
       transactionId: "TX1003",
       transactionDirection: "OWE",
       transactionAmount: "200.00",
-      hasSentOrReceived: true,
-      isRejected: null,
       groupId: "G3",
       groupName: "Work Lunch"
     },
@@ -38,8 +32,6 @@ export const mockUpdatedTransactions: UpdatedTransaction[] = [
       transactionId: "TX1004",
       transactionDirection: "OWED",
       transactionAmount: "50.00",
-      hasSentOrReceived: false,
-      isRejected: null,
       groupId: "G4",
       groupName: "Neighborhood Association"
     },
@@ -49,8 +41,6 @@ export const mockUpdatedTransactions: UpdatedTransaction[] = [
       transactionId: "TX1005",
       transactionDirection: "OWE",
       transactionAmount: "125.75",
-      hasSentOrReceived: true,
-      isRejected: true,
       groupId: "G5",
       groupName: "Book Club"
     }

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMutation } from "react-query";
 import CustomModal from "@components/CustomModal";
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import { updateRequiredTransactionStatus } from "@apis/transaction/updateRequiredTransactionStatus";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -22,30 +22,27 @@ const useSettleTransaction = (groupId: string) => {
     isLoading,
   } = useMutation(updateRequiredTransactionStatus);
 
-  const confirmSettlement = () => {
+  const confirmPayment = () => {
     if (selectedTransaction) {
-      const { transactionId, transactionDirection, hasSentOrReceived } =
-        selectedTransaction;
+      const { transactionId } = selectedTransaction;
 
       executeUpdateRequiredTransactionStatus({
         groupId: groupId,
         transactionId: transactionId,
-        approvalUser: transactionDirection === "OWE" ? "sender" : "recipient",
-        approvalStatus: "CLEAR",
       });
     }
   };
 
   useEffect(() => {
     if (isSuccess) {
-      setSettleTxModal({
+      setSettleTxModal((prev) => ({
+        ...prev,
         isOpen: false,
-        selectedTransaction: null,
-        transactionUpdateSuccess: selectedTransaction?.transactionId!,
-      });
+        isTransactionSuccessfullySettled: true,
+      }));
       setSnackbar({
         show: true,
-        message: `Transaction with ${selectedTransaction?.counterPartyName} marked as settled. Awaiting their confirmation.`,
+        message: `Your payment to ${selectedTransaction?.counterPartyName} has been successfully made.`,
         severity: "success",
       });
     }
@@ -56,7 +53,7 @@ const useSettleTransaction = (groupId: string) => {
       closeSettleTxModal();
       setSnackbar({
         show: true,
-        message: `Sorry, failed to mark the transaction with ${selectedTransaction?.counterPartyName} as settled. Please try again later.`,
+        message: `We encountered an error processing your payment to ${selectedTransaction?.counterPartyName}. Please try again.`,
         severity: "error",
       });
     }
@@ -66,7 +63,7 @@ const useSettleTransaction = (groupId: string) => {
     setSettleTxModal({
       isOpen: false,
       selectedTransaction: null,
-      transactionUpdateSuccess: null,
+      isTransactionSuccessfullySettled: null,
     });
   };
 
@@ -77,16 +74,15 @@ const useSettleTransaction = (groupId: string) => {
 
     return (
       <CustomModal
-        ariaLabel="UPdate Required Transaction Status Modal"
+        ariaLabel="Update Required Transaction Status Modal"
         isOpen={isOpen}
         closeModal={closeSettleTxModal}
+        showCloseButton
       >
         <Stack spacing={3}>
-          <Typography variant="subtitle1">
-            Confirm Transaction Resolution
-          </Typography>
+          <Typography variant="subtitle1">Settle Transaction</Typography>
           <Typography>
-            Have you settled the transaction of
+            Are you ready to settle your payment of
             <span
               style={{
                 color: theme.palette.text.secondary,
@@ -98,7 +94,7 @@ const useSettleTransaction = (groupId: string) => {
             >
               {`${formatNumberWithLocaleAndNegatives(transactionAmount)}₩`}
             </span>
-            with
+            to
             <span
               style={{
                 color: theme.palette.text.secondary,
@@ -110,28 +106,19 @@ const useSettleTransaction = (groupId: string) => {
             </span>
             ?
           </Typography>
-
           <Typography>
-            Marking this as resolved will will notify the other party for their
-            confirmation.
+            Note: This action is a simulation. In a fully functional
+            application, confirming this would initiate a real transaction
+            through a secure payment gateway.
           </Typography>
-          <Stack spacing={2}>
-            <CustomButton
-              buttonStyle="primary"
-              sx={{ width: "100%" }}
-              disabled={isLoading}
-              onClick={confirmSettlement}
-            >
-              Yes, it's settled!
-            </CustomButton>
-            <CustomButton
-              buttonStyle="secondary"
-              sx={{ width: "100%" }}
-              onClick={closeSettleTxModal}
-            >
-              No, not yet
-            </CustomButton>
-          </Stack>
+          <CustomButton
+            buttonStyle="primary"
+            sx={{ width: "100%" }}
+            disabled={isLoading}
+            onClick={confirmPayment}
+          >
+            Confirm Payment
+          </CustomButton>
         </Stack>
       </CustomModal>
     );

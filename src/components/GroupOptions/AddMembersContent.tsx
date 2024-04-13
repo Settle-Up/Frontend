@@ -96,6 +96,7 @@ const AddMembersContent = ({ groupId, groupName, closeModal }: AddMembersContent
           selectedEmailList={groupUserList}
           selectEmail={selectEmail}
           unselectEmail={unselectEmail}
+          groupId={groupId}
         />
         <CustomButton
           disabled={groupUserList.length === 0}

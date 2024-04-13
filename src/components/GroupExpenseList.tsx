@@ -57,7 +57,6 @@ const GroupExpenseList = ({ groupId }: GroupExpenseListProps) => {
     fetchNextPage,
   });
 
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA", data);
 
   const lastSuccessfullyFetchedPage = data?.pages?.length ?? 0;
 

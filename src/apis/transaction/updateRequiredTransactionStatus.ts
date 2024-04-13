@@ -1,22 +1,25 @@
 import axiosInstance from "@apis/axiosConfig";
 
+type UpdateRequiredTransactionStatusRequest = {
+  groupId: string;
+  transactionId: string;
+};
+
+type UpdateRequiredTransactionStatusResponse = {
+  success: boolean;
+};
+
 export const updateRequiredTransactionStatus = async ({
   groupId,
   transactionId,
-  approvalUser,
-  approvalStatus
-}: {
-  groupId: string;
-  transactionId: string;
-  approvalUser: "sender" | "recipient";
-  approvalStatus: "CLEAR" | "REJECT";
-}): Promise<boolean> => {
+}: UpdateRequiredTransactionStatusRequest): Promise<UpdateRequiredTransactionStatusResponse> => {
   try {
-    const response = await axiosInstance.patch(`transaction/approval?groupId=${groupId}`, {
-      transactionId: transactionId,
-      approvalUser: approvalUser,
-      approvalStatus: approvalStatus
-    });
+    const response = await axiosInstance.patch(
+      `transaction/approval?groupId=${groupId}`,
+      {
+        transactionId: transactionId,
+      }
+    );
     console.log(response.data);
     return response.data.success;
   } catch (error) {

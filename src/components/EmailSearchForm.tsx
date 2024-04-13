@@ -26,6 +26,7 @@ export type EmailSearchFormProps = {
   selectedEmailList: GeneralUser[];
   selectEmail: (user: GeneralUser) => void;
   unselectEmail: (user: GeneralUser) => void;
+  groupId?: string;
 };
 
 const EmailSearchForm = ({
@@ -33,6 +34,7 @@ const EmailSearchForm = ({
   selectedEmailList,
   selectEmail,
   unselectEmail,
+  groupId
 }: EmailSearchFormProps) => {
   const setSnackbar = useSetRecoilState(snackbarState);
 
@@ -53,7 +55,7 @@ const EmailSearchForm = ({
   } = useInfiniteQuery(
     "userEmailList",
     ({ pageParam = 1 }) =>
-      searchUserEmailList({ page: pageParam, query: email }),
+      searchUserEmailList({ page: pageParam, query: email, groupId }),
     {
       getNextPageParam: (lastPage, allPages) => {
         if (lastPage.hasNextPage) {
@@ -188,7 +190,7 @@ const EmailSearchForm = ({
               className="custom-scrollbar"
               sx={{
                 borderRadius: 3,
-                height: "400px",
+                maxHeight: "400px",
                 overflow: "auto",
               }}
             >
@@ -211,7 +213,7 @@ const EmailSearchForm = ({
                   No matching users found
                 </Typography>
               )}
-              {data && data.pages.length > 0 && (
+              {data && data.pages[0].searchList.length > 0 && (
                 <List>
                   {data.pages?.map((page, i) => (
                     <Fragment key={i}>

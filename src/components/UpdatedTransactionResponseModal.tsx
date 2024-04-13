@@ -65,58 +65,6 @@ const UpdatedTransactionReponseHandler = () => {
     }
   }, [isFetchingUpdatedTxListError, setSnackbar]);
 
-  const {
-    mutate: executeUpdateRequiredTransactionStatus,
-    isError: isUpdatingRequiredTxStatusError,
-    isSuccess: isUpdatingRequiredTxStatusSuccess,
-    isLoading: isUpdatingTxRequiredStatusLoading,
-  } = useMutation(updateRequiredTransactionStatus);
-
-  useEffect(() => {
-    if (updatedTransactionList && isUpdatingRequiredTxStatusSuccess) {
-      setSnackbar({
-        show: true,
-        message: `Settlement acknowledged with ${counterPartyName} from '${groupName}'.`,
-        severity: "success",
-      });
-      setUpdatedTransactionsAlert((prev) => ({
-        ...prev,
-        updatedTransactionList: prev.updatedTransactionList!.filter(
-          (t) =>
-            t.transactionId !==
-            updatedTransactionList[currentIndex].transactionId
-        ),
-      }));
-      if (currentIndex >= updatedTransactionList!.length - 1) {
-        setCurrentIndex((current) => Math.max(current - 1, 0));
-      }
-    }
-  }, [isUpdatingRequiredTxStatusSuccess, setSnackbar]);
-
-  useEffect(() => {
-    if (isUpdatingRequiredTxStatusError) {
-      setSnackbar({
-        show: true,
-        message: `Sorry, we couldn't update the transaction status with ${counterPartyName} from '${groupName}'. Please try again later.`,
-        severity: "error",
-      });
-    }
-  }, [isUpdatingRequiredTxStatusError, setSnackbar]);
-
-  const resondToUpdatedTransaction = (
-    transactionId: string,
-    groupId: string,
-    transactionDirection: "OWED" | "OWE",
-    approvalDecision: "CLEAR" | "REJECT"
-  ) => {
-    executeUpdateRequiredTransactionStatus({
-      groupId,
-      transactionId,
-      approvalUser: transactionDirection === "OWE" ? "sender" : "recipient",
-      approvalStatus: approvalDecision,
-    } as TransactionDecision);
-  };
-
   const moveToNextTransaction = () => {
     setCurrentIndex((prev) => (prev + 1) % updatedTransactionList!.length);
   };
@@ -248,36 +196,6 @@ const UpdatedTransactionReponseHandler = () => {
             </span>
             '
           </Typography>
-          <Stack spacing={2}>
-            <CustomButton
-              buttonStyle="primary"
-              sx={{ width: "100%" }}
-              onClick={() =>
-                resondToUpdatedTransaction(
-                  transactionId,
-                  groupId,
-                  transactionDirection,
-                  "CLEAR"
-                )
-              }
-            >
-              Acknowledge
-            </CustomButton>
-            <CustomButton
-              buttonStyle="secondary"
-              sx={{ width: "100%" }}
-              onClick={() =>
-                resondToUpdatedTransaction(
-                  transactionId,
-                  groupId,
-                  transactionDirection,
-                  "REJECT"
-                )
-              }
-            >
-              Not Settled Yet
-            </CustomButton>
-          </Stack>
         </Stack>
         <IconButton
           color="primary"
