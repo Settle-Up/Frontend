@@ -36,14 +36,13 @@ const RecentSettlementsList = ({
   //         ...selectedTransaction,
   //         clearedAt: dayjs().format("YYYY-MM-DD"),
   //       };
-      
+
   //       if (prevList === null) {
   //         return [newClearedTx];
   //       }
-      
+
   //       return [...prevList, newClearedTx];
   //     });
-      
 
   //     setSettleTxModal({
   //       isOpen: false,
@@ -70,11 +69,8 @@ const RecentSettlementsList = ({
   };
 
   return (
-    <Stack>
-      <HeadingWithTip
-        heading="Settled Transactions in the Past Week"
-        tipMessage="Check off a transaction in this section once you've settled it outside the app. This will notify the other party for their confirmation."
-      />
+    <Stack spacing={1}>     
+       <Typography variant="subtitle2">Settled Transactions in the Past Week</Typography>
       <Paper
         sx={{
           backgroundColor: "white",
@@ -83,6 +79,7 @@ const RecentSettlementsList = ({
         }}
       >
         <Stack spacing={2}>
+          {isLoading && renderSkeletons()}
           {recentSettlementList && recentSettlementList.length === 0 ? (
             <Typography
               variant="body2"
@@ -92,11 +89,16 @@ const RecentSettlementsList = ({
             </Typography>
           ) : (
             recentSettlementList?.map(
-              ({ counterPartyName, transactionAmount, clearedAt }) => {
+              ({
+                counterPartyName,
+                transactionAmount,
+                clearedAt,
+                transactionId,
+              }) => {
                 const dateOnly = clearedAt.split("T")[0];
                 return (
                   <Box
-                    key={`${counterPartyName}-${dateOnly}`}
+                    key={transactionId}
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",

@@ -22,6 +22,7 @@ type GeneralExpenseDescriptionProps = {
   receiptDate: string;
   receiptTotalPrice: string;
   itemOrderDetailsList: ItemOrderDetails[];
+  showReceiptName?: boolean; 
 };
 const GeneralExpenseDescription = ({
   createdAt,
@@ -30,11 +31,12 @@ const GeneralExpenseDescription = ({
   receiptDate,
   receiptTotalPrice,
   itemOrderDetailsList,
+  showReceiptName = false
 }: GeneralExpenseDescriptionProps) => {
   return (
     <>
       {createdAt && (<LabelValuePair label="Submission Date" value={createdAt.split("T")[0]} />)}
-      <LabelValuePair label="Receipt Name" value={receiptName} />
+      {showReceiptName && <LabelValuePair label="Receipt Name" value={receiptName} />}
       <LabelValuePair label="Merchant Address" value={address} />
       <LabelValuePair label="Transaction Date" value={receiptDate} />
       <LabelValuePair label="Total Price" value={`${receiptTotalPrice}₩`} />

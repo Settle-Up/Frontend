@@ -8,17 +8,17 @@ const ProtectedRoute = () => {
   const accessToken = sessionStorage.getItem("accessToken");
   const setSnackbar = useSetRecoilState(snackbarState);
 
-  if (!accessToken) {
-    if (location.pathname !== "/") {
-      setSnackbar({
-        show: true,
-        message: "Please log in to access this page.",
-        severity: "error",
-      });
-    }
-    sessionStorage.setItem("preAuthRoute", location.pathname);
-    return <Navigate to="/login" replace />;
-  }
+  // if (!accessToken) {
+  //   if (location.pathname !== "/") {
+  //     setSnackbar({
+  //       show: true,
+  //       message: "Please log in to access this page.",
+  //       severity: "error",
+  //     });
+  //   }
+  //   sessionStorage.setItem("preAuthRoute", location.pathname);
+  //   return <Navigate to="/login" replace />;
+  // }
 
   return (
     <>

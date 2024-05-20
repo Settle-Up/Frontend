@@ -1,14 +1,21 @@
-import { Outlet } from "react-router-dom";
 import { Typography } from "@mui/material";
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { isNewExpenseFormFlowInitiatedState } from '@store/isNewExpenseFormFlowInitiatedState';
 
 
 const AddReceiptPageLayout = () => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const isFormFlowInitiated = useRecoilValue(isNewExpenseFormFlowInitiatedState);
 
- 
+  useEffect(() => {
+    if (!isFormFlowInitiated) {
+      navigate('/expense/upload');
+    }
+  }, [isFormFlowInitiated, navigate]);
+
+
 
   return (
     <>

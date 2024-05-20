@@ -29,6 +29,7 @@ const useSettleTransaction = (groupId: string) => {
       executeUpdateRequiredTransactionStatus({
         groupId: groupId,
         transactionId: transactionId,
+        approvalUser: "sender"
       });
     }
   };
@@ -106,7 +107,7 @@ const useSettleTransaction = (groupId: string) => {
             </span>
             ?
           </Typography>
-          <Typography>
+          <Typography variant="caption">
             Note: This action is a simulation. In a fully functional
             application, confirming this would initiate a real transaction
             through a secure payment gateway.

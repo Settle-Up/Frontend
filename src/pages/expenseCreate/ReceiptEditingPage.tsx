@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -12,9 +12,20 @@ import DateSelector from "@components/DateSelector";
 import CustomIconButton from "@components/CustomIconButton";
 import ExpenseItemAccordionList from "@components/ExpenseItemAccordionList";
 import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
+import { useSetRecoilState } from 'recoil';
+import { isNewExpenseFormFlowInitiatedState } from '@store/isNewExpenseFormFlowInitiatedState';
 
 const ReceiptEditingPage = () => {
   const navigate = useNavigate();
+
+  const setIsNewExpenseFormFlowInitiated = useSetRecoilState(isNewExpenseFormFlowInitiatedState);
+
+  useEffect(() => {
+    setIsNewExpenseFormFlowInitiated(true);
+  }, [setIsNewExpenseFormFlowInitiated]);
+
+
+
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
   const {
     receiptName,

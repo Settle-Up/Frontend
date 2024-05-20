@@ -5,6 +5,7 @@ type CurrentUser = {
   accessToken?: string;
   issuedTime?: string;
   expiresIn?: number;
+  isDecimalInputOption: boolean;
 } | null;
 
 type GeneralUser = {

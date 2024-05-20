@@ -28,8 +28,7 @@ const ExpenseAllocationSettingsPage = () => {
   //   isLoading,
   //   error,
   // } = useQuery("groupMemberList", () =>
-  //   getGroupMemberList(newExpense.groupId)
-  // );
+  //   getGroupMemberList(newExpense.groupId)  // );
 
   // const possibleMemberOptions: MemberOption[] =
   //   groupMemberList?.map((member: GeneralUser) => ({
@@ -119,7 +118,10 @@ const ExpenseAllocationSettingsPage = () => {
           label="How would you like to allocate the costs for items purchased?"
           handleSelectionChange={handleAllocationTypeChange}
           possibleOptions={possibleAllocationOptions}
-          selectedOptions={{ id: newExpense.allocationType, label: `Allocate by ${newExpense.allocationType}` }}
+          selectedOptions={{
+            id: newExpense.allocationType,
+            label: `Allocate by ${newExpense.allocationType}`,
+          }}
         />
       </Stack>
       <CustomIconButton

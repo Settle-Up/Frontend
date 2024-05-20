@@ -1,90 +1,121 @@
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import CustomModal from "@components/CustomModal";
-import CustomButton from "@components/CustomButton";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
 import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
-import { useMutation, useQuery } from "react-query";
-import { getUpdatedTransactionList } from "@apis/transaction/getUpdatedTransactionList";
+import { useQuery, useMutation } from "react-query";
+import { getPaymentReceivedTransactionList } from "@apis/transaction/getPaymentReceivedTransactionList";
 import { updateRequiredTransactionStatus } from "@apis/transaction/updateRequiredTransactionStatus";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import theme from "@theme";
-import { respondToUpdatedTxsModalState } from "@store/respondToUpdatedTxsModalStore";
-import Spinner from "@components/Spinner";
+import { paymentReceivedTXModalAlertState } from "@store/paymentReceivedTXModalAlertStore";
+import CustomButton from "@components/CustomButton";
 
 const UpdatedTransactionReponseHandler = () => {
   const setSnackbar = useSetRecoilState(snackbarState);
   const [isInitialFetch, setIsInitialFetch] = useState(true);
 
-  const [{ isOpen, updatedTransactionList }, setUpdatedTransactionsAlert] =
-    useRecoilState(respondToUpdatedTxsModalState);
+  const [{ isOpen, paymentReceivedTxList }, setPaymentReceivedTXModalAlert] =
+    useRecoilState(paymentReceivedTXModalAlertState);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const {
-    data: fetchedUpdatedTransactionList,
-    isLoading: isFetchingUpdatedTxLoading,
-    isError: isFetchingUpdatedTxListError,
-    isSuccess: isFetchingUpdatedTxListSuccess,
-    isFetching,
-  } = useQuery("updatedTransactionList", () => getUpdatedTransactionList());
+    data: fetchedPaymentReceivedTxList,
+    isError: isFetchingPaymentReceivedTxListError,
+    isSuccess: isFetchingPaymentReceivedTxListSuccess,
+  } = useQuery("paymentReceivedTransactionList", () => getPaymentReceivedTransactionList(), {
+  });
 
   useEffect(() => {
-    if (isFetchingUpdatedTxListSuccess) {
-      if (isInitialFetch && fetchedUpdatedTransactionList) {
-        setUpdatedTransactionsAlert((prev) => ({
+    if (isFetchingPaymentReceivedTxListSuccess) {
+      if (isInitialFetch && fetchedPaymentReceivedTxList) {
+        setPaymentReceivedTXModalAlert((prev) => ({
           ...prev,
-          isOpen: fetchedUpdatedTransactionList?.length > 0 ? true : false,
-          updatedTransactionList: fetchedUpdatedTransactionList,
+          isOpen: fetchedPaymentReceivedTxList?.length > 0 ? true : false,
+          paymentReceivedTxList: fetchedPaymentReceivedTxList,
         }));
         setIsInitialFetch(false);
       } else {
-        setUpdatedTransactionsAlert((prev) => ({
+        setPaymentReceivedTXModalAlert((prev) => ({
           ...prev,
           isOpen: false,
-          updatedTransactionList: fetchedUpdatedTransactionList,
+          paymentReceivedTxList: fetchedPaymentReceivedTxList,
         }));
       }
     }
   }, [
-    isFetchingUpdatedTxListSuccess,
+    isFetchingPaymentReceivedTxListSuccess,
     setSnackbar,
-    fetchedUpdatedTransactionList,
+    fetchedPaymentReceivedTxList,
   ]);
 
   useEffect(() => {
-    if (isFetchingUpdatedTxListError) {
+    if (isFetchingPaymentReceivedTxListError) {
       setSnackbar({
         show: true,
-        message: `Sorry, an error occurred while loading updated transactions. Please try again later.`,
+        message: `Sorry, we're unable to load your payment notifications at this time. Please try again later.`,
         severity: "error",
       });
     }
-  }, [isFetchingUpdatedTxListError, setSnackbar]);
+  }, [isFetchingPaymentReceivedTxListError, setSnackbar]);
 
-  const moveToNextTransaction = () => {
-    setCurrentIndex((prev) => (prev + 1) % updatedTransactionList!.length);
-  };
+  const {
+    mutate: executeUpdateRequiredTransactionStatus,
+    isError: isUpdatingRequiredTxStatusError,
+    isSuccess: isUpdatingRequiredTxStatusSuccess,
+    isLoading: isUpdatingTxRequiredStatusLoading,
+  } = useMutation(updateRequiredTransactionStatus);
 
-  const moveToPreviousTransaction = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? updatedTransactionList!.length - 1 : prev - 1
-    );
+  useEffect(() => {
+    if (paymentReceivedTxList && isUpdatingRequiredTxStatusSuccess) {
+      setSnackbar({
+        show: true,
+        message: `Notification dismissed successfully.`,
+        severity: "success",
+      });
+      setPaymentReceivedTXModalAlert((prev) => ({
+        ...prev,
+        paymentReceivedTxList: prev.paymentReceivedTxList!.filter(
+          (t) =>
+            t.transactionId !==
+            paymentReceivedTxList[currentIndex].transactionId
+        ),
+      }));
+      if (currentIndex >= paymentReceivedTxList!.length - 1) {
+        setCurrentIndex((current) => Math.max(current - 1, 0));
+      }
+    }
+  }, [isUpdatingRequiredTxStatusSuccess, setSnackbar]);
+
+  useEffect(() => {
+    if (isUpdatingRequiredTxStatusError) {
+      setSnackbar({
+        show: true,
+        message: `Failed to dismiss the notification. Please try again later.`,
+        severity: "error",
+      });
+    }
+  }, [isUpdatingRequiredTxStatusError, setSnackbar]);
+
+  const dismissPaymentReceivedNotification = () => {
+    executeUpdateRequiredTransactionStatus({
+      groupId,
+      transactionId,
+      approvalUser: "recipient",
+    });
   };
 
   useEffect(() => {
-    if (
-      updatedTransactionList &&
-      currentIndex >= updatedTransactionList.length
-    ) {
-      setCurrentIndex(updatedTransactionList!.length - 1);
+    if (paymentReceivedTxList && currentIndex >= paymentReceivedTxList.length) {
+      setCurrentIndex(paymentReceivedTxList!.length - 1);
     }
-  }, [updatedTransactionList, currentIndex]);
+  }, [paymentReceivedTxList, currentIndex]);
 
-  if (!updatedTransactionList || updatedTransactionList.length === 0) {
+  if (!paymentReceivedTxList || paymentReceivedTxList.length === 0) {
     return null;
   }
 
@@ -93,20 +124,29 @@ const UpdatedTransactionReponseHandler = () => {
     groupName,
     counterPartyName,
     transactionId,
-    transactionDirection,
     transactionAmount,
-  } = updatedTransactionList[currentIndex];
+  } = paymentReceivedTxList[currentIndex];
 
   // if (isOpen && (isLoading || isFetching)) {
   //   return <Spinner isOverlay={true} />;
   // }
 
-  if (updatedTransactionList.length === 0) {
+  const moveToNextTransaction = () => {
+    setCurrentIndex((prev) => (prev + 1) % paymentReceivedTxList!.length);
+  };
+
+  const moveToPreviousTransaction = () => {
+    setCurrentIndex((prev) =>
+      prev === 0 ? paymentReceivedTxList!.length - 1 : prev - 1
+    );
+  };
+
+  if (paymentReceivedTxList.length === 0) {
     return (
       <CustomModal
         ariaLabel="No Transaction Updates"
         closeModal={() =>
-          setUpdatedTransactionsAlert((prev) => ({ ...prev, isOpen: false }))
+          setPaymentReceivedTXModalAlert((prev) => ({ ...prev, isOpen: false }))
         }
         isOpen={isOpen}
         showCloseButton={true}
@@ -126,7 +166,7 @@ const UpdatedTransactionReponseHandler = () => {
     <CustomModal
       ariaLabel="Transaction Update Alerts"
       closeModal={() =>
-        setUpdatedTransactionsAlert((prev) => ({ ...prev, isOpen: false }))
+        setPaymentReceivedTXModalAlert((prev) => ({ ...prev, isOpen: false }))
       }
       isOpen={isOpen}
       showCloseButton={true}
@@ -140,7 +180,7 @@ const UpdatedTransactionReponseHandler = () => {
             height: "40px",
             width: "40px",
             visibility:
-              currentIndex > 0 && updatedTransactionList.length > 1
+              currentIndex > 0 && paymentReceivedTxList.length > 1
                 ? "visible"
                 : "hidden",
           }}
@@ -157,9 +197,9 @@ const UpdatedTransactionReponseHandler = () => {
                 fontWeight: "600",
               }}
             >
-              {updatedTransactionList.length}
+              {paymentReceivedTxList.length}
             </span>
-            Action Alerts: Transaction Updates Require Your Review
+            Payment Received
           </Typography>
           <Typography>
             <span
@@ -196,6 +236,19 @@ const UpdatedTransactionReponseHandler = () => {
             </span>
             '
           </Typography>
+          <Typography variant="caption">
+            Note: This is part of a system simulation to illustrate how
+            transactions would be handled and notified in a real setting. No
+            actual money has moved as this functionality is designed solely for
+            demonstration purposes in our project.
+          </Typography>
+          <CustomButton
+            buttonStyle="secondaryOutline"
+            onClick={() => dismissPaymentReceivedNotification()}
+            sx={{ flex: 1 }}
+          >
+            Dismiss
+          </CustomButton>
         </Stack>
         <IconButton
           color="primary"
@@ -205,8 +258,8 @@ const UpdatedTransactionReponseHandler = () => {
             height: "40px",
             width: "40px",
             visibility:
-              currentIndex < updatedTransactionList.length - 1 &&
-              updatedTransactionList.length > 1
+              currentIndex < paymentReceivedTxList.length - 1 &&
+              paymentReceivedTxList.length > 1
                 ? "visible"
                 : "hidden",
           }}

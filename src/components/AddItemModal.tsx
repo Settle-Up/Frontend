@@ -99,13 +99,15 @@ const AddItemModal = ({
     // const updatedItemError = validateAllFieldsHaveNoErrors();
     // setItemError(updatedItemError);
 
-    const noItemErrors = Object.values(itemError).every(
+    const haveNoItemErrors = Object.values(itemError).every(
       (value) => value.hasError === false
     );
 
+    console.log(haveNoItemErrors);
+
     const randomId = uuidv4();
 
-    if (noItemErrors) {
+    if (haveNoItemErrors) {
       setNewExpense((prevExpense: NewGroupExpense) => ({
         ...prevExpense,
         itemOrderDetailsList: [

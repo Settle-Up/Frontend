@@ -13,10 +13,12 @@ import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversio
 import useSettleTransaction from "@hooks/useSettleTransaction";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
-import { grey } from "@mui/material/colors";
 import { useQuery } from "react-query";
 import { settleTxModalState } from "@store/settleTxModalStore";
-import { outgoingPaymentListState, recentSettlementListState } from "@store/transactionStore"
+import {
+  outgoingPaymentListState,
+  recentSettlementListState,
+} from "@store/transactionStore";
 import dayjs from "dayjs";
 
 const GroupDetailsPage = () => {
@@ -25,13 +27,9 @@ const GroupDetailsPage = () => {
     setSettleTxModal,
   ] = useRecoilState(settleTxModalState);
 
-  const setOutgoingPaymentList = useSetRecoilState(
-    outgoingPaymentListState
-  );
-  
-  const setRecentSettlementList = useSetRecoilState(
-    recentSettlementListState
-  );
+  const setOutgoingPaymentList = useSetRecoilState(outgoingPaymentListState);
+
+  const setRecentSettlementList = useSetRecoilState(recentSettlementListState);
 
   const navigate = useNavigate();
   const { groupId } = useParams() as { groupId: string };
@@ -41,51 +39,74 @@ const GroupDetailsPage = () => {
 
   const { RenderSettleTxModal } = useSettleTransaction(groupId!);
 
-  const { data, isLoading, isError } = useQuery(["groupDetails", groupId], () =>
-    getGroupDetails({ groupId })
+  const { data, isLoading, isError } = useQuery(
+    ["groupDetails", groupId],
+    () => getGroupDetails({ groupId })
   );
 
-  
+
+  // useEffect(() => {
+  //   if (selectedTransaction && isTransactionSuccessfullySettled) {
+  //     setOutgoingPaymentList((prevList: BaseTransaction[] | null) => {
+  //       if (prevList === null) {
+  //         return null;
+  //       }
+  //       return prevList.filter(
+  //         (transaction) =>
+  //           transaction.transactionId !== selectedTransaction.transactionId
+  //       );
+  //     });
+
+  //     setRecentSettlementList((prevList: ClearedTransaction[] | null) => {
+  //       const newClearedTx: ClearedTransaction = {
+  //         ...selectedTransaction,
+  //         clearedAt: dayjs().format("YYYY-MM-DD"),
+  //       };
+
+  //       if (prevList === null) {
+  //         return [newClearedTx];
+  //       }
+
+  //       return [...prevList, newClearedTx];
+  //     });
+
+  //     setSettleTxModal({
+  //       isOpen: false,
+  //       selectedTransaction: null,
+  //       isTransactionSuccessfullySettled: null,
+  //     });
+  //     // remove the transaction from required transaction section and add it to the transactions settled in the past week
+  //   }
+  // }, [isTransactionSuccessfullySettled, setSettleTxModal]);
+
   useEffect(() => {
-    if (selectedTransaction && isTransactionSuccessfullySettled) {
-      setOutgoingPaymentList((prevList: BaseTransaction[] | null) => {
-        if (prevList === null) {
-          return null;
-        }
-        return prevList.filter(
-          (transaction) =>
-            transaction.transactionId !== selectedTransaction.transactionId
-        );
+    if (isError) {
+      setSnackbar({
+        show: true,
+        message: `The group you're looking for doesn't seem to exist. Please check the
+        URL or browse our groups from the home page.`,
+        severity: "error",
       });
-
-      setRecentSettlementList((prevList: ClearedTransaction[] | null) => {
-        const newClearedTx: ClearedTransaction = {
-          ...selectedTransaction,
-          clearedAt: dayjs().format("YYYY-MM-DD"),
-        };
-      
-        if (prevList === null) {
-          return [newClearedTx];
-        }
-      
-        return [...prevList, newClearedTx];
-      });
-
-      setSettleTxModal({
-        isOpen: false,
-        selectedTransaction: null,
-        isTransactionSuccessfullySettled: null,
-      });
-      // remove the transaction from required transaction section and add it to the transactions settled in the past week
+      navigate("/");
     }
-  }, [isTransactionSuccessfullySettled, setSettleTxModal]);
+  }, [isError, setSnackbar]);
 
-
-  // if there's no expesne recorded, then there could be no data
-  if (!data?.groupDetails) {
-    // Handle this case appropriately, maybe show a loading indicator or a message
-    return null; // or your loading component/message
-  }
+  // if (isError) {
+  //   return (
+  //     <Stack sx={{ my: 2 }}>
+  //       <Typography
+  //         sx={{
+  //           color: grey[500],
+  //           textAlign: "center",
+  //           m: 5,
+  //         }}
+  //       >
+  //         The group you're looking for doesn't seem to exist. Please check the
+  //         URL or browse our groups from the home page.
+  //       </Typography>
+  //     </Stack>
+  //   );
+  // }
 
   // show skeleton while loading
 
@@ -95,24 +116,10 @@ const GroupDetailsPage = () => {
     settlementBalance,
     neededTransactionList,
     lastWeekSettledTransactionList,
-  } = data.groupDetails;
-
-
+  } = data?.groupDetails || {};
 
   return (
     <Stack sx={{ my: 2 }}>
-      {isError && (
-        <Typography
-          sx={{
-            color: grey[500],
-            textAlign: "center",
-            m: 5,
-          }}
-        >
-          The group you're looking for doesn't seem to exist. Please check the
-          URL or browse our groups from the home page.
-        </Typography>
-      )}
       <Box
         sx={{
           position: "relative",
@@ -124,17 +131,20 @@ const GroupDetailsPage = () => {
         <Typography variant="h6" sx={{ alignSelf: "center" }}>
           {groupName}
         </Typography>
-        <GroupSettings
-          groupId={groupId!}
-          groupName={groupName}
-          isMonthlyReportUpdateOn={isMonthlyReportUpdateOn}
-          setIsGroupOptionsVisible={setIsGroupOptionsVisible}
-          show={isGroupOptionsVisible}
-        />
+        {groupName && isMonthlyReportUpdateOn !== undefined && (
+          <GroupSettings
+            groupId={groupId!}
+            groupName={groupName}
+            isMonthlyReportUpdateOn={isMonthlyReportUpdateOn}
+            setIsGroupOptionsVisible={setIsGroupOptionsVisible}
+            show={isGroupOptionsVisible}
+          />
+        )}
       </Box>
-      <Stack spacing={7} sx={{ minHeight: "100%", mt: 2 }}>
-        <Stack>
+      <Stack spacing={5} sx={{ minHeight: "100%", mt: 2 }}>
+        <Stack spacing={1}>
           <HeadingWithTip
+            alignSelf="left"
             heading="Final Settlement Balance"
             tipMessage="Final Settlement Balance' represents the net result of all needed transactions. If positive, it's the total amount you're set to receive after settling all dues. If negative, it reflects the total amount you owe."
           />
@@ -143,7 +153,7 @@ const GroupDetailsPage = () => {
               backgroundColor: theme.palette.primary.main,
               color: "white",
               borderRadius: 3,
-              p: 3,
+              p: 2,
             }}
           >
             {settlementBalance !== null && settlementBalance !== undefined ? (

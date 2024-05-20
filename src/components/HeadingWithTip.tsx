@@ -4,23 +4,23 @@ import UsageTip from "@components/UsageTip";
 
 type HeadingWithTipProps = {
   heading: string;
+  alignSelf?: "left" | "center" | "right";
   tipMessage?: string;
 };
 
-const HeadingWithTip = ({ heading, tipMessage }: HeadingWithTipProps) => {
+const HeadingWithTip = ({ heading, alignSelf = "center", tipMessage }: HeadingWithTipProps) => {
   return (
     <Box
       sx={{
-        alignSelf: "center",
+        alignSelf: alignSelf,
         display: "flex",
         alignItems: "center",
         position: "relative",
-        maxWidth: "80%",
+        maxWidth: "100%",
         textAlign: "center",
-        mb: 2,
       }}
     >
-      <Typography variant="subtitle1"> {heading} </Typography>
+      <Typography variant="subtitle2"> {heading} </Typography>
       {tipMessage && (
         <UsageTip
           tipMessage={tipMessage}

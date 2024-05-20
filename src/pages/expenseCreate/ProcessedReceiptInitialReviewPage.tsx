@@ -15,7 +15,7 @@ const ProcessReceiptInitialReviewPage = () => {
     address,
     receiptDate,
     receiptTotalPrice,
-    itemOrderDetailsList
+    itemOrderDetailsList,
   } = newExpense;
 
   return (
@@ -32,7 +32,14 @@ const ProcessReceiptInitialReviewPage = () => {
             tipMessage="Ensure all details match your receipt. You can proceed if the information is accurate or edit if adjustments are needed."
           />
           <Paper sx={{ backgroundColor: "white", borderRadius: 3, padding: 3 }}>
-          <GeneralExpenseDescription receiptName={receiptName} address={address} receiptDate={receiptDate} receiptTotalPrice={receiptTotalPrice} itemOrderDetailsList={itemOrderDetailsList} />
+            <GeneralExpenseDescription
+              receiptName={receiptName}
+              address={address}
+              receiptDate={receiptDate}
+              receiptTotalPrice={receiptTotalPrice}
+              itemOrderDetailsList={itemOrderDetailsList}
+              showReceiptName
+            />
           </Paper>
         </Stack>
         <Box

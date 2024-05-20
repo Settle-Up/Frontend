@@ -3,6 +3,7 @@ import axiosInstance from "@apis/axiosConfig";
 type UpdateRequiredTransactionStatusRequest = {
   groupId: string;
   transactionId: string;
+  approvalUser: "sender" | "recipient";
 };
 
 type UpdateRequiredTransactionStatusResponse = {
@@ -12,12 +13,14 @@ type UpdateRequiredTransactionStatusResponse = {
 export const updateRequiredTransactionStatus = async ({
   groupId,
   transactionId,
+  approvalUser
 }: UpdateRequiredTransactionStatusRequest): Promise<UpdateRequiredTransactionStatusResponse> => {
   try {
     const response = await axiosInstance.patch(
-      `transaction/approval?groupId=${groupId}`,
+      `transaction/manage?groupId=${groupId}`,
       {
-        transactionId: transactionId,
+        transactionId,
+        approvalUser
       }
     );
     console.log(response.data);

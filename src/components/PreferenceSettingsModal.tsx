@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Box, Divider, Switch, Typography } from "@mui/material";
 import CustomModal from "@components/CustomModal";
 import { useMutation } from "react-query";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
+import { userDetailsState } from "@store/userStore";
+import { toggleDecimalDisplayPreferences } from "@apis/user/toggleDecimalDisplayPreferences";
 
 type PreferenceSettingsModalProps = {
   isOpen: boolean;
@@ -14,31 +16,51 @@ const PreferenceSettingsModal = ({
   closePreferenceSettingsModal,
 }: PreferenceSettingsModalProps) => {
   const setSnackbar = useSetRecoilState(snackbarState);
-  const [isMonetaryValueDecimalLimited, setIsMonetaryValueDecimalLimited] =
-    useState(false);
+ 
+  const [userDetails, setUserDetails] = useRecoilState(userDetailsState);
 
-  const toggleMonetaryValueDecimalLimit = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setIsMonetaryValueDecimalLimited(event.target.checked);
+
+  const {
+    mutate: executeToggleDecimalDisplayPreferences,
+    data,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useMutation(toggleDecimalDisplayPreferences);
+  
+  const handleToggle = () => {
+    executeToggleDecimalDisplayPreferences({ isEnabled: !userDetails?.isDecimalInputOption });
   };
+  
+  useEffect(() => {
+    if (isSuccess && data) {
+      setUserDetails(prevState => {
+        if (!prevState) return prevState; // Handle potential null prevState
+    
+        return {
+          ...prevState,
+          isDecimalInputOption: data.isDecimalInputOption // Correctly accessing the data object's property
+        };
+      });
+  
+      setSnackbar({
+        show: true,
+        message: "Your preferences for displaying monetary values have been updated successfully.",
+        severity: "success",
+      });
+    }
+  }, [data, isSuccess]);
 
-  // const {
-  //   mutate: executeSignOut,
-  //   isLoading,
-  //   isError,
-  // } = useMutation(() => {});
-
-  // useEffect(() => {
-  //   if (isError) {
-  //     setSnackbar({
-  //       show: true,
-  //       message:
-  //         "Sorry, we encountered an issue updating your preference for displaying monetary values. Please try again.",
-  //       severity: "error",
-  //     });
-  //   }
-  // }, [isError, setSnackbar]);
+  useEffect(() => {
+    if (isError) {
+      setSnackbar({
+        show: true,
+        message:
+          "Sorry, we encountered an issue updating your preference for displaying monetary values. Please try again.",
+        severity: "error",
+      });
+    }
+  }, [isError, setSnackbar]);
 
   // show loading spinner
 
@@ -67,8 +89,8 @@ const PreferenceSettingsModal = ({
           Show Monetary Values With up to Two Decimal Points
         </Typography>
         <Switch
-          checked={isMonetaryValueDecimalLimited}
-          onChange={toggleMonetaryValueDecimalLimit}
+          checked={userDetails?.isDecimalInputOption}
+          onClick={handleToggle} disabled={isLoading || !userDetails}
         />
       </Box>
     </CustomModal>

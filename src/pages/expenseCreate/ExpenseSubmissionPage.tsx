@@ -22,7 +22,6 @@ const ExpenseSubmissionPage = () => {
     createNewGroupMutation.mutate(newExpense);
   };
 
-
   return (
     <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
       <Stack spacing={2}>
@@ -30,9 +29,8 @@ const ExpenseSubmissionPage = () => {
           heading="Here's how your receipt and item allocations look"
           tipMessage="Please carefully review all the details  and ensure everything is accurate as this will be recorded in the system upon submission."
         />
-      
       </Stack>
-      <ExpenseDetails expense={newExpense} />
+      <ExpenseDetails expense={newExpense} showReceiptName />
       <CustomButton
         buttonStyle="default"
         onClick={() => handleSubmit()}

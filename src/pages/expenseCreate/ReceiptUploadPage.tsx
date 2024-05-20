@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import CustomButton from "@components/CustomButton";
 import { Box, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import EastIcon from "@mui/icons-material/East";
 import { useRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import { useMutation } from "react-query";
@@ -10,6 +10,8 @@ import ReceiptProcessingIndicator from "@components/ReceiptProcessingIndicator";
 import { mergeReceiptInToExpense } from "@utils/mergeReceiptIntoExpense";
 import ImageUploaderWithPreview from "@components/ImageUploaderWithPreview";
 import GroupPickerFromJoined from "@components/GroupPickerFromJoined";
+import { useSetRecoilState } from 'recoil';
+import { isNewExpenseFormFlowInitiatedState } from '@store/isNewExpenseFormFlowInitiatedState';
 
 const ReceiptUploadPage = () => {
   const navigate = useNavigate();
@@ -36,6 +38,13 @@ const ReceiptUploadPage = () => {
       getProcessedReceiptMutation.mutate(requestData);
     }
   };
+
+  const setIsNewExpenseFormFlowInitiated = useSetRecoilState(isNewExpenseFormFlowInitiatedState);
+
+  useEffect(() => {
+    setIsNewExpenseFormFlowInitiated(true);
+  }, [setIsNewExpenseFormFlowInitiated]);
+
 
   return (
     <>

@@ -16,6 +16,7 @@ import { useMutation } from "react-query";
 import { addGroupMembers } from "@apis/group/addGroupMembers";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
+import Spinner from "@components/Spinner";
 
 type AddMembersContentProps = {
   groupId: string;
@@ -58,8 +59,17 @@ const AddMembersContent = ({ groupId, groupName, closeModal }: AddMembersContent
   } = useMutation(() => addGroupMembers({groupId, groupName, groupUserList: groupUserList.map(user => user.userId)}));
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isLoading) {
       closeModal();
+      <Spinner isOverlay />
+    }
+  }, [isLoading, setSnackbar, groupName, closeModal]);
+
+
+
+  useEffect(() => {
+    if (isSuccess) {
+      // closeModal();
       setSnackbar({
         show: true,
         message: `You have successfully added new members to ${groupName}`,
@@ -70,7 +80,7 @@ const AddMembersContent = ({ groupId, groupName, closeModal }: AddMembersContent
 
   useEffect(() => {
     if (isError) {
-      closeModal();
+      // closeModal();
       setSnackbar({
         show: true,
         message: `Sorry, an error occurred while adding new members to ${groupName}. Please try again later.`,

@@ -8,9 +8,10 @@ import ParticipantExpenseAccordion from "@components/ParticipantExpenseAccordion
 type ExpenseDetailsProps = {
   createdAt?: string;
   expense: CoreGroupExpenseDetails;
+  showReceiptName?: boolean;
 };
 
-const ExpenseDetails = ({ createdAt, expense }: ExpenseDetailsProps) => {
+const ExpenseDetails = ({ createdAt, expense, showReceiptName = false }: ExpenseDetailsProps) => {
   const [expanded, setExpanded] = useState<string | false>(false);
 
   const toggleAccordion =
@@ -104,6 +105,7 @@ const ExpenseDetails = ({ createdAt, expense }: ExpenseDetailsProps) => {
         receiptDate={receiptDate}
         receiptTotalPrice={receiptTotalPrice}
         itemOrderDetailsList={itemOrderDetailsList}
+        showReceiptName={showReceiptName}
       />
       <Divider />
       <Typography variant="subtitle2">Payer</Typography>

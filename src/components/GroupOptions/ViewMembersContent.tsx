@@ -23,7 +23,8 @@ const ViewMembersContent = ({
     data: groupMemberList,
     isError,
     isLoading,
-  } = useQuery("groupMemberList", () => getGroupMemberList(groupId), {});
+  } = useQuery("groupMemberList", () => getGroupMemberList(groupId), {
+  });
 
   useEffect(() => {
     if (isError) {
@@ -55,9 +56,9 @@ const ViewMembersContent = ({
       >
         {isLoading
           ? renderSkeletons()
-          : groupMemberList?.map(({ userName, userEmail }: GeneralUser) => {
+          : groupMemberList?.map(({ userId, userName, userEmail }: GeneralUser) => {
               return (
-                <Stack sx={{ textAlign: "left" }}>
+                <Stack key={userId} sx={{ textAlign: "left" }}>
                   <Typography variant="subtitle2"> {userName}</Typography>
                   <Typography
                     sx={{ color: grey[600], textDecoration: "underline" }}

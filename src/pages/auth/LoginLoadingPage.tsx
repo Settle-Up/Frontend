@@ -5,7 +5,7 @@ import { useSetRecoilState } from "recoil";
 import { useEffect } from "react";
 import Spinner from "@components/Spinner";
 import { signIn } from "@apis/auth/signIn";
-import { userAuthState } from "@store/userStore";
+import { userDetailsState } from "@store/userStore";
 import { snackbarState } from "@store/snackbarStore";
 
 const LoginLoadingPage = () => {
@@ -13,10 +13,10 @@ const LoginLoadingPage = () => {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const authCode = queryParams.get("code");
-  const setUserAuthState = useSetRecoilState(userAuthState);
+  const setUserDetailsState = useSetRecoilState(userDetailsState);
   const setSnackbar = useSetRecoilState(snackbarState);
 
-  const { data: userAuthData, isError } = useQuery(
+  const { data: userAuthData, isSuccess, isError } = useQuery(
     "userAuthData",
     () => {
       if (authCode) {
@@ -24,19 +24,16 @@ const LoginLoadingPage = () => {
       }
       throw new Error("Auth code is missing");
     },
-    {
-      refetchOnWindowFocus: false,
-    }
   );
 
   useEffect(() => {
     const preAuthRoute = sessionStorage.getItem("preAuthRoute");
-    if (userAuthData) {
-      setUserAuthState(userAuthData);
+    if (isSuccess && userAuthData) {
+      setUserDetailsState(userAuthData);
       navigate(preAuthRoute || "/");
       sessionStorage.removeItem("preAuthRoute");
     }
-  }, [userAuthData, navigate, setUserAuthState]);
+  }, [isSuccess, userAuthData, navigate, setUserDetailsState]);
 
   useEffect(() => {
     if (isError) {

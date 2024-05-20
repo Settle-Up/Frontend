@@ -11,6 +11,7 @@ import PreferenceSettingsModal from "./PreferenceSettingsModal";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
 import { useNavigate } from "react-router-dom";
+import Spinner from "@components/Spinner";
 
 const actions = [
   {
@@ -26,8 +27,6 @@ const actions = [
     className: "tooltip-logout",
   },
 ];
-
-type MainPageSettingsProps = {};
 
 const MainPageSettings = () => {
   const navigate = useNavigate();
@@ -49,7 +48,12 @@ const MainPageSettings = () => {
   } = useMutation(() => signOut());
 
   useEffect(() => {
+    if (isLoading) {
+      <Spinner isOverlay/>
+    }
+  }, [isLoading]);
 
+  useEffect(() => {
     if (isSuccess) {
       navigate("/")
     }
@@ -66,7 +70,6 @@ const MainPageSettings = () => {
     }
   }, [isError, setSnackbar]);
 
-  // show loading spinner
 
   const handleActionClick = (actionId: string, event: React.MouseEvent) => {
     event.stopPropagation();
@@ -118,13 +121,12 @@ const MainPageSettings = () => {
           zIndex: (theme) => theme.zIndex.tooltip,
           "& .MuiFab-root": {
             boxShadow: "none",
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
             "&:hover": {
-              backgroundColor: theme.palette.primary.main,
+              backgroundColor: theme.palette.primary.light,
             },
             p: 1.5,
             my: 0.5,
-            border: "2px solid blue",
             width: (theme) => theme.spacing(4),
             height: (theme) => theme.spacing(4),
             minHeight: (theme) => theme.spacing(4),
@@ -138,12 +140,12 @@ const MainPageSettings = () => {
             my: 1,
           },
           "& .MuiSpeedDialAction-staticTooltipLabel": {
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
             color: "white",
             textWrap: "nowrap",
           },
           [`& .${hoveredAction}`]: {
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.primary.light,
           },
         }}
       >

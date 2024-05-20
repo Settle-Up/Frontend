@@ -6,6 +6,7 @@ import CustomIconButton from "@components/CustomIconButton";
 import PreferenceSettingsModal from "@components/PreferenceSettingsModal";
 import MainPageTopBar from "@components/MainPageTopBar";
 import GroupList from "@components/GroupList";
+import Spinner from "@components/Spinner";
 
 const MainPage = () => {
   const navigate = useNavigate();

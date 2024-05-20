@@ -1,16 +1,17 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const { whenDev } = require('@craco/craco');
 
-const webpackConfig = {
-  plugins: [
-    {
-      plugin: {
-        overrideWebpackConfig: ({ webpackConfig }) => {
-          webpackConfig.resolve.plugins.push(new TsconfigPathsPlugin({}));
-          return webpackConfig;
-        }
-      }
-    }
-  ]
+module.exports = {
+  webpack: {
+    configure: (webpackConfig, { env, paths }) => {
+      webpackConfig.resolve.plugins.push(new TsconfigPathsPlugin({}));
+
+      whenDev(() => {
+        const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+        webpackConfig.plugins.push(new ReactRefreshPlugin());
+      });
+
+      return webpackConfig;
+    },
+  },
 };
-
-module.exports = webpackConfig;

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import { useMutation } from "react-query";
@@ -19,21 +19,29 @@ const MonthlyReportContent = ({
   closeModal,
   isMonthlyReportUpdateOn,
 }: MonthlyReportContentProps) => {
+  const [isUpdateOn, setIsUpdateOn] = useState(isMonthlyReportUpdateOn);
   const setSnackbar = useSetRecoilState(snackbarState);
+
+  // useEffect(() => {
+  //   console.log(" when is monthly report update on is changed")
+  //   setIsUpdateOn(isMonthlyReportUpdateOn);
+  // }, [isMonthlyReportUpdateOn]); 필요 없을 수도 있음
 
   const {
     mutate: executeToggleGroupMonthlyReport,
+    data,
     isError,
     isSuccess,
   } = useMutation(() => {
-    return toggleGroupMonthlyReport(groupId, !isMonthlyReportUpdateOn)
-  }
-  );
+    return toggleGroupMonthlyReport({groupId, isEnabled: !isUpdateOn});
+  });
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data) {
+      console.log( "When request is successfull")
+      setIsUpdateOn(data.isMonthlyReportUpdateOn)
       closeModal();
-      const message = isMonthlyReportUpdateOn
+      const message = isUpdateOn
         ? `You will no longer receive monthly reports from "${groupName}".`
         : `You will receive monthly reports from "${groupName}" starting now.`;
       setSnackbar({
@@ -42,7 +50,7 @@ const MonthlyReportContent = ({
         severity: "success",
       });
     }
-  }, [isSuccess, setSnackbar, groupName, closeModal, isMonthlyReportUpdateOn]);
+  }, [isSuccess, setSnackbar, groupName, closeModal]);
 
   useEffect(() => {
     if (isError) {
@@ -58,7 +66,7 @@ const MonthlyReportContent = ({
 
   return (
     <>
-      {isMonthlyReportUpdateOn ? (
+      {isUpdateOn ? (
         <Stack spacing={4}>
           <Box>
             <Typography variant="subtitle1">

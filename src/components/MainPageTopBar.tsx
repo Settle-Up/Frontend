@@ -2,13 +2,13 @@ import { Badge, Box, IconButton, Typography } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useRecoilState } from "recoil";
-import { respondToUpdatedTxsModalState } from "@store/respondToUpdatedTxsModalStore";
+import { paymentReceivedTXModalAlertState } from "@store/paymentReceivedTXModalAlertStore";
 import theme from "@theme";
 import MainPageSettings from "@components/MainPageSettings";
 
 const MainPageTopBar = () => {
-  const [{ updatedTransactionList }, setUpdatedTransactionsAlert] =
-    useRecoilState(respondToUpdatedTxsModalState);
+  const [{ paymentReceivedTxList }, setUpdatedTransactionsAlert] =
+    useRecoilState(paymentReceivedTXModalAlertState);
 
   return (
     <>
@@ -41,7 +41,7 @@ const MainPageTopBar = () => {
           }}
         >
           <Badge
-            badgeContent={updatedTransactionList?.length ?? null}
+            badgeContent={paymentReceivedTxList?.length ?? null}
             color="primary"
           >
             <NotificationsIcon />

@@ -11,14 +11,23 @@ import theme from "@theme";
 type AllItemSummaryTableProps = {
   itemOrderDetailsList: ItemOrderDetails[];
 };
+
 const AllItemSummaryTable = ({
   itemOrderDetailsList,
 }: AllItemSummaryTableProps) => {
   return (
-    <TableContainer className="custom-scrollbar">
-      <Table sx={{ minWidth: 650 }} aria-label="Receipt Items Summary Table">
+    <TableContainer className="custom-scrollbar" sx={{ "&  *": {
+      wordBreak: "none",
+    },}}>
+      <Table sx={{ minWidtsh: 650 }} aria-label="Receipt Items Summary Table">
         <TableHead>
-          <TableRow>
+          <TableRow
+            sx={{
+              "& > *": {
+                whiteSpace: "nowrap",
+              },
+            }}
+          >
             {["Item", "Unit Price", "Quantity", "Total Price"].map(
               (text, index) => (
                 <TableCell
@@ -44,33 +53,38 @@ const AllItemSummaryTable = ({
         </TableHead>
         <TableBody>
           {itemOrderDetailsList.map(
-            ({ itemId, itemName, unitPrice, itemQuantity }) => (
-              <TableRow key={itemId}>
-                {[
-                  itemName,
-                  unitPrice + "₩",
-                  itemQuantity,
-                  `${parseFloat(unitPrice) * parseInt(itemQuantity)}₩`,
-                ].map((cellData, index) => {
-                  const isOdd = index % 2 === 0;
-                  return (
-                    <TableCell
-                      key={index}
-                      component={index === 0 ? "th" : undefined}
-                      scope={index === 0 ? "row" : undefined}
-                      sx={{
-                        backgroundColor: isOdd
-                          ? theme.palette.background.paper
-                          : "#EDEDED",
-                        color: isOdd ? theme.palette.text.secondary : "inherit",
-                      }}
-                    >
-                      {cellData}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            )
+            ({ itemId, itemName, unitPrice, itemQuantity }, rowIndex) => {
+              console.log(`Row Key: ${itemId}`);
+              return (
+                <TableRow key={rowIndex}>
+                  {[
+                    itemName,
+                    unitPrice + "₩",
+                    itemQuantity,
+                    `${parseFloat(unitPrice) * parseInt(itemQuantity)}₩`,
+                  ].map((cellData, cellIndex) => {
+                    const isOdd = cellIndex % 2 === 0;
+                    return (
+                      <TableCell
+                        key={`${rowIndex}-${cellIndex}`}
+                        component={cellIndex === 0 ? "th" : undefined}
+                        scope={cellIndex === 0 ? "row" : undefined}
+                        sx={{
+                          backgroundColor: isOdd
+                            ? theme.palette.background.paper
+                            : "#EDEDED",
+                          color: isOdd
+                            ? theme.palette.text.secondary
+                            : "inherit",
+                        }}
+                      >
+                        {cellData}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            }
           )}
         </TableBody>
       </Table>

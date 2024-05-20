@@ -12,7 +12,6 @@ export const createGroup = async (newGroup: NewGroup) => {
   };
 
   try {
-    throw new Error("Simulated error");
     const response = await axiosInstance.post(`/group/create`, requestData);
     console.log(response.data);
     return response.data;

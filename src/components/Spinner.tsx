@@ -1,8 +1,7 @@
 import { Box, CircularProgress } from "@mui/material/";
 import ReactDOM from "react-dom";
-import CustomBackdrop from "@components/CustomBackdrop";
-import { useContext } from "react";
-import RootContainerContext from "@context/RootContainerContext";
+import { useRecoilValue } from "recoil";
+import { rootContainerRefState } from "@store/rootContainerRefStore";
 
 type SpinnerProps = {
   isOverlay?: boolean;
@@ -10,7 +9,7 @@ type SpinnerProps = {
 };
 
 const Spinner = ({ isOverlay = false, size = 40 }: SpinnerProps) => {
-  const rootContainerRef = useContext(RootContainerContext);
+  const rootContainerRef = useRecoilValue(rootContainerRefState);
   
   if (!rootContainerRef?.current) {
     return null;
@@ -20,7 +19,6 @@ const Spinner = ({ isOverlay = false, size = 40 }: SpinnerProps) => {
     <>
       {isOverlay ? (
         <>
-          {/* <CustomBackdrop isOpen={isOpen} zIndex={2000} /> */}
           {ReactDOM.createPortal(
             <CircularProgress
               size={size}

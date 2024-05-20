@@ -47,7 +47,7 @@ const CustomModal = ({
             pb: 4,
             px: 4,
             width: 400,
-            minHeight: "50vh",
+            minHeight: "40vh",
             maxHeight: "80vh",
             overflowY: "auto",
             textAlign: "center",

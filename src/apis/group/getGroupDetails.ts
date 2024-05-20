@@ -19,6 +19,7 @@ export const getGroupDetails = async ({
     
     return {groupDetails: response.data.data};
   } catch (error) {
+    console.log("--------------ERROR OCCURED--------------")
     throw new Error("Failed to get Group Details");
   }
 };

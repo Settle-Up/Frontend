@@ -27,7 +27,7 @@ const SingleDayExpenseList = ({
 
   return (
     <Stack spacing={1}>
-      <Typography variant="subtitle1">{date}</Typography>
+      <Typography variant="subtitle1" sx={{ pl: 1}}>{date}</Typography>
       <Paper elevation={1} sx={{ backgroundColor: "white", borderRadius: 3 }}>
         <List>
           {singleDayExpenseList?.map(

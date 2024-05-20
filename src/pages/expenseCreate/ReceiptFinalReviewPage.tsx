@@ -15,7 +15,7 @@ const ReceiptFinalReviewPage = () => {
     address,
     receiptDate,
     receiptTotalPrice,
-    itemOrderDetailsList
+    itemOrderDetailsList,
   } = newExpense;
 
   return (
@@ -29,7 +29,14 @@ const ReceiptFinalReviewPage = () => {
         Here's How Your Final Receipt Looks
       </Typography>
       <Paper sx={{ backgroundColor: "white", borderRadius: 3, padding: 3 }}>
-      <GeneralExpenseDescription receiptName={receiptName} address={address} receiptDate={receiptDate} receiptTotalPrice={receiptTotalPrice} itemOrderDetailsList={itemOrderDetailsList} />
+        <GeneralExpenseDescription
+          receiptName={receiptName}
+          address={address}
+          receiptDate={receiptDate}
+          receiptTotalPrice={receiptTotalPrice}
+          itemOrderDetailsList={itemOrderDetailsList}
+          showReceiptName
+        />
       </Paper>
       <CustomIconButton
         ariaLabel="Move on to next step"

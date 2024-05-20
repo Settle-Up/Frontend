@@ -57,7 +57,7 @@ const ImageUploaderWithPreview = () => {
       <input type="file" hidden onChange={handleImageFileChange} />
       <Stack
         sx={{
-          "& > :not(:first-child)": {
+          "& > :not(:first-of-type)": {
             textTransform: "none",
           },
           alignItems: "center",

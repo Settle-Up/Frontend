@@ -35,7 +35,7 @@ const GroupList = () => {
         } else {
           return undefined;
         }
-      }, 
+      },
       // staleTime: 600000, // 최적화 위해서 추후 추가
     }
   );

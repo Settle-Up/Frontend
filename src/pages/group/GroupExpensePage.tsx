@@ -22,9 +22,6 @@ const GroupExpensePage = () => {
         return getGroupExpenseDetails({ receiptId });
       }
       throw new Error("Receipt Id is missing");
-    },
-    {
-      refetchOnWindowFocus: false,
     }
   );
 
@@ -39,8 +36,8 @@ const GroupExpensePage = () => {
         />
         <Paper sx={{ backgroundColor: "white", borderRadius: 3, padding: 3 }}>
           <Stack spacing={2}>
-            {Array.from({ length: 4 }).map(() => (
-              <Box>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <Box key={`skeleton-top-${index}`}>
                 <Skeleton variant="text" width={100} height={30} />
                 <Skeleton variant="text" width={150} />
               </Box>
@@ -50,8 +47,8 @@ const GroupExpensePage = () => {
           <Skeleton variant="rectangular" width="100%" height={150} />
           <Divider />
           <Stack spacing={2}>
-            {Array.from({ length: 2 }).map(() => (
-              <Box>
+            {Array.from({ length: 2 }).map((_, index) => (
+              <Box key={`skeleton-bottom-${index}`}>
                 <Skeleton variant="text" width={100} height={30} />
                 <Skeleton variant="text" width={150} />
               </Box>

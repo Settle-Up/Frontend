@@ -1,15 +1,14 @@
 import SingleDayExpenseList from "@components/SingleDayExpenseList";
 import SingleDayExpenseListSkeleton from "@components/SingleDayExpenseListSkeleton";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useInfiniteQuery } from "react-query";
 import { getGroupExpenseList } from "@apis/group/getGroupExpenseList";
 import useIntersectionObserver from "@hooks/useIntersectionObserver";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
-import { useNavigate } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { Stack,Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import Spinner from "./Spinner";
+import Spinner from "@components/Spinner";
 
 type ExpenseListByDate = {
   [date: string]: UserSpecificExpenseSummary[];
@@ -20,7 +19,6 @@ type GroupExpenseListProps = {
 };
 
 const GroupExpenseList = ({ groupId }: GroupExpenseListProps) => {
-  const navigate = useNavigate();
   const setSnackbar = useSetRecoilState(snackbarState);
 
   const [expensesByDate, setExpensesByDate] = useState<ExpenseListByDate>({});
@@ -116,7 +114,7 @@ const GroupExpenseList = ({ groupId }: GroupExpenseListProps) => {
   // }, [data]);
 
   return (
-    <>
+    <Stack spacing={4}>
       {lastSuccessfullyFetchedPage === 0 && isError && (
         <Typography
         variant="subtitle2"
@@ -164,7 +162,7 @@ const GroupExpenseList = ({ groupId }: GroupExpenseListProps) => {
           }}
         />
       )}
-    </>
+    </Stack>
   );
 };
 

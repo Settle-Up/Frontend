@@ -7,7 +7,7 @@ const CustomSnackbar = () => {
   const [{ show, message, severity }, setSnackbar] =
     useRecoilState(snackbarState);
 
-  const handleClose = () => {
+  const closeAlert = () => {
     setSnackbar((prevState) => ({ ...prevState, show: false }));
   };
 
@@ -16,12 +16,11 @@ const CustomSnackbar = () => {
       <CustomBackdrop isOpen={show} zIndex={2000} />
       <Snackbar
         open={show}
-        autoHideDuration={6000}
-        onClose={handleClose}
         anchorOrigin={{
           vertical: "top",
           horizontal: "center",
         }}
+        autoHideDuration={null} 
         sx={{
           maxWidth: "550px",
           zIndex: (theme) => theme.zIndex.snackbar,
@@ -29,7 +28,7 @@ const CustomSnackbar = () => {
       >
         <Alert
           severity={severity}
-          onClose={handleClose}
+          onClose={closeAlert}
           sx={{ maxWidth: "550px" }}
         >
           {message}

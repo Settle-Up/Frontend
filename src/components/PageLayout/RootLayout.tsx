@@ -1,30 +1,25 @@
-import { useLocation } from "react-router-dom";
-import { Outlet } from "react-router-dom";
-import { Box, Stack, Typography } from "@mui/material";
-import theme from "@theme";
-import { useRef, useState } from "react";
-import RootContainerContext from "@context/RootContainerContext";
-import CustomSnackbar from "@components/CustomSnackbar";
-import { useRecoilValue } from "recoil";
-import {respondToUpdatedTxsModalState } from "@store/respondToUpdatedTxsModalStore";
+import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { Stack } from '@mui/material';
+import theme from '@theme';
+import CustomSnackbar from '@components/CustomSnackbar';
+import { useSetRecoilState } from 'recoil';
+import { rootContainerRefState } from '@store/rootContainerRefStore';
 
-const PageLayout = () => {
+const RootLayout = () => {
   const rootContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const setRootContainerRef = useSetRecoilState(rootContainerRefState);
 
-  const [currentRef, setCurrentRef] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    setRootContainerRef(rootContainerRef);
+  }, [setRootContainerRef]);
 
-  const { isOpen, updatedTransactionList } = useRecoilValue(
-    respondToUpdatedTxsModalState
-  );
+  const loginPageBackground = location.pathname === "/login" ? "gradient-background" : "";
 
-  const loginPageBackground =
-    location.pathname === "/login" ? "gradient-background" : "";
-  // useEffect(() => {
-  //   setCurrentRef(rootContainerRef.current);
-  // }, []);
   return (
-    <RootContainerContext.Provider value={rootContainerRef}>
+    <>
       <CustomSnackbar />
       <Stack
         ref={rootContainerRef}
@@ -40,12 +35,13 @@ const PageLayout = () => {
           overflow: "auto",
           position: "relative",
           zIndex: 1,
+          border: "2px dotted green"
         }}
       >
         <Outlet />
       </Stack>
-    </RootContainerContext.Provider>
+    </>
   );
 };
 
-export default PageLayout;
+export default RootLayout;
