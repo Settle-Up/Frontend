@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Stack } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import SelectableParticipantChipList from "@components/SelectableParticipantChipList";
-import PurchasedItemToggletList from "@components/PurchasedItemToggletList";
+import PurchasedItemToggleList from "@components/PurchasedItemToggleList";
 import { useRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import HeadingWithTip from "@components/HeadingWithTip";
@@ -12,10 +12,10 @@ import { snackbarState } from "@store/snackbarStore";
 
 const initializeParticipantItemLinkStatus = (
   expenseParticipantList: GeneralUser[],
-  itemOrderDetailsList: ItemOrderDetails[]
+  itemList: Item[]
 ): ParticipantItemLinkStatusMap => {
   return expenseParticipantList.reduce((acc, participant) => {
-    const isLinked = itemOrderDetailsList.some((item) =>
+    const isLinked = itemList.some((item) =>
       item.jointPurchaserList?.some(
         (purchaser) => purchaser.userId === participant.userId
       )
@@ -30,22 +30,18 @@ const EqualQuantityAllocationPage = () => {
   const location = useLocation();
   const { groupMemberList } = location.state;
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
-  const { allocationType, expenseParticipantList, itemOrderDetailsList } =
-    newExpense;
+  const { allocationType, expenseParticipantList, itemList } = newExpense;
   const [selectedParticipantId, setSelectedParticipantId] = useState<string>(
     expenseParticipantList[0].userId
   );
   const [participantItemLinkStatus, setParticipantItemLinkStatus] = useState(
-    initializeParticipantItemLinkStatus(
-      expenseParticipantList,
-      itemOrderDetailsList
-    )
+    initializeParticipantItemLinkStatus(expenseParticipantList, itemList)
   );
 
   const setSnackbar = useSetRecoilState(snackbarState);
 
   const isUserLinkedToAnyItems = (userId: string) =>
-    itemOrderDetailsList.some((itemOrderDetail) =>
+    itemList.some((itemOrderDetail) =>
       itemOrderDetail.jointPurchaserList?.some(
         (purchaser) => purchaser.userId === userId
       )
@@ -63,20 +59,33 @@ const EqualQuantityAllocationPage = () => {
 
   useEffect(() => {
     updateParticipantItemLinkStatus();
-  }, [itemOrderDetailsList]);
+  }, [itemList]);
 
   const handleConfirmClick = () => {
     const allUsersLinked = Object.values(participantItemLinkStatus).every(
       (status) => status
     );
-    if (allUsersLinked) {
+
+    const everyItemHasPurchasers = itemList.every(
+      (item) => item.jointPurchaserList && item.jointPurchaserList.length > 0
+    );
+
+    if (allUsersLinked && everyItemHasPurchasers) {
       navigate("/expense/submission/review");
     } else {
-      // setShowAllocationIncompleteAlert(true);
+      let errorMessage = "";
+      if (!allUsersLinked && !everyItemHasPurchasers) {
+        errorMessage =
+          "Please ensure that each participant has items allocated to them and each item has at least one purchaser.";
+      } else if (!allUsersLinked) {
+        errorMessage =
+          "Each participant must have at least one item allocated to them.";
+      } else if (!everyItemHasPurchasers) {
+        errorMessage = "Each item must have at least one purchaser.";
+      }
       setSnackbar({
         show: true,
-        message:
-          "To proceed, please ensure that each participant has items allocated to them.",
+        message: errorMessage,
         severity: "warning",
       });
     }
@@ -84,7 +93,7 @@ const EqualQuantityAllocationPage = () => {
 
   const handleNewExpenseChange = (
     key: string,
-    value: string | AllocationType | ItemOrderDetails[] | GeneralUser[]
+    value: string | AllocationType | Item[] | GeneralUser[]
   ) => {
     setNewExpense((prev) => {
       return {
@@ -110,9 +119,9 @@ const EqualQuantityAllocationPage = () => {
             selectedParticipantId={selectedParticipantId}
             setSelectedParticipantId={setSelectedParticipantId}
           />
-          <PurchasedItemToggletList
+          <PurchasedItemToggleList
             handleNewExpenseChange={handleNewExpenseChange}
-            itemOrderDetailsList={itemOrderDetailsList}
+            itemList={itemList}
             userId={selectedParticipantId}
           />
         </Stack>

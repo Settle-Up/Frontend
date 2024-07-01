@@ -1,12 +1,13 @@
 import { Box, Stack, Typography } from "@mui/material";
 import theme from "@theme";
+import { useFormatNumberAsKoreanWon } from "@hooks/useFormatNumberAsKoreanWon";
 
 type ItemDescriptionProps = {
   itemName: string;
   mode: "itemDetail" | "variableQuantity" | "equalQuantity";
-  initialAmount: string;
-  quantity: string;
-  calculatedTotal: string;
+  initialAmount: string | number;
+  quantity: string | number;
+  calculatedTotal: string | number;
 };
 
 const ItemDescription = ({
@@ -16,6 +17,8 @@ const ItemDescription = ({
   quantity,
   calculatedTotal,
 }: ItemDescriptionProps) => {
+  const formatToKoreanWon = useFormatNumberAsKoreanWon();
+
   const operator = mode === "equalQuantity" ? "/" : "x";
 
   return (
@@ -32,24 +35,29 @@ const ItemDescription = ({
         sx={{
           wordBreak: "break-all",
           flexWrap: "wrap",
+          width: "60%",
         }}
       >
-        <Typography>{itemName}</Typography>
+        <Typography variant="subtitle2">{itemName}</Typography>
         <Typography variant="caption" color="textSecondary">
-          {initialAmount}₩ {operator} {quantity}
+          {formatToKoreanWon(initialAmount)} {operator} {quantity}
         </Typography>
       </Stack>
-      <Typography
-        variant="subtitle2"
-        sx={{
-          backgroundColor: theme.palette.tertiary.main,
-          borderRadius: 10,
-          px: 1.2,
-          py: 0.2,
-        }}
-      >
-        {`${calculatedTotal}₩`}
-      </Typography>
+      <Box>
+        <Typography
+          variant="subtitle2"
+          sx={{
+            backgroundColor: theme.palette.tertiary.main,
+            borderRadius: 10,
+            px: 1.2,
+            py: 0.2,
+            width: "auto",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {formatToKoreanWon(calculatedTotal)}
+        </Typography>
+      </Box>
     </Box>
   );
 };

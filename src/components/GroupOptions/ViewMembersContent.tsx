@@ -1,10 +1,9 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
 import { Skeleton, Stack, Typography } from "@mui/material";
 import { useQuery } from "react-query";
-import { getGroupMemberList } from "@apis/group/getGroupMemberList";
+import { getGroupMemberList } from "@apis/groups/getGroupMemberList";
 import { grey } from "@mui/material/colors";
-import { useSetRecoilState } from "recoil";
-import { snackbarState } from "@store/snackbarStore";
+import useFeedbackHandler from "@hooks/useFeedbackHandler";
 
 type ViewMembersContentProps = {
   groupId: string;
@@ -17,25 +16,19 @@ const ViewMembersContent = ({
   groupName,
   closeModal,
 }: ViewMembersContentProps) => {
-  const setSnackbar = useSetRecoilState(snackbarState);
-
   const {
     data: groupMemberList,
     isError,
     isLoading,
-  } = useQuery("groupMemberList", () => getGroupMemberList(groupId), {
-  });
+  } = useQuery(["groupMemberList", groupId], () => getGroupMemberList(groupId));
 
-  useEffect(() => {
-    if (isError) {
+  useFeedbackHandler({
+    isError,
+    errorMessage: `Failed to load members of '${groupName}'. Please try again later.`,
+    errorAction: useCallback(() => {
       closeModal();
-      setSnackbar({
-        show: true,
-        message: `Failed to load members of '${groupName}'. Please try again later.`,
-        severity: "error",
-      });
-    }
-  }, [isError, setSnackbar, groupName, closeModal]);
+    }, []),
+  });
 
   const renderSkeletons = () => {
     return Array.from({ length: 5 }).map((_, index) => (
@@ -56,18 +49,20 @@ const ViewMembersContent = ({
       >
         {isLoading
           ? renderSkeletons()
-          : groupMemberList?.map(({ userId, userName, userEmail }: GeneralUser) => {
-              return (
-                <Stack key={userId} sx={{ textAlign: "left" }}>
-                  <Typography variant="subtitle2"> {userName}</Typography>
-                  <Typography
-                    sx={{ color: grey[600], textDecoration: "underline" }}
-                  >
-                    {userEmail}
-                  </Typography>
-                </Stack>
-              );
-            })}
+          : groupMemberList?.map(
+              ({ userId, userName, userEmail }: GeneralUser) => {
+                return (
+                  <Stack key={userId} sx={{ textAlign: "left" }}>
+                    <Typography variant="subtitle2"> {userName}</Typography>
+                    <Typography
+                      sx={{ color: grey[600], textDecoration: "underline" }}
+                    >
+                      {userEmail}
+                    </Typography>
+                  </Stack>
+                );
+              }
+            )}
       </Stack>
     </Stack>
   );

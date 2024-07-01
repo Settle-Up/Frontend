@@ -8,22 +8,19 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "react-query";
-import { getGroupExpenseDetails } from "@apis/group/getGroupExpenseDetails";
+import { getGroupExpenseDetails } from "@apis/groups/getGroupExpenseDetails";
 import ExpenseDetails from "@components/ExpenseDetails";
 import { grey } from "@mui/material/colors";
 
 const GroupExpensePage = () => {
-  let { receiptId } = useParams();
+  const { expenseId } = useParams();
 
-  const { data, isLoading, isError } = useQuery(
-    "expenseDetails",
-    () => {
-      if (receiptId) {
-        return getGroupExpenseDetails({ receiptId });
-      }
-      throw new Error("Receipt Id is missing");
+  const { data, isLoading, isError } = useQuery("expenseDetails", () => {
+    if (expenseId) {
+      return getGroupExpenseDetails({ expenseId });
     }
-  );
+    throw new Error("Expense Id is missing");
+  });
 
   const renderSkeletons = () => {
     return (

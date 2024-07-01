@@ -22,7 +22,7 @@ const Spinner = ({ isOverlay = false, size = 40 }: SpinnerProps) => {
           {ReactDOM.createPortal(
             <CircularProgress
               size={size}
-              sx={{ position: "absolute", top: "50%", left: "50%" }}
+              sx={{ position: "absolute", top: "50%", left: "50%", color: "black", border: "2px solid red" }}
             />,
             rootContainerRef.current
           )}

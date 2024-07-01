@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SpeedDial, SpeedDialAction } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -8,21 +8,20 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { useMutation } from "react-query";
 import { signOut } from "@apis/auth/signOut";
 import PreferenceSettingsModal from "./PreferenceSettingsModal";
-import { useSetRecoilState } from "recoil";
-import { snackbarState } from "@store/snackbarStore";
 import { useNavigate } from "react-router-dom";
 import Spinner from "@components/Spinner";
+import useFeedbackHandler from "@hooks/useFeedbackHandler";
 
 const actions = [
   {
     id: "preferenceSetting",
-    icon: <SettingsIcon sx={{ color: "white" }} />,
+    IconComponent: SettingsIcon,
     name: "Preference Setting",
     className: "tooltip-preference-setting",
   },
   {
     id: "logout",
-    icon: <LogoutIcon sx={{ color: "white" }} />,
+    IconComponent: LogoutIcon,
     name: "Logout",
     className: "tooltip-logout",
   },
@@ -34,8 +33,6 @@ const MainPageSettings = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [hoveredAction, setHoveredAction] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
-  const setSnackbar = useSetRecoilState(snackbarState);
-
 
   const [isPreferenceSettingsModalOpen, setIsPreferenceSettingsModalOpen] =
     useState(false);
@@ -49,27 +46,19 @@ const MainPageSettings = () => {
 
   useEffect(() => {
     if (isLoading) {
-      <Spinner isOverlay/>
+      <Spinner isOverlay />;
     }
   }, [isLoading]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/")
-    }
-  }, [isSuccess, navigate]);
-
-  useEffect(() => {
-    if (isError) {
-      setSnackbar({
-        show: true,
-        message:
-          "Sorry, Something went wrong during sign-out. Please try again.",
-        severity: "error",
-      });
-    }
-  }, [isError, setSnackbar]);
-
+  useFeedbackHandler({
+    isError,
+    errorMessage:
+      "Sorry, Something went wrong during sign-out. Please try again.",
+    isSuccess,
+    successAction: useCallback(() => {
+      navigate("/");
+    }, []),
+  });
 
   const handleActionClick = (actionId: string, event: React.MouseEvent) => {
     event.stopPropagation();
@@ -113,46 +102,55 @@ const MainPageSettings = () => {
       <SpeedDial
         ariaLabel="SpeedDial tooltip example"
         id="speed-dial"
-        icon={<MoreVertIcon />}
+        icon={<MoreVertIcon sx={{ fontSize: theme.spacing(2.3) }} />}
         onClick={() => setShowOptions((prev) => !prev)}
         open={showOptions}
         direction="down"
         sx={{
           zIndex: (theme) => theme.zIndex.tooltip,
           "& .MuiFab-root": {
+            fontSize: theme.spacing(2),
+
             boxShadow: "none",
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: showOptions ? "white" : theme.palette.default.main,
+            color: showOptions ? theme.palette.default.main : "white",
             "&:hover": {
-              backgroundColor: theme.palette.primary.light,
+              backgroundColor: showOptions
+                ? "#E0E0E0"
+                : theme.palette.default.light,
             },
             p: 1.5,
             my: 0.5,
-            width: (theme) => theme.spacing(4),
-            height: (theme) => theme.spacing(4),
-            minHeight: (theme) => theme.spacing(4),
+            width: (theme) => theme.spacing(3.5),
+            height: (theme) => theme.spacing(3.5),
+            minHeight: (theme) => theme.spacing(3.5),
           },
-          // "& .MuiSpeedDial-actions": {
-          //   p: 0,
-          //   m: 0,
-          //   border: "2px solid red",
-          // },
           "& .MuiSpeedDial-actions > *": {
             my: 1,
           },
           "& .MuiSpeedDialAction-staticTooltipLabel": {
-            backgroundColor: theme.palette.primary.main,
-            color: "white",
+            backgroundColor: "white",
+            color: theme.palette.default.main,
             textWrap: "nowrap",
+            fontSize: "14px",
+            fontWeight: "bold",
           },
           [`& .${hoveredAction}`]: {
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
           },
         }}
       >
         {actions.map((action) => (
           <SpeedDialAction
             key={action.name}
-            icon={action.icon}
+            icon={
+              <action.IconComponent
+                sx={{
+                  fontSize: theme.spacing(2.3),
+                  color: theme.palette.default.main,
+                }}
+              />
+            }
             tooltipTitle={
               <span className={action.className}>{action.name}</span>
             }

@@ -1,6 +1,6 @@
 import { numberToString } from "@utils/numberStringConversions";
 
-const extractDataFromProcessReceipt = (jsonObj: any): NewReceipt | null => {
+const extractDataFromProcessedReceipt = (jsonObj: any): NewReceipt | null => {
   if (
     !jsonObj ||
     !jsonObj.analyzeResult ||
@@ -22,6 +22,7 @@ const extractDataFromProcessReceipt = (jsonObj: any): NewReceipt | null => {
     itemList: [],
   };
 
+
   const items = fields.Items?.valueArray || [];
   items.forEach((item: any) => {
     const itemObject = item.valueObject;
@@ -38,4 +39,4 @@ const extractDataFromProcessReceipt = (jsonObj: any): NewReceipt | null => {
   return receipt;
 };
 
-export default extractDataFromProcessReceipt;
+export default extractDataFromProcessedReceipt;

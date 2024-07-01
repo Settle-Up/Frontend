@@ -1,125 +1,42 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import HeadingWithTip from "@components/HeadingWithTip";
 import { useNavigate } from "react-router-dom";
 import { Box, Divider, Stack, Paper, Typography } from "@mui/material";
 import theme from "@theme";
 import { useParams } from "react-router-dom";
-import GroupSettings from "@components/GroupSettings";
-import { getGroupDetails } from "@apis/group/getGroupDetails";
-import GroupExpenseList from "@components/GroupExpenseList";
-import RequiredSettlementsOverview from "@components/RequiredSettlementsOverview";
-import RecentSettlementsList from "@components/RecentSettlementsList";
-import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
-import useSettleTransaction from "@hooks/useSettleTransaction";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { snackbarState } from "@store/snackbarStore";
+import GroupSettings from "@components/Group/GroupSettings";
+import { getGroupDetails } from "@apis/groups/getGroupDetails";
+import GroupExpenseList from "@components/Group/GroupExpenseList";
+import RequiredSettlementList from "@components/RequiredSettlementList";
+import RecentSettlementList from "@components/RecentSettlementList";
+import { useFormatNumberAsKoreanWon } from "@hooks/useFormatNumberAsKoreanWon";
 import { useQuery } from "react-query";
-import { settleTxModalState } from "@store/settleTxModalStore";
-import {
-  outgoingPaymentListState,
-  recentSettlementListState,
-} from "@store/transactionStore";
-import dayjs from "dayjs";
-
+import useFeedbackHandler from "@hooks/useFeedbackHandler";
 const GroupDetailsPage = () => {
-  const [
-    { selectedTransaction, isTransactionSuccessfullySettled },
-    setSettleTxModal,
-  ] = useRecoilState(settleTxModalState);
-
-  const setOutgoingPaymentList = useSetRecoilState(outgoingPaymentListState);
-
-  const setRecentSettlementList = useSetRecoilState(recentSettlementListState);
-
   const navigate = useNavigate();
   const { groupId } = useParams() as { groupId: string };
-  const setSnackbar = useSetRecoilState(snackbarState);
+
+  const formatToKoreanWon = useFormatNumberAsKoreanWon();
 
   const [isGroupOptionsVisible, setIsGroupOptionsVisible] = useState(false);
 
-  const { RenderSettleTxModal } = useSettleTransaction(groupId!);
-
-  const { data, isLoading, isError } = useQuery(
-    ["groupDetails", groupId],
-    () => getGroupDetails({ groupId })
-  );
-
-
-  // useEffect(() => {
-  //   if (selectedTransaction && isTransactionSuccessfullySettled) {
-  //     setOutgoingPaymentList((prevList: BaseTransaction[] | null) => {
-  //       if (prevList === null) {
-  //         return null;
-  //       }
-  //       return prevList.filter(
-  //         (transaction) =>
-  //           transaction.transactionId !== selectedTransaction.transactionId
-  //       );
-  //     });
-
-  //     setRecentSettlementList((prevList: ClearedTransaction[] | null) => {
-  //       const newClearedTx: ClearedTransaction = {
-  //         ...selectedTransaction,
-  //         clearedAt: dayjs().format("YYYY-MM-DD"),
-  //       };
-
-  //       if (prevList === null) {
-  //         return [newClearedTx];
-  //       }
-
-  //       return [...prevList, newClearedTx];
-  //     });
-
-  //     setSettleTxModal({
-  //       isOpen: false,
-  //       selectedTransaction: null,
-  //       isTransactionSuccessfullySettled: null,
-  //     });
-  //     // remove the transaction from required transaction section and add it to the transactions settled in the past week
-  //   }
-  // }, [isTransactionSuccessfullySettled, setSettleTxModal]);
-
-  useEffect(() => {
-    if (isError) {
-      setSnackbar({
-        show: true,
-        message: `The group you're looking for doesn't seem to exist. Please check the
-        URL or browse our groups from the home page.`,
-        severity: "error",
-      });
-      navigate("/");
-    }
-  }, [isError, setSnackbar]);
-
-  // if (isError) {
-  //   return (
-  //     <Stack sx={{ my: 2 }}>
-  //       <Typography
-  //         sx={{
-  //           color: grey[500],
-  //           textAlign: "center",
-  //           m: 5,
-  //         }}
-  //       >
-  //         The group you're looking for doesn't seem to exist. Please check the
-  //         URL or browse our groups from the home page.
-  //       </Typography>
-  //     </Stack>
-  //   );
-  // }
-
-  // show skeleton while loading
-
   const {
-    groupName,
-    isMonthlyReportUpdateOn,
-    settlementBalance,
-    neededTransactionList,
-    lastWeekSettledTransactionList,
-  } = data?.groupDetails || {};
+    data: groupDetails,
+    isLoading: isGroupDetailsLoading,
+    isError,
+  } = useQuery(["groupDetails", groupId], () => getGroupDetails({ groupId }));
+
+  useFeedbackHandler({
+    isError,
+    errorMessage: `The group you're looking for doesn't seem to exist. Please check the
+    URL or browse our groups from the home page.`,
+    errorAction: useCallback(() => {
+      navigate("/");
+    }, []),
+  });
 
   return (
-    <Stack sx={{ my: 2 }}>
+    <>
       <Box
         sx={{
           position: "relative",
@@ -129,19 +46,20 @@ const GroupDetailsPage = () => {
         }}
       >
         <Typography variant="h6" sx={{ alignSelf: "center" }}>
-          {groupName}
+          {groupDetails?.groupName ?? ""}
         </Typography>
-        {groupName && isMonthlyReportUpdateOn !== undefined && (
-          <GroupSettings
-            groupId={groupId!}
-            groupName={groupName}
-            isMonthlyReportUpdateOn={isMonthlyReportUpdateOn}
-            setIsGroupOptionsVisible={setIsGroupOptionsVisible}
-            show={isGroupOptionsVisible}
-          />
-        )}
+        {groupDetails?.groupName &&
+          groupDetails?.isMonthlyReportUpdateOn !== undefined && (
+            <GroupSettings
+              groupId={groupId!}
+              groupName={groupDetails?.groupName}
+              isMonthlyReportUpdateOn={groupDetails?.isMonthlyReportUpdateOn}
+              setIsGroupOptionsVisible={setIsGroupOptionsVisible}
+              showOptions={isGroupOptionsVisible}
+            />
+          )}
       </Box>
-      <Stack spacing={5} sx={{ minHeight: "100%", mt: 2 }}>
+      <Stack spacing={5} sx={{ minHeight: "100%" }}>
         <Stack spacing={1}>
           <HeadingWithTip
             alignSelf="left"
@@ -156,9 +74,10 @@ const GroupDetailsPage = () => {
               p: 2,
             }}
           >
-            {settlementBalance !== null && settlementBalance !== undefined ? (
+            {groupDetails?.settlementBalance !== null &&
+            groupDetails?.settlementBalance !== undefined ? (
               <Typography variant="subtitle1">
-                {`${formatNumberWithLocaleAndNegatives(settlementBalance)}₩`}
+                {formatToKoreanWon(groupDetails?.settlementBalance)}
               </Typography>
             ) : (
               <Typography variant="body2" sx={{ textAlign: "center" }}>
@@ -167,23 +86,25 @@ const GroupDetailsPage = () => {
             )}
           </Paper>
         </Stack>
-        {neededTransactionList && (
-          <RequiredSettlementsOverview
-            isLoading={isLoading}
-            neededTransactionList={neededTransactionList}
+        {groupDetails?.neededTransactionList && (
+          <RequiredSettlementList
+            isLoading={isGroupDetailsLoading}
+            groupId={groupId}
+            neededTransactionList={groupDetails?.neededTransactionList}
           />
         )}
-        {lastWeekSettledTransactionList && (
-          <RecentSettlementsList
-            isLoading={isLoading}
-            lastWeekSettledTransactionList={lastWeekSettledTransactionList}
+        {groupDetails?.lastWeekSettledTransactionList && (
+          <RecentSettlementList
+            isLoading={isGroupDetailsLoading}
+            lastWeekSettledTransactionList={
+              groupDetails?.lastWeekSettledTransactionList
+            }
           />
         )}
         <Divider />
         <GroupExpenseList groupId={groupId} />
       </Stack>
-      <RenderSettleTxModal />
-    </Stack>
+    </>
   );
 };
 

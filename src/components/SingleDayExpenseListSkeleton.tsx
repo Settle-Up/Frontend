@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 const SingleDayExpenseListSkeleton = () => {
-  const dummyItemsCount = 3; // Assuming 5 items for the skeleton
+  const dummyItemsCount = 3; 
 
   return (
     <Stack spacing={1}>

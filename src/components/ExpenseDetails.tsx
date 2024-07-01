@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react";
-import { Divider, Paper, Stack, Typography } from "@mui/material";
-import SelectableParticipantChipList from "@components/SelectableParticipantChipList";
-import PurchasedItemToggletList from "@components/PurchasedItemToggletList";
-import GeneralExpenseDescription from "@components/GeneralExpenseDescription";
+import { useState } from "react";
+import { Divider, Paper, Typography } from "@mui/material";
+import GeneralExpenseDescription from "@components/Group/GeneralExpenseDescription";
 import ParticipantExpenseAccordion from "@components/ParticipantExpenseAccordion";
 
 type ExpenseDetailsProps = {
   createdAt?: string;
-  expense: CoreGroupExpenseDetails;
+  expense: Expense;
   showReceiptName?: boolean;
 };
 
-const ExpenseDetails = ({ createdAt, expense, showReceiptName = false }: ExpenseDetailsProps) => {
+const ExpenseDetails = ({
+  createdAt,
+  expense,
+  showReceiptName = false,
+}: ExpenseDetailsProps) => {
   const [expanded, setExpanded] = useState<string | false>(false);
 
   const toggleAccordion =
@@ -23,7 +25,7 @@ const ExpenseDetails = ({ createdAt, expense, showReceiptName = false }: Expense
     payerUserName,
     allocationType,
     expenseParticipantList,
-    itemOrderDetailsList,
+    itemList,
     receiptName,
     address,
     receiptDate,
@@ -42,13 +44,13 @@ const ExpenseDetails = ({ createdAt, expense, showReceiptName = false }: Expense
     let totalPurchasedCost = 0;
 
     if (allocationType === "Equal Quantity") {
-      itemOrderDetailsList.forEach((item) => {
+      itemList.forEach((item) => {
         const isPurchaser = item.jointPurchaserList?.some(
           (purchaser) => purchaser.userId === participantId
         );
 
         if (isPurchaser) {
-          const jointPurchaserCount = item.jointPurchaserList?.length!;
+          const jointPurchaserCount = item.jointPurchaserList?.length ?? 0;
           const itemPurchasedCost =
             parseFloat(item.itemTotalPrice) / jointPurchaserCount!;
 
@@ -63,7 +65,7 @@ const ExpenseDetails = ({ createdAt, expense, showReceiptName = false }: Expense
         }
       });
     } else if (allocationType === "Variable Quantity") {
-      itemOrderDetailsList.forEach((item) => {
+      itemList.forEach((item) => {
         const isPurchaser = item.jointPurchaserList?.some(
           (purchaser) => purchaser.userId === participantId
         );
@@ -97,23 +99,23 @@ const ExpenseDetails = ({ createdAt, expense, showReceiptName = false }: Expense
   };
 
   return (
-    <Paper sx={{ backgroundColor: "white", borderRadius: 3, padding: 3 }}>
+    <Paper sx={{ backgroundColor: "white", borderRadius: 3, p: 3 }}>
       <GeneralExpenseDescription
         createdAt={createdAt}
         receiptName={receiptName}
         address={address}
         receiptDate={receiptDate}
         receiptTotalPrice={receiptTotalPrice}
-        itemOrderDetailsList={itemOrderDetailsList}
+        itemList={itemList}
         showReceiptName={showReceiptName}
       />
       <Divider />
       <Typography variant="subtitle2">Payer</Typography>
-      <Typography gutterBottom color="text.secondary">
+      <Typography gutterBottom color="text.secondary" variant="body1">
         {payerUserName}
       </Typography>
       <Typography variant="subtitle2">Allocation Type</Typography>
-      <Typography gutterBottom color="text.secondary">
+      <Typography gutterBottom color="text.secondary" variant="body1">
         {allocationType}
       </Typography>
       <Divider />

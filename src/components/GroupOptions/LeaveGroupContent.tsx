@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import StandardLabeledInput from "@components/StandardLabeledInput";
-import { useMutation, useQueryClient } from "react-query"; 
-import { leaveGroup } from "@apis/group/leaveGroup";
+import { useMutation, useQueryClient } from "react-query";
+import { leaveGroup } from "@apis/groups/leaveGroup";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
+import useFeedbackHandler from "@hooks/useFeedbackHandler";
+import removeItemFromListInCache from "reactQuery/removeItemFromListInCache";
 
 type LeaveGroupContentProps = {
   groupId: string;
@@ -29,15 +31,15 @@ const LeaveGroupContent = ({
 
   const {
     mutate: executeLeaveGroup,
-    isSuccess,
+    data: deletedGroup,
     isError,
     error,
     isLoading,
+    isSuccess,
   } = useMutation(() => leaveGroup(groupId));
 
   useEffect(() => {
     if (isError && error instanceof Error) {
-      closeModal();
       let message = error.message;
       if (message === "USER SETTLED REQUIRED") {
         message = `Ensure all debts are paid and credits received in "${groupName}" before you leave the group.`;
@@ -53,21 +55,36 @@ const LeaveGroupContent = ({
     }
   }, [isError, error, setSnackbar, groupName]);
 
-  useEffect(() => {
-    if (isSuccess) {
+
+  const successAction = useCallback(() => {
+    if (deletedGroup) {
+      removeItemFromListInCache<PaginatedResponse<JoinedGroupSummary>, "dataList">({
+        queryClient,
+        queryKey: "groupSummaryList",
+        listKey: "dataList",
+        identifierKey: "groupId",
+        identifierValue: deletedGroup.groupId,
+      });
       queryClient.removeQueries(["groupDetails", groupId]);
       queryClient.removeQueries(["groupExpenseList", groupId]);
-      closeModal();
-      setSnackbar({
-        show: true,
-        message: `You have successfully left ${groupName}`,
-        severity: "success",
-      });
-      navigate("/");
-    }
-  }, [isSuccess, navigate, setSnackbar, groupName]);
 
-  console.log(groupName, groupNameConfirmation);
+    }
+    navigate("/");
+  }, []);
+
+  useFeedbackHandler({
+    isError,
+    errorMessage:
+      error instanceof Error && error.message === "USER SETTLED REQUIRED"
+        ? `Ensure all debts are paid and credits received in "${groupName}" before you leave the group.`
+        : `Sorry, an error occurred while leaving ${groupName}. Please try again later.`,
+    isSuccess,
+    successMessage: `You have successfully left ${groupName}`,
+    successAction,
+    unconditionalExecute: useCallback(() => {
+      closeModal();
+    }, []),
+  });
   return (
     <>
       <Stack spacing={4}>
@@ -82,19 +99,17 @@ const LeaveGroupContent = ({
           Please type the group name below to confirm your departure.
         </Typography>
         <StandardLabeledInput
-          handleInputChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setGroupNameConfirmation(e.target.value)
-          }
+          changeInput={(e) => setGroupNameConfirmation(e.target.value)}
           name="groupName"
           placeholder={`Type "${groupName}" to confirm`}
           value={groupNameConfirmation}
         />
         <CustomButton
-          disabled={groupName !== groupNameConfirmation}
+          disabled={groupName !== groupNameConfirmation || isLoading}
           sx={{ width: "100%" }}
           onClick={() => executeLeaveGroup()}
         >
-          Leave
+          {isLoading ? "Processing..." : "Leave"}
         </CustomButton>
       </Stack>
     </>

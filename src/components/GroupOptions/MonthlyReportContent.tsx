@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import { useMutation } from "react-query";
-import { toggleGroupMonthlyReport } from "@apis/group/toggleGroupMonthlyReport";
-import { useSetRecoilState } from "recoil";
-import { snackbarState } from "@store/snackbarStore";
+import { toggleGroupMonthlyReport } from "@apis/groups/toggleGroupMonthlyReport";
+import useFeedbackHandler from "@hooks/useFeedbackHandler";
+import { useQueryClient } from "react-query";
+import updateCache from "reactQuery/updateCache";
 
 type MonthlyReportContentProps = {
   groupId: string;
@@ -19,119 +20,84 @@ const MonthlyReportContent = ({
   closeModal,
   isMonthlyReportUpdateOn,
 }: MonthlyReportContentProps) => {
-  const [isUpdateOn, setIsUpdateOn] = useState(isMonthlyReportUpdateOn);
-  const setSnackbar = useSetRecoilState(snackbarState);
-
-  // useEffect(() => {
-  //   console.log(" when is monthly report update on is changed")
-  //   setIsUpdateOn(isMonthlyReportUpdateOn);
-  // }, [isMonthlyReportUpdateOn]); 필요 없을 수도 있음
+  const queryClient = useQueryClient();
 
   const {
     mutate: executeToggleGroupMonthlyReport,
-    data,
+    data: updatedIsMonthlyReportUpdateOn,
     isError,
+    isLoading,
     isSuccess,
   } = useMutation(() => {
-    return toggleGroupMonthlyReport({groupId, isEnabled: !isUpdateOn});
+    return toggleGroupMonthlyReport({
+      groupId,
+      isEnabled: !isMonthlyReportUpdateOn,
+    });
   });
 
-  useEffect(() => {
-    if (isSuccess && data) {
-      console.log( "When request is successfull")
-      setIsUpdateOn(data.isMonthlyReportUpdateOn)
-      closeModal();
-      const message = isUpdateOn
-        ? `You will no longer receive monthly reports from "${groupName}".`
-        : `You will receive monthly reports from "${groupName}" starting now.`;
-      setSnackbar({
-        show: true,
-        message: message,
-        severity: "success",
-      });
-    }
-  }, [isSuccess, setSnackbar, groupName, closeModal]);
+  const successAction = useCallback(() => {
+    updateCache({
+      queryClient,
+      queryKey: ["groupDetails", groupId],
+      updatedData: { isMonthlyReportUpdateOn: updatedIsMonthlyReportUpdateOn },
+    });
+  }, [updatedIsMonthlyReportUpdateOn, groupId, queryClient]);
 
-  useEffect(() => {
-    if (isError) {
+  useFeedbackHandler({
+    isError,
+    errorMessage:
+      "An error occurred while updating the monthly report settings. Please try again later.",
+    isSuccess,
+    successMessage: isMonthlyReportUpdateOn
+      ? `You will no longer receive monthly reports from "${groupName}".`
+      : `You will receive monthly reports from "${groupName}" starting now.`,
+    successAction,
+    unconditionalExecute: useCallback(() => {
       closeModal();
-      setSnackbar({
-        show: true,
-        message:
-          "An error occurred while updating the monthly report settings. Please try again later.",
-        severity: "error",
-      });
-    }
-  }, [isError, setSnackbar, groupName, closeModal]);
+    }, []),
+  });
 
   return (
-    <>
-      {isUpdateOn ? (
-        <Stack spacing={4}>
-          <Box>
-            <Typography variant="subtitle1">
-              Disable Monthly Expense Summaries for
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
-              {groupName}
-            </Typography>
-          </Box>
-          <Typography>
-            Do you want to stop receiving monthly updates on on your owed and
-            owing balances for each expense in the group via Kakao Messenger?
-          </Typography>
-          <Stack spacing={2}>
-            <CustomButton
-              buttonStyle="primary"
-              sx={{ width: "100%" }}
-              onClick={() => executeToggleGroupMonthlyReport()}
-            >
-              Yes, Disable Summaries
-            </CustomButton>
-            <CustomButton
-              buttonStyle="secondary"
-              sx={{ width: "100%" }}
-              onClick={closeModal}
-            >
-              No, Keep Them
-            </CustomButton>
-          </Stack>
-        </Stack>
-      ) : (
-        <Stack spacing={4}>
-          <Box>
-            <Typography variant="subtitle1">
-              Enable Monthly Expense Summaries for
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
-              {groupName}
-            </Typography>
-          </Box>
-          <Typography>
-            Receive monthly updates on your owed and owing balances for each
-            expense in the group via Kakao Messenger. <br />
-            <br /> Would you like to enable this feature?
-          </Typography>
-          <Stack spacing={2}>
-            <CustomButton
-              buttonStyle="primary"
-              sx={{ width: "100%" }}
-              onClick={() => executeToggleGroupMonthlyReport()}
-            >
-              Yes, Enable Summaries
-            </CustomButton>
-            <CustomButton
-              buttonStyle="secondary"
-              sx={{ width: "100%" }}
-              onClick={closeModal}
-            >
-              No, Thanks
-            </CustomButton>
-          </Stack>
-        </Stack>
-      )}
-    </>
+    <Stack spacing={4}>
+      <Box>
+        <Typography variant="subtitle1">
+          {isMonthlyReportUpdateOn ? "Disable" : "Enable"} Monthly Expense
+          Summaries for
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary">
+          {groupName}
+        </Typography>
+      </Box>
+      <Typography>
+        {isMonthlyReportUpdateOn
+          ? "Do you want to stop receiving monthly updates on your owed and owing balances for each expense in the group via Kakao Messenger?"
+          : "Receive monthly updates on your owed and owing balances for each expense in the group via Kakao Messenger. Would you like to enable this feature?"}
+      </Typography>
+      <Stack spacing={2}>
+        <CustomButton
+          buttonStyle="primary"
+          sx={{ width: "100%" }}
+          onClick={() => executeToggleGroupMonthlyReport()}
+          disabled={isLoading}
+        >
+          {isLoading
+            ? isMonthlyReportUpdateOn
+              ? "Disabling..."
+              : "Enabling..."
+            : isMonthlyReportUpdateOn
+            ? "Yes, Disable Summaries"
+            : "Yes, Enable Summaries"}
+        </CustomButton>
+        <CustomButton
+          buttonStyle="secondary"
+          sx={{ width: "100%" }}
+          onClick={closeModal}
+          disabled={isLoading}
+        >
+          No, {isMonthlyReportUpdateOn ? "Keep Them" : "Thanks"}
+        </CustomButton>
+      </Stack>
+    </Stack>
   );
 };
-
 export default MonthlyReportContent;

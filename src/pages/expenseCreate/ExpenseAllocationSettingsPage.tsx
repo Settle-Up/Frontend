@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { Stack, TextField, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import SearchableSelect from "@components/SearchableSelect";
 import { useQuery } from "react-query";
-import { getGroupMemberList } from "@apis/group/getGroupMemberList";
+import { getGroupMemberList } from "@apis/groups/getGroupMemberList";
 import { useRecoilState } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
-import { mockGroupMemberList } from "@mock/groupMock";
 import CustomIconButton from "@components/CustomIconButton";
 import EastIcon from "@mui/icons-material/East";
 
@@ -23,18 +22,17 @@ const ExpenseAllocationSettingsPage = () => {
   const navigate = useNavigate();
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
 
-  // const {
-  //   data: groupMemberList,
-  //   isLoading,
-  //   error,
-  // } = useQuery("groupMemberList", () =>
-  //   getGroupMemberList(newExpense.groupId)  // );
+  const {
+    data: groupMemberList,
+    isLoading,
+    error,
+  } = useQuery("groupMemberList", () => getGroupMemberList(newExpense.groupId));
 
-  // const possibleMemberOptions: MemberOption[] =
-  //   groupMemberList?.map((member: GeneralUser) => ({
-  //     id: member.userId,
-  //     label: member.userName!,
-  //   })) ?? [];
+  const possibleMemberOptions: MemberOption[] =
+    groupMemberList?.map((member: GeneralUser) => ({
+      id: member.userId,
+      label: member.userName!,
+    })) ?? [];
 
   const possibleAllocationOptions: AllocationOption[] = [
     { id: "Variable Quantity", label: "Allocate by Variable Quantity" },
@@ -82,10 +80,7 @@ const ExpenseAllocationSettingsPage = () => {
     }
   };
 
-  const mockGroupMemberOptions = mockGroupMemberList.map((member) => ({
-    id: member.userId,
-    label: member.userName,
-  }));
+
 
   return (
     <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
@@ -94,8 +89,7 @@ const ExpenseAllocationSettingsPage = () => {
           ariaLabelledby="expense-payer"
           label="Who paid for this expense?"
           handleSelectionChange={handlePayerChange}
-          // possibleOptions={possibleMemberOptions}
-          possibleOptions={mockGroupMemberOptions}
+          possibleOptions={possibleMemberOptions}
           selectedOptions={{
             id: newExpense.payerUserId,
             label: newExpense.payerUserName,
@@ -105,8 +99,7 @@ const ExpenseAllocationSettingsPage = () => {
           ariaLabelledby="expense-participants"
           label="Who participated in this expense?"
           handleSelectionChange={handleExpenseParticipantListChange}
-          // possibleOptions={possibleMemberOptions}
-          possibleOptions={mockGroupMemberOptions}
+          possibleOptions={possibleMemberOptions}
           selectedOptions={newExpense.expenseParticipantList.map((user) => ({
             id: user.userId!,
             label: user.userName!,
@@ -130,16 +123,12 @@ const ExpenseAllocationSettingsPage = () => {
         handleClick={() => {
           if (newExpense.allocationType === "Equal Quantity") {
             navigate("/expense/allocation/equal", {
-              state: { groupMemberList: mockGroupMemberList },
+              state: { groupMemberList },
             });
-            // navigate("/allocate-equal-quantity", {
-            //   state: { groupMemberList },
-            // })
           } else if (newExpense.allocationType === "Variable Quantity") {
-            navigate("/expense/allocation/variable");
-            // navigate("/allocate-variable-quantity", {
-            //   state: { groupMemberList },
-            // })
+            navigate("/expense/allocation/variable", {
+              state: { groupMemberList },
+            })
           }
         }}
         shape="round"

@@ -6,27 +6,25 @@ import dayjs from "dayjs";
 import theme from "@theme";
 
 type DateSelectorProps = {
-  error?: boolean;
-  errorText?: string;
+  error?: CustomError;
   label: string;
   name: string;
-  onSelectionChange: (e: {
+  changeDate: (e: {
     target: { name: string; value: string | null };
   }) => void;
   selectedOption: string;
 };
 
 const DateSelector = ({
-  error = false,
-  errorText = "This field is required.",
+  error,
   label,
   name,
-  onSelectionChange,
+  changeDate,
   selectedOption,
 }: DateSelectorProps) => {
-  const handleDateChange = (date: dayjs.Dayjs | null) => {
+  const formatAndChangeDate = (date: dayjs.Dayjs | null) => {
     const dateString = date ? dayjs(date).format("YYYY-MM-DD") : null;
-    onSelectionChange({ target: { name, value: dateString } });
+    changeDate({ target: { name, value: dateString } });
   };
 
   return (
@@ -39,7 +37,7 @@ const DateSelector = ({
           name={name}
           slotProps={{
             textField: {
-              helperText: error ? errorText : "",
+              helperText: error ?? "",
               sx: {
                 "& .MuiOutlinedInput-root fieldset": {
                   borderColor: error ? theme.palette.error.main : null,
@@ -53,7 +51,7 @@ const DateSelector = ({
           sx={{ flex: 1 }}
           value={selectedOption ? dayjs(selectedOption) : null}
           maxDate={dayjs()}
-          onChange={handleDateChange}
+          onChange={formatAndChangeDate}
           format="YYYY-MM-DD"
         />
       </LocalizationProvider>

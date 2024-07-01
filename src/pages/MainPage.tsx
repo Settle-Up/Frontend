@@ -1,12 +1,9 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CustomIconButton from "@components/CustomIconButton";
-import PreferenceSettingsModal from "@components/PreferenceSettingsModal";
 import MainPageTopBar from "@components/MainPageTopBar";
-import GroupList from "@components/GroupList";
-import Spinner from "@components/Spinner";
+import GroupList from "@components/Group/GroupList";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -21,7 +18,7 @@ const MainPage = () => {
             <CustomIconButton
               ariaLabel="Create New Group"
               handleClick={() => navigate("/groups/create")}
-              icon={<AddIcon />}
+              icon={<AddIcon sx={{ fontSize: "18px" }}/>}
               shape="square"
             />
           </Box>
@@ -30,7 +27,7 @@ const MainPage = () => {
         <CustomIconButton
           ariaLabel="Add New Receipt"
           handleClick={() => navigate("/expense/upload")}
-          icon={<AddIcon sx={{ fontSize: "36px" }} />}
+          icon={<AddIcon sx={{ fontSize: "30px" }} />}
           shape="round"
           sx={{
             position: "sticky",

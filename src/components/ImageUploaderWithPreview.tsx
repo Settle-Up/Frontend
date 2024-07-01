@@ -26,7 +26,6 @@ const ImageUploaderWithPreview = () => {
     if (file) {
       try {
         const resizedImg = await resizeImage(file, 9000, 9000, "JPEG", 70, 0);
-        console.log("Resized image:", resizedImg);
         setNewExpense((prevState) => ({
           ...prevState,
           receiptImgFile: resizedImg,
@@ -57,9 +56,7 @@ const ImageUploaderWithPreview = () => {
       <input type="file" hidden onChange={handleImageFileChange} />
       <Stack
         sx={{
-          "& > :not(:first-of-type)": {
-            textTransform: "none",
-          },
+          textTransform: "none",
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
@@ -78,13 +75,13 @@ const ImageUploaderWithPreview = () => {
                 objectFit: "contain",
               }}
             />
-            <Typography variant="body2">{imgFileName}</Typography>
+            <Typography variant="subtitle1">{imgFileName}</Typography>
           </>
         ) : (
           <>
             <DriveFolderUploadIcon sx={{ fontSize: 120 }} />
             <Typography variant="subtitle1">Upload Receipt Image</Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{textAlign: "center"}}>
               Save time and effort by letting our system automatically extract
               the necessary fields for you!
             </Typography>

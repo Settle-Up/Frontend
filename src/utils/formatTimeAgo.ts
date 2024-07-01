@@ -4,7 +4,6 @@ import "dayjs/locale/ko";
 
 dayjs.extend(relativeTime);
 dayjs.locale('en');
-// dayjs.locale('ko'); 
 
 const formatTimeAgo = (date: dayjs.Dayjs | null) => {
   if (!date) return null;

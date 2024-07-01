@@ -10,6 +10,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import theme from "@theme";
 import ItemDescription from "@components/ItemDescription";
+import { useFormatNumberAsKoreanWon } from "@hooks/useFormatNumberAsKoreanWon";
 
 type ParticipantExpenseAccordionProps = {
   allocationType: AllocationType;
@@ -26,6 +27,8 @@ const ParticipantExpenseAccordion = ({
   participantExpense,
   toggleAccordion,
 }: ParticipantExpenseAccordionProps) => {
+  const formatToKoreanWon = useFormatNumberAsKoreanWon();
+
   const { userId, userName } = participant;
 
   return (
@@ -46,7 +49,6 @@ const ParticipantExpenseAccordion = ({
           <IconButton
             color="primary"
             aria-label="dropdown"
-            onClick={() => {}}
             sx={{ p: 0.5 }}
           >
             <ExpandMoreIcon fontSize="medium" />
@@ -63,16 +65,16 @@ const ParticipantExpenseAccordion = ({
           sx={{ display: "flex", alignItems: "center", width: "100%", gap: 1 }}
         >
           <Typography
-            variant="subtitle1"
+            variant="subtitle2"
             sx={{ width: "60%", wordBreak: "break-all" }}
           >
             {userName}
           </Typography>
           <Typography
-            variant="subtitle1"
+            variant="subtitle2"
             sx={{ width: "40%", wordBreak: "break-all", textAlign: "right" }}
           >
-            {participantExpense.totalPurchasedCost}₩
+            {formatToKoreanWon(participantExpense.totalPurchasedCost)}
           </Typography>
         </Box>
       </AccordionSummary>
@@ -91,8 +93,8 @@ const ParticipantExpenseAccordion = ({
                   key={index}
                   itemName={itemName}
                   initialAmount={itemTotalPrice}
-                  quantity={jointPurchaserCount!.toString()}
-                  calculatedTotal={itemPurchasedCost!.toString()}
+                  quantity={jointPurchaserCount!}
+                  calculatedTotal={itemPurchasedCost!}
                   mode="equalQuantity"
                 />
               );
@@ -103,13 +105,14 @@ const ParticipantExpenseAccordion = ({
                 purchasedQuantity,
                 itemPurchasedCost,
               } = purchasedItem as VariableShareItemDetails;
+
               return (
                 <ItemDescription
                   key={index}
                   itemName={itemName}
                   initialAmount={unitPrice}
-                  quantity={purchasedQuantity.toString()}
-                  calculatedTotal={itemPurchasedCost.toString()}
+                  quantity={purchasedQuantity}
+                  calculatedTotal={itemPurchasedCost}
                   mode="variableQuantity"
                 />
               );

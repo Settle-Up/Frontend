@@ -19,12 +19,20 @@ export const searchUserEmailList = async ({
   groupId,
 }: EmailSearchListRequest): Promise<EmailSearchListResponse> => {
   try {
-    let queryParams = `search=${query}&page=${page}&size=${SEARCH_RESULT_PER_PAGE}`;
+    const params: any = {
+      email: query,
+      page: page,
+      size: SEARCH_RESULT_PER_PAGE,
+    };
+
     if (groupId) {
-      queryParams += `&groupId=${groupId}`;
+      params.excludeGroupId = groupId;
     }
 
-    const response = await axiosInstance.get(`/?${queryParams}`);
+    const response = await axiosInstance.get(`/users/search`, {
+      params,
+    });
+
     return response.data.data;
   } catch (error) {
     throw new Error("Failed to get email list");

@@ -1,8 +1,7 @@
-import { useEffect } from "react";
 import { Box, ListItem, Stack, Typography } from "@mui/material";
-import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
+import { useFormatNumberAsKoreanWon } from "@hooks/useFormatNumberAsKoreanWon";
 import { useSetRecoilState } from "recoil";
-import { settleTxModalState } from "@store/settleTxModalStore";
+import { selectedTransactionForPaymentState } from "@store/transactionStore";
 import CustomButton from "@components/CustomButton";
 
 type RequiredTransactionCardProps = {
@@ -10,17 +9,13 @@ type RequiredTransactionCardProps = {
 };
 
 const OutgoingPaymentCard = ({ transaction }: RequiredTransactionCardProps) => {
+  const formatToKoreanWon = useFormatNumberAsKoreanWon();
+
   const { counterPartyName, transactionAmount } = transaction;
 
-  const setSettleTxModal = useSetRecoilState(settleTxModalState);
-
-  const openSettleTxModal = () => {
-    setSettleTxModal((prevState) => ({
-      ...prevState,
-      isOpen: true,
-      selectedTransaction: transaction,
-    }));
-  };
+  const setSelectedTransactionForPayment = useSetRecoilState(
+    selectedTransactionForPaymentState
+  );
 
   return (
     <ListItem
@@ -32,6 +27,7 @@ const OutgoingPaymentCard = ({ transaction }: RequiredTransactionCardProps) => {
       <Stack sx={{ width: "100%" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Typography
+            variant="subtitle2"
             sx={{
               width: "55%",
             }}
@@ -39,15 +35,23 @@ const OutgoingPaymentCard = ({ transaction }: RequiredTransactionCardProps) => {
             {counterPartyName}
           </Typography>
           <Typography
+            variant="subtitle2"
             sx={{
               width: "40%",
               wordBreak: "normal",
               textAlign: "left",
             }}
           >
-            {`${formatNumberWithLocaleAndNegatives(transactionAmount)}₩`}
+            {formatToKoreanWon(transactionAmount)}
           </Typography>
-          <CustomButton onClick={() => openSettleTxModal()}>Pay</CustomButton>
+          <CustomButton
+            onClick={() => {
+              setSelectedTransactionForPayment(transaction);
+            }}
+            sx={{ py: 0.5 }}
+          >
+            Pay
+          </CustomButton>
         </Box>
       </Stack>
     </ListItem>

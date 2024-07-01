@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
-import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
+import CodeIcon from '@mui/icons-material/Code';
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 
 const LoginPage = () => {
@@ -44,8 +44,8 @@ const LoginPage = () => {
         >
           Kakao Login
         </CustomButton>
-        <CustomButton startIcon={<TipsAndUpdatesIcon />} sx={{ fontSize: 15 }}>
-          How To Use
+        <CustomButton startIcon={<CodeIcon />} sx={{ fontSize: 15 }}>
+          Behind The Code
         </CustomButton>
       </Stack>
     </>

@@ -2,8 +2,7 @@ import axiosInstance from "@apis/axiosConfig";
 
 export const signOut = async (): Promise<string> => {
   try {
-    const response = await axiosInstance.post("/logout");
-    console.log(response.data);
+    const response = await axiosInstance.post("/auth/logout");
 
     sessionStorage.clear();
 

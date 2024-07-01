@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Box, Divider, Switch, Typography } from "@mui/material";
-import CustomModal from "@components/CustomModal";
+import { useCallback } from "react";
+import { Box, Switch, Typography } from "@mui/material";
+import Modal from "@components/Modal";
 import { useMutation } from "react-query";
-import { useSetRecoilState, useRecoilState } from "recoil";
-import { snackbarState } from "@store/snackbarStore";
-import { userDetailsState } from "@store/userStore";
-import { toggleDecimalDisplayPreferences } from "@apis/user/toggleDecimalDisplayPreferences";
+import { useRecoilState } from "recoil";
+import { toggleDecimalDisplayPreferences } from "@apis/users/toggleDecimalDisplayPreferences";
+import useFeedbackHandler from "@hooks/useFeedbackHandler";
+import { userProfileState } from "@store/userStore";
 
 type PreferenceSettingsModalProps = {
   isOpen: boolean;
@@ -15,57 +15,50 @@ const PreferenceSettingsModal = ({
   isOpen,
   closePreferenceSettingsModal,
 }: PreferenceSettingsModalProps) => {
-  const setSnackbar = useSetRecoilState(snackbarState);
- 
-  const [userDetails, setUserDetails] = useRecoilState(userDetailsState);
-
+  const [userProfile, setUserProfile] = useRecoilState(userProfileState);
+  
 
   const {
     mutate: executeToggleDecimalDisplayPreferences,
-    data,
+    data: updatedIsDecimalInputOption,
     isLoading,
     isSuccess,
     isError,
   } = useMutation(toggleDecimalDisplayPreferences);
-  
+
   const handleToggle = () => {
-    executeToggleDecimalDisplayPreferences({ isEnabled: !userDetails?.isDecimalInputOption });
+    if (userProfile) {
+      executeToggleDecimalDisplayPreferences({
+        isEnabled: !userProfile.isDecimalInputOption,
+      });
+    }
   };
-  
-  useEffect(() => {
-    if (isSuccess && data) {
-      setUserDetails(prevState => {
-        if (!prevState) return prevState; // Handle potential null prevState
-    
-        return {
-          ...prevState,
-          isDecimalInputOption: data.isDecimalInputOption // Correctly accessing the data object's property
-        };
-      });
-  
-      setSnackbar({
-        show: true,
-        message: "Your preferences for displaying monetary values have been updated successfully.",
-        severity: "success",
-      });
-    }
-  }, [data, isSuccess]);
 
-  useEffect(() => {
-    if (isError) {
-      setSnackbar({
-        show: true,
-        message:
-          "Sorry, we encountered an issue updating your preference for displaying monetary values. Please try again.",
-        severity: "error",
-      });
-    }
-  }, [isError, setSnackbar]);
+  const successAction = useCallback(() => {
+    if (updatedIsDecimalInputOption) {
+      const updatedUserProfile = {
+        ...userProfile,
+        isDecimalInputOption: updatedIsDecimalInputOption?.isDecimalInputOption,
+      };
 
-  // show loading spinner
+
+      setUserProfile(updatedUserProfile)
+     
+    }
+  }, [updatedIsDecimalInputOption]);
+
+  useFeedbackHandler({
+    isError,
+    errorMessage:
+      "Sorry, we encountered an issue updating your preference for displaying monetary values. Please try again.",
+    isSuccess,
+    successMessage:
+      "Your preferences for displaying monetary values have been updated successfully.",
+    successAction,
+  });
 
   return (
-    <CustomModal
+    <Modal
       ariaLabel="View Settings"
       isOpen={isOpen}
       closeModal={closePreferenceSettingsModal}
@@ -89,11 +82,12 @@ const PreferenceSettingsModal = ({
           Show Monetary Values With up to Two Decimal Points
         </Typography>
         <Switch
-          checked={userDetails?.isDecimalInputOption}
-          onClick={handleToggle} disabled={isLoading || !userDetails}
+          checked={userProfile?.isDecimalInputOption}
+          onChange={handleToggle}
+          disabled={isLoading || !userProfile}
         />
       </Box>
-    </CustomModal>
+    </Modal>
   );
 };
 

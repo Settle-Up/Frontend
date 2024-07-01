@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import CustomButton from "@components/CustomButton";
 import StandardLabeledInput from "@components/StandardLabeledInput";
-import { createGroup } from "@apis/group/createGroup";
+import { createGroup } from "@apis/groups/createGroup";
 import EmailSearchForm from "@components/EmailSearchForm";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
 
 const GroupCreatePage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const accessToken = sessionStorage.getItem("accessToken");
+
+  const userProfile = queryClient.getQueryData<CurrentUser>([
+    "fetchedUserProfile",
+    accessToken,
+  ]);
+
   const [newGroup, setNewGroup] = useState<NewGroup>({
     groupName: "",
     groupUserList: [],
@@ -24,7 +32,16 @@ const GroupCreatePage = () => {
     mutate: executeCreateGroup,
     isSuccess,
     isError,
-  } = useMutation(createGroup);
+  } = useMutation(
+    () => {
+      if (userProfile?.userId) {
+        return createGroup(newGroup, userProfile.userId);
+      } else {
+        return Promise.reject(new Error('User ID is missing'));
+      }
+    }
+  );
+  
 
   useEffect(() => {
     if (isSuccess) {
@@ -68,7 +85,7 @@ const GroupCreatePage = () => {
 
   const updateGroup: UpdateGroupFn = (action, eventOrUser) => {
     setNewGroup((prevGroup) => {
-      let updatedGroup = { ...prevGroup };
+      const updatedGroup = { ...prevGroup };
 
       if (action === "changeGroupName") {
         const event = eventOrUser as React.ChangeEvent<HTMLInputElement>;
@@ -97,9 +114,8 @@ const GroupCreatePage = () => {
       <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
         <Stack spacing={4}>
           <StandardLabeledInput
-            error={!!groupNameError}
-            errorText={groupNameError}
-            handleInputChange={(e) => {
+            error={groupNameError}
+            changeInput={(e) => {
               updateGroup("changeGroupName", e);
             }}
             label="Group Name *"
@@ -124,7 +140,7 @@ const GroupCreatePage = () => {
         <CustomButton
           buttonStyle="default"
           disabled={newGroup.groupName.trim().length <= 1}
-          onClick={() => executeCreateGroup(newGroup)}
+          onClick={() => executeCreateGroup()}
           sx={{
             alignSelf: "flex-end",
             width: { xs: "100%", sm: "auto" },
@@ -134,29 +150,6 @@ const GroupCreatePage = () => {
           Create
         </CustomButton>
       </Stack>
-      {/* <CustomModal
-        ariaLabel="Add New Member"
-        isOpen={isSuccessModalOpen}
-        closeModal={closeModal}
-      >
-        <Typography variant="subtitle1">Awesome!</Typography>
-        <Typography variant="h6" color="text.secondary">
-          {newGroup.groupName}
-        </Typography>
-        <Typography variant="subtitle1">
-          is all set up and invites are on their way to your members.
-        </Typography>
-        <Typography variant="subtitle1">
-          Time to streamline your group expenses!
-        </Typography>
-        <CustomButton
-          buttonStyle="default"
-          sx={{ width: "100%" }}
-          onClick={closeModal}
-        >
-          Go Home
-        </CustomButton>
-      </CustomModal> */}
     </>
   );
 };

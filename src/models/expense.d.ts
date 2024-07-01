@@ -1,44 +1,44 @@
-type AllocationType = "Variable Quantity" | "Equal Quantity" | ""; // if it's "Variable Quantity", I need to send "variableQuantity". if it's "Equal Quantity", I need to send "equalQuantity"
+type AllocationType = "Variable Quantity" | "Equal Quantity" | ""; 
 
 type PurchaserDetails = {
   userId: string;
-  userName?: string; 
+  userName?: string;
   purchasedQuantity?: string | undefined;
 };
 
-type ItemOrderDetails = {
-  itemId: string; // --> don't need to include in the request body
-  itemName: string; // --> change field name to receiptItemName
-  unitPrice: string; 
-  itemQuantity: string; // --> change field name to totalItemQuantity
-  itemTotalPrice: string; // -> don't need to include in the request body 
-  jointPurchaserCount?: string; // --> value should be jointPurchaserList.length
-  jointPurchaserList?: PurchaserDetails[]; 
+type Item = {
+  itemId: string; 
+  itemName: string; 
+  unitPrice: string;
+  itemQuantity: string; 
+  itemTotalPrice: string; 
+  jointPurchaserCount?: string; 
+  jointPurchaserList?: PurchaserDetails[];
 };
 
-type CoreGroupExpenseDetails = {
-  expenseParticipantList: GeneralUser[]; // -> don't need to include in the request body
-  groupId: string; 
-  groupName: string; 
-  payerUserId: string; 
-  payerUserName: string; 
-  receiptName: string; 
-  address: string; 
-  receiptDate: string; //
-  receiptTotalPrice: string; // --> change field name to totalPrice
-  // discountApplied: string; 
-  // actualPaidPrice: string; 
-  allocationType: AllocationType; 
-  itemOrderDetailsList: ItemOrderDetails[]; // --> change field name to receiptItemList
+type Expense = {
+  expenseParticipantList: GeneralUser[]; 
+  groupId: string;
+  groupName: string;
+  payerUserId: string;
+  payerUserName: string;
+  receiptName: string;
+  address: string;
+  receiptDate: string; 
+  receiptTotalPrice: string; 
+  discountApplied: string;
+  actualPaidPrice: string;
+  allocationType: AllocationType;
+  itemList: Item[]; 
 };
 
-type NewGroupExpense = CoreGroupExpenseDetails & {
-  receiptImgFile: File | null; // -> don't need to include in the request body
+type NewExpense = Expense & {
+  receiptImgFile: File | null; 
 };
 
-type ExisitingGroupExpense = CoreGroupExpenseDetails & {
-  expenseId: string; // --> receiptUUID
-  createdAt: string; 
+type ExisitingExpense = Expense & {
+  expenseId: string; 
+  createdAt: string;
 };
 
 type ItemsAllocationStatusMap = {

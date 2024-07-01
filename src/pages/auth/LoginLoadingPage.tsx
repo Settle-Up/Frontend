@@ -5,7 +5,6 @@ import { useSetRecoilState } from "recoil";
 import { useEffect } from "react";
 import Spinner from "@components/Spinner";
 import { signIn } from "@apis/auth/signIn";
-import { userDetailsState } from "@store/userStore";
 import { snackbarState } from "@store/snackbarStore";
 
 const LoginLoadingPage = () => {
@@ -13,34 +12,39 @@ const LoginLoadingPage = () => {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const authCode = queryParams.get("code");
-  const setUserDetailsState = useSetRecoilState(userDetailsState);
   const setSnackbar = useSetRecoilState(snackbarState);
 
-  const { data: userAuthData, isSuccess, isError } = useQuery(
-    "userAuthData",
-    () => {
-      if (authCode) {
-        return signIn(authCode);
-      }
-      throw new Error("Auth code is missing");
-    },
-  );
+  const {
+    data: userAuthDetails,
+    isSuccess,
+    isError,
+  } = useQuery("userAuthDetails", () => {
+    if (authCode) {
+      return signIn(authCode);
+    }
+    throw new Error("Auth code is missing");
+  });
 
   useEffect(() => {
     const preAuthRoute = sessionStorage.getItem("preAuthRoute");
-    if (isSuccess && userAuthData) {
-      setUserDetailsState(userAuthData);
+    if (isSuccess && userAuthDetails) {
+      const { accessToken, issuedTime, expiresIn } = userAuthDetails;
+
+      sessionStorage.setItem("accessToken", accessToken);
+      sessionStorage.setItem("issuedTime", issuedTime);
+      sessionStorage.setItem("expiresIn", expiresIn);
+
       navigate(preAuthRoute || "/");
       sessionStorage.removeItem("preAuthRoute");
     }
-  }, [isSuccess, userAuthData, navigate, setUserDetailsState]);
+  }, [isSuccess, userAuthDetails, navigate]);
 
   useEffect(() => {
     if (isError) {
       setSnackbar({
         show: true,
         message:
-          "Oops! It looks like your login attempt hit a snag. We apologize for the inconvenience. Could you please give it another try? If you continue to face issues, our support team is here to help. Thanks for bearing with us!",
+          "Sorry, something went wrong with your login attempt. Please try again later.",
         severity: "error",
       });
       navigate("/login");

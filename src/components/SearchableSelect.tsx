@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment } from "react/jsx-runtime";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PaperProps } from "@mui/material";
 
 type Option = {
@@ -18,6 +18,7 @@ type SearchableSelectProps<T extends Option> = {
   ariaLabelledby: string;
   endOfListElement?: React.ReactNode;
   handleSelectionChange: (value: T | T[] | null) => void;
+  helperText?: string | null;
   label?: string;
   possibleOptions: T[] | null;
   selectedOptions: T | T[] | null;
@@ -30,6 +31,7 @@ const SearchableSelect = <T extends Option>({
   ariaLabelledby,
   endOfListElement,
   handleSelectionChange,
+  helperText,
   label,
   possibleOptions,
   selectedOptions,
@@ -37,6 +39,8 @@ const SearchableSelect = <T extends Option>({
   noOptionsText = "No options available",
   lastElementRef,
 }: SearchableSelectProps<T>) => {
+  const [open, setOpen] = useState(false);
+
   let value;
   if (multiselect) {
     value = Array.isArray(selectedOptions) ? selectedOptions : [];
@@ -50,22 +54,17 @@ const SearchableSelect = <T extends Option>({
         : null;
   }
 
-  console.log("LAST ELEMENT REF", lastElementRef)
-  const CustomPaperComponent: React.FC<
-    PaperProps & { children?: React.ReactNode }
-  > = ({ children, ...other }) => (
-    <Paper elevation={5} {...other} sx={{maxHeight: "100px"}}>
-      {children}
-      {endOfListElement}
-      <div
-          ref={lastElementRef}
-          style={{
-            display: "inline",
-            border: "3px solid orange",
-          }}
-        />
-    </Paper>
-  );
+  const handleDropdownOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDropdownClose = (event: React.SyntheticEvent<Element, Event>, reason: string) => {
+    if (multiselect && reason === "selectOption") {
+      event.stopPropagation();
+      return;
+    }
+    setOpen(false);
+  };
 
   return (
     <Stack spacing={2}>
@@ -75,6 +74,9 @@ const SearchableSelect = <T extends Option>({
         </Typography>
       )}
       <Autocomplete
+        open={open}
+        onOpen={handleDropdownOpen}
+        onClose={handleDropdownClose}
         value={value}
         onChange={(event, newValue) => handleSelectionChange(newValue)}
         options={possibleOptions || []}
@@ -84,13 +86,22 @@ const SearchableSelect = <T extends Option>({
         ListboxProps={{
           className: "custom-scrollbar",
         }}
-        PaperComponent={CustomPaperComponent}
+        PaperComponent={({ children }) => (
+          <Paper>
+            <Stack spacing={2}>
+              {children}
+              {endOfListElement}
+            </Stack>
+          </Paper>
+        )}
         renderInput={(params) => (
           <TextField
             {...params}
             aria-labelledby={ariaLabelledby}
             variant="outlined"
             fullWidth
+            error={!!helperText}
+            helperText={helperText}
             InputProps={{
               ...params.InputProps,
               endAdornment: (
@@ -100,6 +111,7 @@ const SearchableSelect = <T extends Option>({
           />
         )}
         renderOption={(props, option) => <li {...props}>{option.label}</li>}
+        aria-expanded="true"
       />
     </Stack>
   );

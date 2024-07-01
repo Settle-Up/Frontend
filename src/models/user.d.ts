@@ -1,16 +1,12 @@
 type CurrentUser = {
-  userId: string;
+  userId?: string;
   userName?: string;
   userEmail?: string;
-  accessToken?: string;
-  issuedTime?: string;
-  expiresIn?: number;
-  isDecimalInputOption: boolean;
-} | null;
+  isDecimalInputOption?: boolean;
+};
 
 type GeneralUser = {
   userId: string;
   userName?: string;
   userEmail?: string;
 };
-

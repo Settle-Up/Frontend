@@ -12,14 +12,12 @@ import HeadingWithTip from "@components/HeadingWithTip";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
 
-
 const initializeItemsAllocationStatusMap = (
-  itemOrderDetailsList: ItemOrderDetails[]
+  itemList: Item[]
 ): ItemsAllocationStatusMap => {
-
   const initialItemsAllocationStatusMap: ItemsAllocationStatusMap = {};
 
-  itemOrderDetailsList.forEach((item) => {
+  itemList.forEach((item) => {
     // Calculate the sum of purchasedQuantity for each item
     const totalAllocatedQuantity =
       item.jointPurchaserList?.reduce((total, purchaser) => {
@@ -41,23 +39,23 @@ const initializeItemsAllocationStatusMap = (
 
 const VariableQuantityAllocationPage = () => {
   const navigate = useNavigate();
-  
+
   const setSnackbar = useSetRecoilState(snackbarState);
 
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
 
-  const { expenseParticipantList, itemOrderDetailsList } = newExpense;
+  const { expenseParticipantList, itemList } = newExpense;
 
   const [selectedItemId, setSelectedItemId] = useState<string>(
-    itemOrderDetailsList[0].itemId
+    itemList[0].itemId
   );
 
-  const itemNameList = itemOrderDetailsList.map(({ itemId, itemName }) => ({
+  const itemNameList = itemList.map(({ itemId, itemName }) => ({
     itemId,
     itemName,
   }));
 
-  const selectedItemOrderDetails = itemOrderDetailsList.find(
+  const selectedItemOrderDetails = itemList.find(
     (item) => item.itemId === selectedItemId
   );
 
@@ -71,7 +69,7 @@ const VariableQuantityAllocationPage = () => {
 
   const handleNewExpenseChange = (
     key: string,
-    value: string | AllocationType | ItemOrderDetails[] | GeneralUser[]
+    value: string | AllocationType | Item[] | GeneralUser[]
   ) => {
     setNewExpense((prev) => {
       return {
@@ -82,7 +80,7 @@ const VariableQuantityAllocationPage = () => {
   };
 
   const [itemsAllocationStatusMap, setItemsAllocationStatusMap] = useState(() =>
-    initializeItemsAllocationStatusMap(itemOrderDetailsList)
+    initializeItemsAllocationStatusMap(itemList)
   );
 
   const updateItemsAllocationStatusMap = (
@@ -100,9 +98,6 @@ const VariableQuantityAllocationPage = () => {
     }));
   };
 
-  const [showAllocationIncompleteAlert, setShowAllocationIncompleteAlert] =
-    useState(false);
-
   const areAllItemsFullyAllocated = () => {
     return Object.values(itemsAllocationStatusMap).every(
       (detail) => detail.isItemFullyAllocated
@@ -113,20 +108,23 @@ const VariableQuantityAllocationPage = () => {
     if (areAllItemsFullyAllocated()) {
       navigate("/expense/submission/review");
     } else {
-      // setShowAllocationIncompleteAlert(true);
-      setSnackbar({ show: true, message: "To proceed, please ensure that each item's quantity is fully allocated among participants.", severity: 'warning' });
-
+      setSnackbar({
+        show: true,
+        message:
+          "To proceed, please ensure that each item's quantity is fully allocated among participants.",
+        severity: "warning",
+      });
     }
   };
 
   return (
     <>
       <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
-        <HeadingWithTip
-          heading="Allocate Quantities of Items Per Member"
-          tipMessage="For each item, specify the quantity each member purchased. Adjust the quantities using the plus and minus controls beside each name."
-        />
         <Stack spacing={2}>
+          <HeadingWithTip
+            heading="Allocate Quantities of Items Per Member"
+            tipMessage="For each item, specify the quantity each member purchased. Adjust the quantities using the plus and minus controls beside each name."
+          />
           <SelectableItemChipList
             itemsAllocationStatusMap={itemsAllocationStatusMap}
             itemNameList={itemNameList}
@@ -146,7 +144,7 @@ const VariableQuantityAllocationPage = () => {
             expenseParticipantList={expenseParticipantList}
             handleNewExpenseChange={handleNewExpenseChange}
             itemsAllocationStatusMap={itemsAllocationStatusMap}
-            itemOrderDetailsList={itemOrderDetailsList}
+            itemList={itemList}
             jointPurchaserList={jointPurchaserList!}
             selectedItemId={selectedItemId}
             updateItemsAllocationStatusMap={updateItemsAllocationStatusMap}
@@ -179,12 +177,6 @@ const VariableQuantityAllocationPage = () => {
           Confirm
         </CustomButton>
       </Stack>
-      {/* <CustomSnackbar
-        handleClose={() => setShowAllocationIncompleteAlert(false)}
-        message="To proceed, please ensure that each item's quantity is fully allocated among participants."
-        severity="warning"
-        show={showAllocationIncompleteAlert}
-      /> */}
     </>
   );
 };

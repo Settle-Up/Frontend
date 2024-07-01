@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
 type UseScrollBasedDataLoaderProps = {
-  containerId: string;
   isError: boolean;
   isLoading: boolean;
   hasNextPage: boolean | undefined;
@@ -10,7 +9,6 @@ type UseScrollBasedDataLoaderProps = {
 };
 
 const useIntersectionObserver = ({
-  containerId,
   isError,
   isLoading,
   hasNextPage,
@@ -21,11 +19,6 @@ const useIntersectionObserver = ({
   const targetElementRef = useRef<HTMLDivElement | null>(null);
 
 
-  // console.log("isError", isError)
-  // console.log("targetElementRef", targetElementRef)
-  // console.log("isLoading", isLoading)
-  // console.log("hasNextPage", hasNextPage)
-  // console.log("isFetchingNextPage", isFetchingNextPage)
   const observeElement = useCallback(() => {
     if (
       !isError &&
@@ -38,7 +31,6 @@ const useIntersectionObserver = ({
       observer.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting) {
-            console.log("FETCH NEXT PAGE FIRED!!!!!!!!!!!!!!!!!!!!!!!!!");
             fetchNextPage();
           }
         },
@@ -48,10 +40,9 @@ const useIntersectionObserver = ({
           threshold: 0,
         }
       );
-      console.log("INTERSECTION OBERSERVER ATTACHED");
       observer.current.observe(targetElementRef.current);
     }
-  }, [isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [isError, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
     observeElement();

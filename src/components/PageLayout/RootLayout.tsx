@@ -35,7 +35,6 @@ const RootLayout = () => {
           overflow: "auto",
           position: "relative",
           zIndex: 1,
-          border: "2px dotted green"
         }}
       >
         <Outlet />

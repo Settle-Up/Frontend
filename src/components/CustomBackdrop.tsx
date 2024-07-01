@@ -19,7 +19,7 @@ const CustomBackdrop = ({ isOpen, zIndex = 1000 }: CustomBackdropProps) => {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
         zIndex,
         maxWidth: "600px",
         margin: "auto",

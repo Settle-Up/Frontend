@@ -1,22 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
-  IconButton,
   Stack,
-  TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import EmailSearchForm from "@components/EmailSearchForm";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import theme from "@theme";
-import { grey } from "@mui/material/colors";
 import { useMutation } from "react-query";
-import { addGroupMembers } from "@apis/group/addGroupMembers";
+import { addGroupMembers } from "@apis/groups/addGroupMembers";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
 import Spinner from "@components/Spinner";
+import useFeedbackHandler from "@hooks/useFeedbackHandler";
+import { useQueryClient } from "react-query";
 
 type AddMembersContentProps = {
   groupId: string;
@@ -24,7 +20,13 @@ type AddMembersContentProps = {
   closeModal: () => void;
 };
 
-const AddMembersContent = ({ groupId, groupName, closeModal }: AddMembersContentProps) => {
+const AddMembersContent = ({
+  groupId,
+  groupName,
+  closeModal,
+}: AddMembersContentProps) => {
+  const queryClient = useQueryClient();
+
   const setSnackbar = useSetRecoilState(snackbarState);
 
   const [groupUserList, setGroupUserList] = useState<GeneralUser[]>([]);
@@ -53,41 +55,35 @@ const AddMembersContent = ({ groupId, groupName, closeModal }: AddMembersContent
 
   const {
     mutate: executeAddGroupMembers,
-    isSuccess,
     isError,
     isLoading,
-  } = useMutation(() => addGroupMembers({groupId, groupName, groupUserList: groupUserList.map(user => user.userId)}));
+    isSuccess,
+  } = useMutation(() =>
+    addGroupMembers({
+      groupId,
+      groupName,
+      groupUserList: groupUserList.map((user) => user.userId),
+    })
+  );
 
   useEffect(() => {
     if (isLoading) {
       closeModal();
-      <Spinner isOverlay />
+      <Spinner isOverlay />;
     }
   }, [isLoading, setSnackbar, groupName, closeModal]);
 
+  const successAction = useCallback(() => {
+    queryClient.invalidateQueries(["groupMemberList", groupId]);
+  }, []);
 
-
-  useEffect(() => {
-    if (isSuccess) {
-      // closeModal();
-      setSnackbar({
-        show: true,
-        message: `You have successfully added new members to ${groupName}`,
-        severity: "success",
-      });
-    }
-  }, [isSuccess, setSnackbar, groupName, closeModal]);
-
-  useEffect(() => {
-    if (isError) {
-      // closeModal();
-      setSnackbar({
-        show: true,
-        message: `Sorry, an error occurred while adding new members to ${groupName}. Please try again later.`,
-        severity: "error",
-      });
-    }
-  }, [isError, setSnackbar, groupName, closeModal]);
+  useFeedbackHandler({
+    isError,
+    errorMessage: `Sorry, an error occurred while adding new members to ${groupName}. Please try again later.`,
+    isSuccess,
+    successAction,
+    successMessage: `Successfully added new members to ${groupName}`,
+  });
 
   return (
     <Stack spacing={6}>
@@ -102,7 +98,7 @@ const AddMembersContent = ({ groupId, groupName, closeModal }: AddMembersContent
           Enter the email address of the person you'd like to invite
         </Typography>
         <EmailSearchForm
-         selectedItemsSectionHeight="100px"
+          selectedItemsSectionHeight="100px"
           selectedEmailList={groupUserList}
           selectEmail={selectEmail}
           unselectEmail={unselectEmail}
@@ -112,7 +108,7 @@ const AddMembersContent = ({ groupId, groupName, closeModal }: AddMembersContent
           disabled={groupUserList.length === 0}
           sx={{ width: "100%" }}
           onClick={() => executeAddGroupMembers()}
-          >
+        >
           Invite Members
         </CustomButton>
       </Stack>

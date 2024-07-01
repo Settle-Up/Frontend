@@ -1,5 +1,4 @@
 import { Alert, Snackbar } from "@mui/material";
-import CustomBackdrop from "@components/CustomBackdrop";
 import { useRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
 
@@ -13,23 +12,27 @@ const CustomSnackbar = () => {
 
   return (
     <>
-      <CustomBackdrop isOpen={show} zIndex={2000} />
       <Snackbar
         open={show}
         anchorOrigin={{
           vertical: "top",
           horizontal: "center",
         }}
-        autoHideDuration={null} 
+        autoHideDuration={null}
         sx={{
           maxWidth: "550px",
           zIndex: (theme) => theme.zIndex.snackbar,
+          "& .MuiAlert-root": {
+            boxShadow: 6,
+          },
         }}
       >
         <Alert
           severity={severity}
           onClose={closeAlert}
-          sx={{ maxWidth: "550px" }}
+          sx={{
+            maxWidth: "550px",
+          }}
         >
           {message}
         </Alert>

@@ -61,16 +61,22 @@ const theme = createTheme({
       fontWeight: "bolder",
     },
     h6: {
-      fontSize: "1.5rem",
+      fontSize: "1.3rem",
       fontWeight: "bolder",
     },
     subtitle1: {
-      fontSize: "1rem",
+      fontSize: "0.9rem",
       fontWeight: 600,
     },
     subtitle2: {
-      fontSize: "0.9rem",
+      fontSize: "0.8rem",
       fontWeight: 600,
+    },
+    body1: {
+      fontSize: "0.8rem",
+    },
+    body2: {
+      fontSize: "0.7rem",
     },
   },
   components: {
@@ -99,11 +105,8 @@ const theme = createTheme({
               borderColor: "#D6CCFE",
             },
             "&:not(.Mui-error):hover fieldset": {
-              borderColor: "#D6CCFE", //"#6D53F3"
+              borderColor: "#D6CCFE", 
             },
-            // "&.Mui-focused fieldset": {
-            //   borderColor: "red",
-            // },
             backgroundColor: "white",
             borderRadius: 10,
           },
@@ -162,17 +165,6 @@ const theme = createTheme({
           "& .MuiBackdrop-root": {
             backgroundColor: "rgba(0, 0, 0, 0.6)",
           },
-        },
-      },
-    },
-    MuiSnackbarContent: {
-      styleOverrides: {
-        root: {
-          // backgroundColor: "#F7F5FF",
-          // color: "#8a75f5",
-          // borderRadius: 10,
-          // border: "1px solid #6D53F3",
-          // textAlign: "center",
         },
       },
     },

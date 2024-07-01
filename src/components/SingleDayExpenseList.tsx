@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import {
   Paper,
   Stack,
@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { grey, orange } from "@mui/material/colors";
 import theme from "@theme";
-import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
+import { useFormatNumberAsKoreanWon } from "@hooks/useFormatNumberAsKoreanWon";
 
 type SingleDayExpenseListProps = {
   date: string;
@@ -24,10 +24,13 @@ const SingleDayExpenseList = ({
   const navigate = useNavigate();
   const { groupId } = useParams();
 
+  const formatToKoreanWon = useFormatNumberAsKoreanWon();
 
   return (
     <Stack spacing={1}>
-      <Typography variant="subtitle1" sx={{ pl: 1}}>{date}</Typography>
+      <Typography variant="subtitle1" sx={{ pl: 1 }}>
+        {date}
+      </Typography>
       <Paper elevation={1} sx={{ backgroundColor: "white", borderRadius: 3 }}>
         <List>
           {singleDayExpenseList?.map(
@@ -47,14 +50,15 @@ const SingleDayExpenseList = ({
               >
                 <ListItemText
                   primary={
-                    <span style={{ fontWeight: 600 }}>{receiptName}</span>
+                    <Typography variant="subtitle2">{receiptName}</Typography>
                   }
                   secondary={
-                    <span
-                      style={{ color: grey[500] }}
-                    >{`${payerUserName} paid ${formatNumberWithLocaleAndNegatives(
+                    <Typography
+                      variant="caption"
+                      color={grey[600]}
+                    >{`${payerUserName} paid ${formatToKoreanWon(
                       totalPrice
-                    )}₩`}</span>
+                    )}`}</Typography>
                   }
                 />
                 <Typography
@@ -69,7 +73,7 @@ const SingleDayExpenseList = ({
                         : theme.palette.primary.main,
                   }}
                 >
-                  {`${formatNumberWithLocaleAndNegatives(userOwedAmount)}₩`}
+                  {`${formatToKoreanWon(userOwedAmount)}`}
                 </Typography>
               </ListItem>
             )

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Paper, Stack } from "@mui/material";
 import CustomButton from "@components/CustomButton";
-import GeneralExpenseDescription from "@components/GeneralExpenseDescription";
+import GeneralExpenseDescription from "@components/Group/GeneralExpenseDescription";
 import HeadingWithTip from "@components/HeadingWithTip";
 import { useRecoilValue } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
@@ -10,13 +10,8 @@ const ProcessReceiptInitialReviewPage = () => {
   const navigate = useNavigate();
   const newExpense = useRecoilValue(newExpenseState);
 
-  const {
-    receiptName,
-    address,
-    receiptDate,
-    receiptTotalPrice,
-    itemOrderDetailsList,
-  } = newExpense;
+  const { receiptName, address, receiptDate, receiptTotalPrice, itemList } =
+    newExpense;
 
   return (
     <>
@@ -37,7 +32,7 @@ const ProcessReceiptInitialReviewPage = () => {
               address={address}
               receiptDate={receiptDate}
               receiptTotalPrice={receiptTotalPrice}
-              itemOrderDetailsList={itemOrderDetailsList}
+              itemList={itemList}
               showReceiptName
             />
           </Paper>

@@ -12,9 +12,9 @@ import theme from "@theme";
 
 type PurchasedItemQuantityAdjustListProps = {
   expenseParticipantList: GeneralUser[];
-  handleNewExpenseChange: (key: string, value: ItemOrderDetails[]) => void;
+  handleNewExpenseChange: (key: string, value: Item[]) => void;
   itemsAllocationStatusMap: ItemsAllocationStatusMap;
-  itemOrderDetailsList: ItemOrderDetails[];
+  itemList: Item[];
   jointPurchaserList: PurchaserDetails[];
   selectedItemId: string;
   updateItemsAllocationStatusMap: (
@@ -26,7 +26,7 @@ const PurchasedItemQuantityAdjustList = ({
   expenseParticipantList,
   handleNewExpenseChange,
   itemsAllocationStatusMap,
-  itemOrderDetailsList,
+  itemList,
   jointPurchaserList,
   selectedItemId,
   updateItemsAllocationStatusMap,
@@ -40,40 +40,38 @@ const PurchasedItemQuantityAdjustList = ({
       return;
     }
 
-    const updatedItemOrderDetailsList: ItemOrderDetails[] =
-      itemOrderDetailsList.map((item) => {
-        if (item.itemId === selectedItemId) {
-          const newItem = { ...item };
-          newItem.jointPurchaserList = item.jointPurchaserList
-            ? item.jointPurchaserList.map((jp) => ({ ...jp }))
-            : [];
+    const updatedItemOrderDetailsList: Item[] = itemList.map((item) => {
+      if (item.itemId === selectedItemId) {
+        const newItem = { ...item };
+        newItem.jointPurchaserList = item.jointPurchaserList
+          ? item.jointPurchaserList.map((jp) => ({ ...jp }))
+          : [];
 
-          const existingPurchaserIndex = newItem.jointPurchaserList.findIndex(
-            (p) => p.userId === userId
+        const existingPurchaserIndex = newItem.jointPurchaserList.findIndex(
+          (p) => p.userId === userId
+        );
+
+        if (existingPurchaserIndex >= 0) {
+          let currentQuantity = parseInt(
+            newItem.jointPurchaserList[existingPurchaserIndex]
+              .purchasedQuantity || "0"
           );
+          // Prevent reducing the quantity below zero
+          currentQuantity = Math.max(0, currentQuantity + delta);
 
-          if (existingPurchaserIndex >= 0) {
-            let currentQuantity = parseInt(
-              newItem.jointPurchaserList[existingPurchaserIndex]
-                .purchasedQuantity || "0"
-            );
-            // Prevent reducing the quantity below zero
-            currentQuantity = Math.max(0, currentQuantity + delta);
-
-            newItem.jointPurchaserList[
-              existingPurchaserIndex
-            ].purchasedQuantity = currentQuantity.toString();
-            if (currentQuantity === 0) {
-              newItem.jointPurchaserList.splice(existingPurchaserIndex, 1);
-            }
-          } else if (delta > 0) {
-            newItem.jointPurchaserList.push({ userId, purchasedQuantity: "1" });
+          newItem.jointPurchaserList[existingPurchaserIndex].purchasedQuantity =
+            currentQuantity.toString();
+          if (currentQuantity === 0) {
+            newItem.jointPurchaserList.splice(existingPurchaserIndex, 1);
           }
-
-          return newItem;
+        } else if (delta > 0) {
+          newItem.jointPurchaserList.push({ userId, purchasedQuantity: "1" });
         }
-        return item;
-      });
+
+        return newItem;
+      }
+      return item;
+    });
 
     const selectedUpdatedItem = updatedItemOrderDetailsList.find(
       (item) => item.itemId === selectedItemId
@@ -94,12 +92,15 @@ const PurchasedItemQuantityAdjustList = ({
       selectedItemId,
       updatedTotalAllocatedQuantity
     );
-    handleNewExpenseChange("itemOrderDetailsList", updatedItemOrderDetailsList);
+    handleNewExpenseChange("itemList", updatedItemOrderDetailsList);
   };
 
   const getPurchasedQuantity = (userId: string) => {
-    const purchaserDetails = jointPurchaserList.find(
-      (jointPurchaser) => jointPurchaser.userId === userId
+    const purchaserDetails = jointPurchaserList?.find(
+      (jointPurchaser) => {
+
+        return jointPurchaser.userId === userId
+      }
     );
 
     return purchaserDetails ? purchaserDetails?.purchasedQuantity : 0;
@@ -108,7 +109,6 @@ const PurchasedItemQuantityAdjustList = ({
   return (
     <List>
       {expenseParticipantList.map(({ userId, userName }) => {
-        // Call getPurchasedQuantity once per user
         const purchasedQuantity = getPurchasedQuantity(userId);
 
         return (
@@ -130,9 +130,7 @@ const PurchasedItemQuantityAdjustList = ({
                 gap: 4,
               }}
             >
-              <Typography
-                sx={{ width: "65%", wordBreak: "break-all" }}
-              >
+              <Typography sx={{ width: "65%", wordBreak: "break-all" }}>
                 {userName}
               </Typography>
               <Typography sx={{ width: "5%", mx: 1 }} variant="body1">

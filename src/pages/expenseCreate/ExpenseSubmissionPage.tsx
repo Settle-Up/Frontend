@@ -1,26 +1,40 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Divider, Paper, Stack, Typography } from "@mui/material";
 import CustomButton from "@components/CustomButton";
 import SelectableParticipantChipList from "@components/SelectableParticipantChipList";
-import PurchasedItemToggletList from "@components/PurchasedItemToggletList";
+import PurchasedItemToggleList from "@components/PurchasedItemToggleList";
 import { useRecoilValue } from "recoil";
 import { newExpenseState } from "@store/expenseStore";
 import { useMutation } from "react-query";
-import { createNewExpense } from "@apis/expense/createNewExpense";
+import { createNewExpense } from "@apis/expenses/createNewExpense";
 import HeadingWithTip from "@components/HeadingWithTip";
 import ExpenseDetails from "@components/ExpenseDetails";
+import useFeedbackHandler from "@hooks/useFeedbackHandler";
+import { useResetRecoilState } from "recoil";
 
 const ExpenseSubmissionPage = () => {
+  const navigate = useNavigate();
   const newExpense = useRecoilValue(newExpenseState);
+  const resetNewExpense = useResetRecoilState(newExpenseState);
 
-  const createNewGroupMutation = useMutation(createNewExpense, {
-    onSuccess: () => {},
+  const {
+    mutate: executeCreateNewExpense,
+    isSuccess,
+    isError,
+  } = useMutation(() => createNewExpense(newExpense));
+
+  useFeedbackHandler({
+    isError,
+    errorMessage:
+      "Sorry, we encountered an issue adding new expense. Please try again later.",
+    isSuccess,
+    successMessage: "Expense successfully added.",
+    successAction: useCallback(() => {
+      navigate("/");
+      resetNewExpense();
+    }, []),
   });
-
-  const handleSubmit = () => {
-    createNewGroupMutation.mutate(newExpense);
-  };
 
   return (
     <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
@@ -33,7 +47,7 @@ const ExpenseSubmissionPage = () => {
       <ExpenseDetails expense={newExpense} showReceiptName />
       <CustomButton
         buttonStyle="default"
-        onClick={() => handleSubmit()}
+        onClick={() => executeCreateNewExpense()}
         sx={{
           alignSelf: "flex-end",
           width: { xs: "100%", sm: "auto" },
@@ -47,34 +61,3 @@ const ExpenseSubmissionPage = () => {
 };
 
 export default ExpenseSubmissionPage;
-
-// const calculateParticipantExpenses = (
-//   participantId: string
-// ): ParticipantPurchaseDetails => {
-//   return itemOrderDetailsList.reduce<ParticipantPurchaseDetails>(
-//     (acc, item) => {
-//       const isPurchaser = item.jointPurchaserList?.some(
-//         (purchaser) => purchaser.userId === participantId
-//       );
-//       if (isPurchaser) {
-//         const unitPrice = parsePrice(item.unitPrice);
-//         const purchasedQuantity =
-//           Number(
-//             item.jointPurchaserList?.find(
-//               (purchaser) => purchaser.userId === participantId
-//             )?.purchasedQuantity
-//           ) || 0;
-//         const totalPrice = unitPrice * purchasedQuantity;
-//         acc.purchasedItemList.push({
-//           itemName: item.itemName,
-//           unitPrice: item.unitPrice,
-//           purchasedQuantity,
-//           itemPurchasedCost: totalPrice,
-//         } as VariableShareItemDetails);
-//         acc.totalPurchasedCost += totalPrice;
-//       }
-//       return acc;
-//     },
-//     { purchasedItemList: [], totalPurchasedCost: 0 }
-//   );
-// };

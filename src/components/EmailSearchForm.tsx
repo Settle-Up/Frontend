@@ -21,7 +21,7 @@ import useIntersectionObserver from "@hooks/useIntersectionObserver";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
 
-export type EmailSearchFormProps = {
+type EmailSearchFormProps = {
   selectedItemsSectionHeight?: string;
   selectedEmailList: GeneralUser[];
   selectEmail: (user: GeneralUser) => void;
@@ -87,7 +87,6 @@ const EmailSearchForm = ({
   };
 
   const lastElementRef = useIntersectionObserver({
-    containerId: "searchListContainer",
     isError,
     isLoading,
     hasNextPage,

@@ -11,24 +11,28 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StandardLabeledInput from "@components/StandardLabeledInput";
 import theme from "@theme";
 import RemoveIcon from "@mui/icons-material/Remove";
-import CustomIconButton from "./CustomIconButton";
+import CustomIconButton from "@components/CustomIconButton";
+import { useState } from "react";
 
 type ExpenseItemAccordionProps = {
-  item: ItemOrderDetails;
-  itemErrors: ItemError;
-  expanded: boolean;
-  toggleAccordion: (event: React.SyntheticEvent, isExpanded: boolean) => void;
-  handleItemDetailsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDelete: () => void;
+  item: Item;
+  itemErrors?: ItemError;
+  updateItem: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  removeItem: () => void;
 };
 const ExpenseItemAccordion = ({
   item,
   itemErrors,
-  expanded,
-  toggleAccordion,
-  handleItemDetailsChange,
-  handleDelete,
+  updateItem,
+  removeItem,
 }: ExpenseItemAccordionProps) => {
+  const [expanded, setExpanded] = useState<boolean>(false);
+
+  const toggleAccordion = () => {
+    setExpanded(!expanded);
+  };
+
+
   const { itemId, itemName, unitPrice, itemQuantity, itemTotalPrice } = item;
 
   return (
@@ -49,7 +53,6 @@ const ExpenseItemAccordion = ({
           <IconButton
             color="primary"
             aria-label="dropdown"
-            onClick={() => {}}
             sx={{ p: 0.5 }}
           >
             <ExpandMoreIcon fontSize="large" />
@@ -68,7 +71,7 @@ const ExpenseItemAccordion = ({
           <CustomIconButton
             ariaLabel="Delete receipt item"
             icon={<RemoveIcon sx={{ fontSize: "24px" }} />}
-            handleClick={handleDelete}
+            handleClick={removeItem}
             shape="round"
             sx={{ p: 0 }}
             variant="primary"
@@ -81,34 +84,30 @@ const ExpenseItemAccordion = ({
       <AccordionDetails>
         <Stack spacing={2}>
           <StandardLabeledInput
-            error={itemErrors?.itemName.hasError}
-            errorText={itemErrors.itemName.message}
-            handleInputChange={handleItemDetailsChange}
-            label="Item Name"
+            error={itemErrors?.itemName}
+            changeInput={updateItem}
+            label="Item Name *"
             name="itemName"
             value={itemName}
           />
           <StandardLabeledInput
-            error={itemErrors?.unitPrice.hasError}
-            errorText={itemErrors.unitPrice.message}
-            handleInputChange={handleItemDetailsChange}
-            label="Unit Price"
+            error={itemErrors?.unitPrice}
+            changeInput={updateItem}
+            label="Unit Price *"
             name="unitPrice"
             value={unitPrice}
           />
           <StandardLabeledInput
-            error={itemErrors?.itemQuantity.hasError}
-            errorText={itemErrors.itemQuantity.message}
-            handleInputChange={handleItemDetailsChange}
-            label="Quantity"
+            error={itemErrors?.itemQuantity}
+            changeInput={updateItem}
+            label="Quantity *"
             name="itemQuantity"
             value={itemQuantity}
           />
           <StandardLabeledInput
-            error={itemErrors?.itemTotalPrice.hasError}
-            errorText={itemErrors.itemTotalPrice.message}
-            handleInputChange={handleItemDetailsChange}
-            label="Total Price"
+            error={itemErrors?.itemTotalPrice}
+            changeInput={updateItem}
+            label="Total Price *"
             name="itemTotalPrice"
             value={itemTotalPrice}
           />

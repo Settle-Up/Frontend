@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Typography } from "@mui/material";
 import SearchableSelect from "@components/SearchableSelect";
 import CustomButton from "@components/CustomButton";
-import CustomModal from "@components/CustomModal";
+import Modal from "@components/Modal";
 
 type MemberOption = {
   id: string;
@@ -73,7 +73,7 @@ const AddParticipantModal = ({
   };
 
   return (
-    <CustomModal
+    <Modal
       ariaLabel="Add New Member"
       closeModal={handleClose}
       isOpen={isOpen}
@@ -102,7 +102,7 @@ const AddParticipantModal = ({
       >
         Add Members
       </CustomButton>
-    </CustomModal>
+    </Modal>
   );
 };
 

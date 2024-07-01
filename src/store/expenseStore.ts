@@ -1,9 +1,26 @@
 import { atom } from "recoil";
-import mockExpense from "@mock/expenseMock";
 
-export const newExpenseState = atom<NewGroupExpense>({
+export const newExpenseState = atom<NewExpense>({
   key: "newExpense",
-  default: mockExpense
+  default: {
+    receiptImgFile: null,
+    expenseParticipantList: [],
+    groupId: "",
+    groupName: "",
+    payerUserId: "",
+    payerUserName: "",
+    receiptName: "",
+    address: "",
+    receiptDate: "",
+    receiptTotalPrice: "",
+    allocationType: "",
+    itemList: [],
+    discountApplied: "0",
+    actualPaidPrice: "0"
+  },
 });
 
-
+export const isNewExpenseFormFlowInitiatedState = atom({
+  key: "isNewExpenseFormFlowInitiatedState",
+  default: false,
+});

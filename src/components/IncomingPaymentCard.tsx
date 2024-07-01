@@ -1,11 +1,13 @@
 import { Box, ListItem, Stack, Typography } from "@mui/material";
-import { formatNumberWithLocaleAndNegatives } from "@utils/numberStringConversions";
+import { useFormatNumberAsKoreanWon } from "@hooks/useFormatNumberAsKoreanWon";
 
 type IncomingPaymentCardProps = {
   transaction: RequiredTransaction;
 };
 
 const IncomingPaymentCard = ({ transaction }: IncomingPaymentCardProps) => {
+  const formatToKoreanWon = useFormatNumberAsKoreanWon();
+
   const { counterPartyName, transactionAmount } = transaction;
 
   return (
@@ -24,13 +26,14 @@ const IncomingPaymentCard = ({ transaction }: IncomingPaymentCardProps) => {
             gap: 2,
           }}
         >
-          <Typography>{counterPartyName}</Typography>
+          <Typography variant="subtitle2">{counterPartyName}</Typography>
           <Typography
+            variant="subtitle2"
             sx={{
               wordBreak: "normal",
             }}
           >
-            {`${formatNumberWithLocaleAndNegatives(transactionAmount)}₩`}
+            {formatToKoreanWon(transactionAmount)}
           </Typography>
         </Box>
       </Stack>

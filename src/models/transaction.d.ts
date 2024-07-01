@@ -11,10 +11,11 @@ type RequiredTransaction = BaseTransaction;
 type UpdatedTransaction = BaseTransaction & {
   groupId: string;
   groupName: string;
+  clearedAt: string;
 };
 
 type ClearedTransaction = BaseTransaction & {
   clearedAt: string;
 };
 
-
+type ReceivedPayments = { receivedPaymentList: UpdatedTransaction[] };

@@ -2,9 +2,8 @@ import React from "react";
 import { Box, Typography, TextField, SxProps } from "@mui/material";
 
 type StandardLabeledInputProps = {
-  error?: boolean;
-  errorText?: string;
-  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: CustomError;
+  changeInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
   name: string;
   placeholder?: string;
@@ -13,9 +12,8 @@ type StandardLabeledInputProps = {
 };
 
 const StandardLabeledInput = ({
-  error = false,
-  errorText,
-  handleInputChange,
+  error,
+  changeInput,
   label,
   name,
   placeholder,
@@ -31,11 +29,11 @@ const StandardLabeledInput = ({
       )}
       <TextField
         aria-labelledby={name}
-        error={error}
-        helperText={errorText}
+        error={!!error}
+        helperText={error}
         fullWidth
         name={name}
-        onChange={handleInputChange}
+        onChange={changeInput}
         placeholder={placeholder}
         required={true}
         sx={sx}

@@ -1,15 +1,16 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://3.34.147.95:8080/',
+  baseURL: 'https://7af7-125-132-224-129.ngrok-free.app/',
   withCredentials: true
 });
 
 axiosInstance.interceptors.request.use(
   config => {
-    const url = config.url || '';
+    config.headers['ngrok-skip-browser-warning'] = 'true'; // should get rid of this later 
 
-    const excludeEndpoints = ['/login', '/auth/kakao/callback'];
+    const url = config.url || '';
+    const excludeEndpoints = ['/login', '/auth/login/social/kakao'];
     
     if (!excludeEndpoints.includes(url)) {
       const accessToken = sessionStorage.getItem('accessToken');

@@ -47,7 +47,7 @@ const router = createBrowserRouter([
             element: <GroupDetailsPage />,
           },
           {
-            path: "groups/:groupId/expenses/:receiptId",
+            path: "groups/:groupId/expenses/:expenseId",
             element: <GroupExpensePage />,
           },
           {
