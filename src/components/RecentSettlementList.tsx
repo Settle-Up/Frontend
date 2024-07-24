@@ -16,7 +16,7 @@ const RecentSettlementList = ({
 
   const hasTransactions =
     lastWeekSettledTransactionList &&
-    lastWeekSettledTransactionList.length === 0;
+    lastWeekSettledTransactionList.length > 0;
 
   const SkeletonSettlementCard = (index: number) => (
     <Box

@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { useSetRecoilState } from "recoil";
@@ -59,10 +59,7 @@ const LoginLoadingPage = () => {
         height: "100%",
       }}
     >
-      <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
-        Please hold on a brief second..
-      </Typography>
-      <Spinner />
+      <Spinner size={70} />
     </Stack>
   );
 };

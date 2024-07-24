@@ -6,18 +6,14 @@ import CustomButton from "@components/CustomButton";
 import StandardLabeledInput from "@components/StandardLabeledInput";
 import { createGroup } from "@apis/groups/createGroup";
 import EmailSearchForm from "@components/EmailSearchForm";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import { snackbarState } from "@store/snackbarStore";
+import { userProfileState } from "@store/userStore";
 
 const GroupCreatePage = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const accessToken = sessionStorage.getItem("accessToken");
-
-  const userProfile = queryClient.getQueryData<CurrentUser>([
-    "fetchedUserProfile",
-    accessToken,
-  ]);
+  const userProfile = useRecoilValue(userProfileState);
+ 
 
   const [newGroup, setNewGroup] = useState<NewGroup>({
     groupName: "",

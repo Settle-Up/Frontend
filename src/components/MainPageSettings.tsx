@@ -11,6 +11,7 @@ import PreferenceSettingsModal from "./PreferenceSettingsModal";
 import { useNavigate } from "react-router-dom";
 import Spinner from "@components/Spinner";
 import useFeedbackHandler from "@hooks/useFeedbackHandler";
+import useLogout from "@hooks/useLogout";
 
 const actions = [
   {
@@ -29,6 +30,7 @@ const actions = [
 
 const MainPageSettings = () => {
   const navigate = useNavigate();
+  const logout = useLogout();
 
   const [showOptions, setShowOptions] = useState(false);
   const [hoveredAction, setHoveredAction] = useState<string | null>(null);
@@ -56,6 +58,7 @@ const MainPageSettings = () => {
       "Sorry, Something went wrong during sign-out. Please try again.",
     isSuccess,
     successAction: useCallback(() => {
+      logout();
       navigate("/");
     }, []),
   });

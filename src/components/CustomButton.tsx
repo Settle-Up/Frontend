@@ -1,6 +1,5 @@
-import { Button, ButtonProps, IconButton } from "@mui/material";
+import { Button, ButtonProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactElement } from "react";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import { SxProps } from "@mui/material/styles";
 import theme from "@theme";
@@ -51,12 +50,11 @@ interface CustomButtonProps extends ButtonProps {
     | "primaryPlain"
     | "secondaryOutline"
     | "default";
-
   EndIcon?: React.ElementType<SvgIconProps> | undefined;
   StartIcon?: React.ElementType<SvgIconProps> | undefined;
-
   sx?: SxProps;
   type?: "button" | "submit" | "reset";
+  href?: string; // Added href for linking capability
 }
 
 const CustomButton = ({
@@ -66,12 +64,14 @@ const CustomButton = ({
   StartIcon,
   sx,
   type = "button",
+  href, // New prop for navigation
   ...props
 }: CustomButtonProps) => {
   let ButtonComponent: React.ElementType;
   let variant: "contained" | "outlined" | "text" = "contained";
 
-  switch (buttonStyle) {
+  // Determine the button component based on the style
+   switch (buttonStyle) {
     case "primary":
       ButtonComponent = PrimaryButton;
       break;
@@ -91,12 +91,42 @@ const CustomButton = ({
       break;
     default:
       ButtonComponent = PrimaryButton;
+      ButtonComponent = PrimaryButton;
   }
 
+  // Conditionally set component to 'a' if href is provided
+  if (href) {
+    return (
+      <ButtonComponent
+        component="a"
+        href={href}
+        target="_blank" // Opens in a new tab
+        rel="noopener noreferrer" // Security for opening new tabs
+        startIcon={StartIcon ? <StartIcon /> : undefined}
+        endIcon={EndIcon ? <EndIcon /> : undefined}
+        {...props}
+        sx={{
+          borderRadius: 5,
+          fontSize: "12px",
+          fontWeight: "bold",
+          letterSpacing: 1,
+          textTransform: "none",
+          boxShadow: 0,
+          px: 2,
+          textDecoration: "none",
+          ...sx,
+        }}
+      >
+        {children}
+      </ButtonComponent>
+    );
+  }
+
+  // Default button if no href
   return (
     <ButtonComponent
-      startIcon={StartIcon}
-      endIcon={EndIcon}
+      startIcon={StartIcon ? <StartIcon /> : undefined}
+      endIcon={EndIcon ? <EndIcon /> : undefined}
       {...props}
       sx={{
         borderRadius: 5,

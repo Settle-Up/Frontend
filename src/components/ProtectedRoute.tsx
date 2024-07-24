@@ -6,13 +6,16 @@ import { useQuery } from "react-query";
 import useFeedbackHandler from "@hooks/useFeedbackHandler";
 import { useCallback } from "react";
 import { userProfileState } from "@store/userStore";
+import { useQueryClient } from "react-query";
 
 const ProtectedRoute = () => {
+  const queryClient = useQueryClient();
   const location = useLocation();
   const accessToken = sessionStorage.getItem("accessToken");
   const setSnackbar = useSetRecoilState(snackbarState);
   const setUserProfile = useSetRecoilState(userProfileState);
-
+  const userAuthDetails: DemoUserAuthenticationDetails | undefined =
+    queryClient.getQueryData(["userAuthDetails"]);
 
   const {
     data: fetchedUserProfile,
@@ -24,7 +27,7 @@ const ProtectedRoute = () => {
   });
 
   const successAction = useCallback(() => {
-    if(fetchedUserProfile) {
+    if (fetchedUserProfile) {
       setUserProfile(fetchedUserProfile);
     }
   }, [fetchedUserProfile]);
@@ -36,7 +39,7 @@ const ProtectedRoute = () => {
     errorMessage: "Sorry, unable to load your profile at this moment.",
   });
 
-  if (accessToken && !isSuccess) {
+  if (accessToken && !isSuccess && userAuthDetails?.subject !== "DemoLogin") {
     refetch();
   }
 
@@ -50,8 +53,8 @@ const ProtectedRoute = () => {
     }
     sessionStorage.setItem("preAuthRoute", location.pathname);
     return <Navigate to="/login" replace />;
-  } 
-  
+  }
+
   return <Outlet />;
 };
 

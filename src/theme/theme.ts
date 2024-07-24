@@ -9,7 +9,7 @@ const theme = createTheme({
       dark: "#4c3aaa",
     },
     secondary: {
-      main: "#FF9000",
+      main: "#F58B00",
       contrastText: "#fff",
     },
     tertiary: {
@@ -50,6 +50,9 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ["Rubik", "Arial", "sans-serif"].join(","),
+    h2: {
+      fontWeight: "bolder",
+    },
     h3: {
       fontWeight: "bolder",
     },

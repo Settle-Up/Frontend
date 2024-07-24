@@ -96,7 +96,7 @@ const GroupList = () => {
             Please try again later.
           </Typography>
         )}
-        {data && data.pages.length === 0 && (
+        {data && data.pages[0]?.dataList.length === 0 && (
           <Typography
             sx={{
               color: grey[500],

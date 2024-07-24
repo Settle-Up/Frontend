@@ -13,10 +13,13 @@ import ExpenseItemAccordionList from "@components/ExpenseItemAccordionList";
 import { useSetRecoilState } from "recoil";
 import { isNewExpenseFormFlowInitiatedState } from "@store/expenseStore";
 import validateExpenseInput from "@utils/validateExpenseInput";
+import { snackbarState } from "@store/snackbarStore";
 
 const ReceiptEditingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const setSnackbar = useSetRecoilState(snackbarState);
 
   const setIsNewExpenseFormFlowInitiated = useSetRecoilState(
     isNewExpenseFormFlowInitiatedState
@@ -26,6 +29,18 @@ const ReceiptEditingPage = () => {
     setIsNewExpenseFormFlowInitiated(true);
   }, [setIsNewExpenseFormFlowInitiated]);
 
+  useEffect(() => {
+    if (location.state && !location.state.isValid) {
+      setSnackbar({
+        show: true,
+        message:
+          "Please ensure all required fields have valid values before proceeding.",
+        severity: "warning",
+      });
+    }
+    setIsNewExpenseFormFlowInitiated(true);
+  }, [location.state]);
+
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
 
   const { receiptName, address, receiptDate, receiptTotalPrice, itemList } =
@@ -34,12 +49,21 @@ const ReceiptEditingPage = () => {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
 
   const [newExpenseErrors, setNewExpenseErrors] = useState<NewExpenseError>(
-    location.state || {}
+    location.state?.errors || {}
   );
 
   const moveToNextStep = () => {
     const { errors, isValid } = validateExpenseInput(newExpense, "NewExpense");
     setNewExpenseErrors(errors);
+
+    if (!isValid) {
+      setSnackbar({
+        show: true,
+        message:
+          "Please ensure all required fields have valid values before proceeding.",
+        severity: "warning",
+      });
+    }
 
     if (isValid) {
       navigate("/expense/review/final");

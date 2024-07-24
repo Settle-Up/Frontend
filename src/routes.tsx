@@ -19,12 +19,22 @@ import {
 } from "@pages/expenseCreate";
 import NotFoundPage from "@pages/NotFoundPage";
 import ProtectedRoute from "@components/ProtectedRoute";
+import HowToUsePage from "@pages/HowToUsePage";
+import DemoStartPage from "@pages/DemoStartPage";
 
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
     errorElement: <NotFoundPage />,
     children: [
+      {
+        path: "/how-to-use",
+        element: <HowToUsePage />,
+      },
+      {
+        path: "/start-demo",
+        element: <DemoStartPage />,
+      },
       {
         path: "/login",
         element: <LoginPage />,

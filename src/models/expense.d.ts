@@ -16,6 +16,8 @@ type Item = {
   jointPurchaserList?: PurchaserDetails[];
 };
 
+//variable 이면 quantity
+//equal 이면 userid
 type Expense = {
   expenseParticipantList: GeneralUser[]; 
   groupId: string;

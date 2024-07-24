@@ -1,13 +1,12 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://7af7-125-132-224-129.ngrok-free.app/',
+  baseURL: 'https://server2a.settleup.store/',
   withCredentials: true
 });
 
 axiosInstance.interceptors.request.use(
   config => {
-    config.headers['ngrok-skip-browser-warning'] = 'true'; // should get rid of this later 
 
     const url = config.url || '';
     const excludeEndpoints = ['/login', '/auth/login/social/kakao'];

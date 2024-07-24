@@ -10,7 +10,7 @@ type SpinnerProps = {
 
 const Spinner = ({ isOverlay = false, size = 40 }: SpinnerProps) => {
   const rootContainerRef = useRecoilValue(rootContainerRefState);
-  
+
   if (!rootContainerRef?.current) {
     return null;
   }
@@ -22,7 +22,12 @@ const Spinner = ({ isOverlay = false, size = 40 }: SpinnerProps) => {
           {ReactDOM.createPortal(
             <CircularProgress
               size={size}
-              sx={{ position: "absolute", top: "50%", left: "50%", color: "black", border: "2px solid red" }}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                color: "black",
+              }}
             />,
             rootContainerRef.current
           )}

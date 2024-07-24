@@ -5,10 +5,11 @@ const GROUP_PER_PAGE = 100;
 
 type GetGroupListRequest = {
   page: number;
-}
+};
 
 export const getGroupList = async ({
-  page}:GetGroupListRequest): Promise<PaginatedResponse<JoinedGroupSummary>> => {
+  page,
+}: GetGroupListRequest): Promise<PaginatedResponse<JoinedGroupSummary>> => {
   try {
     const response = await axiosInstance.get(`/groups`, {
       params: {
@@ -19,14 +20,16 @@ export const getGroupList = async ({
 
     const extractedResponse = response.data.data;
 
-    const processedGroupList = extractedResponse.groupList.map(
+    const { groupList, ...otherDetails } = extractedResponse;
+
+    const processedGroupList = groupList.map(
       (group: any) => ({
         ...group,
         lastActive: group.lastActive ? dayjs(group.lastActive) : null,
       })
     );
 
-    return { ...extractedResponse, dataList: processedGroupList };
+    return { ...otherDetails, dataList: processedGroupList };
   } catch (error) {
     throw new Error("Failed to get Group List");
   }

@@ -14,9 +14,12 @@ import { useSetRecoilState } from "recoil";
 import { isNewExpenseFormFlowInitiatedState } from "@store/expenseStore";
 import useFeedbackHandler from "@hooks/useFeedbackHandler";
 import validateExpenseInput from "@utils/validateExpenseInput";
+import { snackbarState } from "@store/snackbarStore";
 
 const ReceiptUploadPage = () => {
   const navigate = useNavigate();
+  const setSnackbar = useSetRecoilState(snackbarState);
+
   const [newExpense, setNewExpense] = useRecoilState(newExpenseState);
   const [groupError, setGroupError] = useState('');
 
@@ -32,16 +35,13 @@ const ReceiptUploadPage = () => {
     if (processedReceipt) {
       const mergedData = mergeReceiptInToExpense(processedReceipt, newExpense);
       setNewExpense(mergedData);
-
-      const { errors, isValid } = validateExpenseInput(
-        mergedData,
-        "NewExpense"
-      );
-
+  
+      const { errors, isValid } = validateExpenseInput(mergedData, "NewExpense");
+  
       if (isValid) {
         navigate("/expense/review/initial");
       } else {
-        navigate("/expense/edit", { state: errors });
+        navigate("/expense/edit", { state: { errors, isValid } });
       }
     }
   }, [processedReceipt]);
@@ -78,6 +78,13 @@ const ReceiptUploadPage = () => {
       const requestData = new FormData();
       requestData.append("image", newExpense.receiptImgFile);
       executeGetProcessedReceipt(requestData);
+    } else {
+      setSnackbar({
+        show: true,
+        message:
+          "Please verify that you have uploaded a receipt.",
+        severity: "warning",
+      });
     }
   };
   

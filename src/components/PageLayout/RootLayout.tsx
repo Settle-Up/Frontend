@@ -16,14 +16,15 @@ const RootLayout = () => {
     setRootContainerRef(rootContainerRef);
   }, [setRootContainerRef]);
 
-  const loginPageBackground = location.pathname === "/login" ? "gradient-background" : "";
-
+  const pathsWithGradient = ["/login", "/how-to-use", "/start-demo"];
+  const backgroundStyle = pathsWithGradient.includes(location.pathname) ? "gradient-background" : "";
+  
   return (
     <>
       <CustomSnackbar />
       <Stack
         ref={rootContainerRef}
-        className={`custom-scrollbar ${loginPageBackground}`}
+        className={`custom-scrollbar ${backgroundStyle}`}
         sx={{
           height: "100%",
           maxWidth: "600px",
