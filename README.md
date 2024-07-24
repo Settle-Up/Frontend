@@ -2,7 +2,7 @@
 
 
 Settle Up은 단체 모임에서 장기간 발생하는 비용을 정산할 수 있는 웹 애플리케이션입니다. 이 서비스는 그룹의 비용 기록과 분배를 간소화하여 사용자가 신속하고 투명하게 정산을 완료할 수 있도록 돕습니다.
-배포된 웹사이트는 [여기](https://your-deployed-website.com)에서 확인할 수 있습니다.
+배포된 웹사이트는 [여기](https://d142csekpetioz.cloudfront.net/login)에서 확인할 수 있습니다.
 
 <br/>
 
@@ -36,9 +36,7 @@ Settle Up은 단체 모임에서 장기간 발생하는 비용을 정산할 수 
 
 ## 데모 영상
 
-<video width="100%" controls>
-        <source src="/videos/how-to-use.mp4" type="video/mp4" />
-</video>
+[데모 영상 보기](https://d142csekpetioz.cloudfront.net/how-to-use)
 
 <br/>
 
@@ -109,7 +107,7 @@ Settle Up은 단체 모임에서 장기간 발생하는 비용을 정산할 수 
 <br/>
 <br/>
 
-Settle Up is a web application designed to manage and settle expenses over a prolonged period in group settings. This service simplifies the recording and distribution of group expenses, helping users settle up quickly and transparently. The deployed website can be found [here](https://your-deployed-website.com).
+Settle Up is a web application designed to manage and settle expenses over a prolonged period in group settings. This service simplifies the recording and distribution of group expenses, helping users settle up quickly and transparently. The deployed website can be found [here](https://d142csekpetioz.cloudfront.net/login).
 
 <br/>
 
@@ -143,9 +141,7 @@ Settle Up is a web application designed to manage and settle expenses over a pro
 
 ## Demo Video
 
-<video width="100%" controls>
-        <source src="/videos/how-to-use.mp4" type="video/mp4" />
-</video>
+[Watch the Video](https://d142csekpetioz.cloudfront.net/how-to-use)
 
 <br/>
 
