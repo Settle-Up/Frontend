@@ -325,7 +325,7 @@ This project was managed using a combination of Kanban methodology and Scrum ele
   <tbody>
     <tr>
       <td><strong>Frontend</strong></td>
-      <td>Park Subin</td>
+      <td>Soo Bin Park</td>
       <td><a href="mailto:sooparksb@gmail.com">sooparksb@gmail.com</a></td>
       <td>
         <a href="https://github.com/sooparkdev">
@@ -341,7 +341,7 @@ This project was managed using a combination of Kanban methodology and Scrum ele
     </tr>
     <tr>
       <td><strong>Backend</strong></td>
-      <td>Seo Donghee</td>
+      <td>Dong Hee Seo</td>
       <td><a href="mailto:seodonghee456@gmail.com">seodonghee456@gmail.com</a></td>
       <td>
         <a href="https://github.com/donghee9">
