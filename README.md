@@ -2,59 +2,94 @@
 
 
 Settle Up은 단체 모임에서 장기간 발생하는 비용을 정산할 수 있는 웹 애플리케이션입니다. 이 서비스는 그룹의 비용 기록과 분배를 간소화하여 사용자가 신속하고 투명하게 정산을 완료할 수 있도록 돕습니다.
-배포된 웹사이트는 [여기](https://d142csekpetioz.cloudfront.net/login)에서 확인할 수 있습니다.
 
-<br/>
-
-## 주요 특징
+#### 핵심 특징
 
 - **그룹 관리**: 그룹을 생성하고 멤버를 초대하여 공동의 비용을 관리할 수 있습니다.
 - **자동 영수증 인식**: 영수증 사진에서 텍스트를 자동으로 추출하여 비용 기록을 간편하게 합니다.
 - **정산 최적화**: 지출을 분석하고 거래 횟수를 최소화하여 효율적인 정산을 지원합니다.
 
-<br/>
+<br />
+<br />
 
-## 팀원
+### 🔗 배포된 웹사이트 : https://d142csekpetioz.cloudfront.net/
 
-### [박수빈](https://github.com/sooparkdev) | 프론트엔드 개발자
+<br />
+<br />
 
-- 역할:
-    - ERD 및 API 설계
-    - 유저 플로우 설계
-    - UI/UX 디자인
-    - 클라이언트 사이드 기능 개발
+# 목차
 
-### [서동희](https://github.com/donghee9) | 백엔드 개발자
+#### [🎥 데모 영상](#-데모-영상)
+#### [🔧 기술 스택](#-기술-스택)
+#### [📄 상세 기능](#-상세-기능)
+#### [📋 프로젝트 관리](#-프로젝트-관리)
+#### [👨‍👩‍👦 팀원 소개](#-팀원-소개)
 
-- 역할:
-    - ERD 및 API 설계
-    - 정산 최적화 로직 설계
-    - 데이터베이스 관리
-    - 서버 사이드 기능 개발
+<br />
+<br />
 
-<br/>
-
-## 데모 영상
-
+## 🎥 데모 영상
 [데모 영상 보기](https://d142csekpetioz.cloudfront.net/how-to-use)
 
-<br/>
 
-## 기술 스택
 
-| **분류**      | **기술**                                                      |
-|---------------|--------------------------------------------------------------|
-| **프론트엔드** | React, TypeScript, Material UI, React Query, Recoil          |
-| **백엔드**    | Java, Spring Boot, JPA                                        |
-| **데이터베이스** | MySQL, Redis                                                  |
-| **외부 API**  | Kakao OAuth2, Microsoft Azure AI Document Intelligence                      |
-| **배포**      | AWS S3, AWS CloudFront, AWS EC2                               |
-| **버전 관리** | Git, GitHub                                                   |
+<br />
 
-<br/>
 
-## 기능 상세
 
+## 🔧 기술 스택
+<table>
+  <tbody>
+    <tr>
+      <td><strong>프론트엔드</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+        <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+        <img src="https://img.shields.io/badge/Material_UI-0081CB?style=for-the-badge&logo=material-ui&logoColor=white" alt="Material UI" />
+        <img src="https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white" alt="React Query" />
+        <img src="https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white" alt="Recoil" />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>백엔드</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java" />
+        <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot" />
+        <img src="https://img.shields.io/badge/JPA-007396?style=for-the-badge&logo=java&logoColor=white" alt="JPA" />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>데이터베이스</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
+        <img src="https://img.shields.io/badge/Redis-D82C20?style=for-the-badge&logo=redis&logoColor=white" alt="Redis" />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Third-party API</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/Kakao_OAuth2-FFCC00?style=for-the-badge&logo=kakao&logoColor=black" alt="Kakao OAuth2" />
+        <img src="https://img.shields.io/badge/Microsoft_Azure_AI-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white" alt="Microsoft Azure AI" />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>배포</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/AWS_S3-569A31?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS S3" />
+        <img src="https://img.shields.io/badge/AWS_CloudFront-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS CloudFront" />
+        <img src="https://img.shields.io/badge/AWS_EC2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS EC2" />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<br />
+
+
+
+## 📄 상세 기능
 ### 그룹
 
 - **그룹 생성**: 새로운 그룹을 만들 수 있습니다.
@@ -87,16 +122,66 @@ Settle Up은 단체 모임에서 장기간 발생하는 비용을 정산할 수 
 
 - 앱 내에서 이메일 검색을 통해 사용자를 찾을 수 있습니다.
 
+
+
 <br/>
 
-## 프로젝트 관리
 
-이 프로젝트는 Kanban 방법론과 스크럼의 요소를 결합하여 관리하였습니다. 주요 관리 방식을 아래와 같이 적용하였습니다.
+
+## 📋 프로젝트 관리
+이 프로젝트는 Kanban 방법론과 스크럼의 요소를 결합하여 관리하였습니다. 
 
 - **Kanban 보드 활용**: 프론트엔드와 백엔드 작업을 시각적으로 관리하며 진행 상황을 명확히 파악하고 팀원 간의 작업 상태를 투명하게 공유하였습니다.
 - **미팅 관리**: 프로젝트 초기와 중기에는 매일 두 차례의 스크럼 미팅을 통해 팀원 간의 진행 상황을 점검하고, 문제 해결 및 조율을 신속하게 진행하였습니다. 프로젝트 후기에는 Kanban의 유연한 접근 방식을 적용하여 필요할 때만 미팅을 진행하였습니다.
 - **작업 우선순위 조정**: 주기적인 검토를 통해 작업 항목의 우선순위를 조정하였습니다. 이를 통해 프로젝트의 목표와 요구사항에 따라 가장 중요한 작업이 우선적으로 처리될 수 있도록 하였습니다.
 
+
+
+<br/>
+
+
+
+## 👨‍👩‍👦 팀원 소개
+<table>
+  <tbody>
+    <tr>
+      <td><strong>프론트엔드</strong></td>
+      <td>박수빈</td>
+      <td><a href="mailto:sooparksb@gmail.com">sooparksb@gmail.com</a></td>
+      <td>
+        <a href="https://github.com/sooparkdev">
+          <img src="https://img.shields.io/badge/GitHub-ED8B00?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - 박수빈" style="background-color: #ED8B00;" />
+        </a>
+      </td>
+      <td> 
+        - ERD 및 API 설계 <br/>
+        - 유저 플로우 설계 <br/>
+        - UI/UX 디자인 <br/>
+        - 클라이언트 사이드 기능 개발 
+      </td>
+    </tr>
+    <tr>
+      <td><strong>백엔드</strong></td>
+      <td>서동희</td>
+      <td><a href="mailto:seodonghee456@gmail.com">seodonghee456@gmail.com</a></td>
+      <td>
+        <a href="https://github.com/donghee9">
+          <img src="https://img.shields.io/badge/GitHub-00A86B?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - 서동희" style="background-color: #00A86B;" />
+        </a>
+      </td>
+       <td> 
+        - ERD 및 API 설계 <br/>
+        - 정산 최적화 로직 설계 <br/>
+        - 데이터베이스 관리 <br/>
+        - 서버 사이드 기능 개발 
+      </td>
+    </tr>
+  </tbody>
+</table>
+                                              
+
+
+<br/>
 <br/>
 <br/>
 <br/>
@@ -106,98 +191,169 @@ Settle Up은 단체 모임에서 장기간 발생하는 비용을 정산할 수 
 <br/>
 <br/>
 <br/>
-
-Settle Up is a web application designed to manage and settle expenses over a prolonged period in group settings. This service simplifies the recording and distribution of group expenses, helping users settle up quickly and transparently. The deployed website can be found [here](https://d142csekpetioz.cloudfront.net/login).
-
 <br/>
 
-## Key Features
+
+# Settle Up
+
+Settle Up is a web application designed to manage and settle long-term expenses in group gatherings. This service simplifies the recording and distribution of group expenses, helping users quickly and transparently complete settlements.
+
+#### Key Features
 
 - **Group Management**: Create groups and invite members to manage shared expenses.
 - **Automatic Receipt Recognition**: Extract text from receipt photos to easily record expenses.
-- **Settlement Optimization**: Analyze expenditures and minimize transaction counts for efficient settlement.
+- **Settlement Optimization**: Analyze spending and minimize transaction frequency to support efficient settlement.
 
-<br/>
+<br />
+<br />
 
-## Team Members
+### 🔗 Deployed Website: [https://d142csekpetioz.cloudfront.net/](https://d142csekpetioz.cloudfront.net/)
 
-### [Soo Bin Park](https://github.com/sooparkdev) | Frontend Developer
+<br />
+<br />
 
-- Responsibilities:
-    - ERD and API design
-    - User flow design
-    - UI/UX design
-    - Client-side feature development
+# Table of Contents
 
-### [Dong Hee Seo](https://github.com/donghee9) | Backend Developer
+#### [🎥 Demo Video](#-demo-video)
+#### [🔧 Tech Stack](#-tech-stack)
+#### [📄 Detailed Features](#-detailed-features)
+#### [📋 Project Management](#-project-management)
+#### [👨‍👩‍👦 Team Members](#-team-members)
 
-- Responsibilities:
-    - ERD and API design
-    - Settlement optimization logic design
-    - Database management
-    - Server-side feature development
+<br />
+<br />
 
-<br/>
+## 🎥 Demo Video
+[Watch the Demo Video](https://d142csekpetioz.cloudfront.net/how-to-use)
 
-## Demo Video
+<br />
 
-[Watch the Video](https://d142csekpetioz.cloudfront.net/how-to-use)
+## 🔧 Tech Stack
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Frontend</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+        <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+        <img src="https://img.shields.io/badge/Material_UI-0081CB?style=for-the-badge&logo=material-ui&logoColor=white" alt="Material UI" />
+        <img src="https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white" alt="React Query" />
+        <img src="https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white" alt="Recoil" />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Backend</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java" />
+        <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot" />
+        <img src="https://img.shields.io/badge/JPA-007396?style=for-the-badge&logo=java&logoColor=white" alt="JPA" />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Database</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
+        <img src="https://img.shields.io/badge/Redis-D82C20?style=for-the-badge&logo=redis&logoColor=white" alt="Redis" />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Third-party API</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/Kakao_OAuth2-FFCC00?style=for-the-badge&logo=kakao&logoColor=black" alt="Kakao OAuth2" />
+        <img src="https://img.shields.io/badge/Microsoft_Azure_AI-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white" alt="Microsoft Azure AI" />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Deployment</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/AWS_S3-569A31?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS S3" />
+        <img src="https://img.shields.io/badge/AWS_CloudFront-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS CloudFront" />
+        <img src="https://img.shields.io/badge/AWS_EC2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS EC2" />
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-<br/>
+<br />
 
-## Tech Stack
-
-| **Category**     | **Technologies**                                          |
-|------------------|-----------------------------------------------------------|
-| **Frontend**     | React, TypeScript, Material UI, React Query, Recoil       |
-| **Backend**      | Java, Spring Boot, JPA                                    |
-| **Database**     | MySQL, Redis                                              |
-| **External API** | Kakao OAuth2, Microsoft Azure AI Document Intelligence                  |
-| **Deployment**   | AWS S3, AWS CloudFront, AWS EC2                           |
-| **Version Control** | Git, GitHub                                            |
-
-<br/>
-
-## Detailed Features
-
+## 📄 Detailed Features
 ### Group
 
 - **Create Group**: Create a new group.
-- **Leave Group**: Leave an existing group.
-- **Invite Members**: Invite users to the group.
-    - **Invitation Notifications**: Sends email notifications to invited users.
-- **Monthly Expense Summary Reports**: Configure to receive monthly summary reports of group expenses via email.
+- **Leave Group**: Leave a group.
+- **Invite Members**: Invite other users to the group.
+    - **Invitation Notifications**: Send email notifications to invited users when they are invited to a group.
+- **Monthly Consumption Summary Report**: Set up to receive a summary of the group's monthly expenses via email.
 
 ### Expenses
 
 - **Create Expense**: Record a new expense.
-    - Attach receipt photos to auto-fill information.
-    - Select specific members within the group to participate in the expense.
-    - Choose between equal or differential distribution methods.
-        - **Equal Distribution**: Share the total cost of a specific item equally among the participating members.
-        - **Differential Distribution**: Share the cost based on each member's consumption of a specific item.
-- **View Expenses**: View all group expenses sorted by recent date. Each expense displays receipt details, payer, distribution method, itemized member consumption, and total amount owed.
+    - Attach a receipt photo to automatically extract text and fill in the information.
+    - Select members who participated in the expense within the group.
+    - Choose between equal or proportional distribution of costs.
+        - **Equal Distribution**: Share the total cost of an item equally among members who consumed it.
+        - **Proportional Distribution**: Share the cost of an item based on the quantity consumed by each member.
+- **View Expenses**: View all expenses within the group in reverse chronological order. Each expense shows receipt details, the payer, distribution method, item details, and total amount each member owes.
 
 ### Settlement
 
-- **Automatic Settlement and Transaction Minimization**: Implement efficient settlements by minimizing total transactions among group members.
-- **Settlement Transaction Display**: Clearly shows each user the members they need to send money to, the amount, and the members they will receive money from.
+- **Automatic Settlement and Minimization of Transactions**: Implement efficient settlement by minimizing the total number of transactions between group members.
+- **Settlement Transactions Display**: Clearly show each user who they need to send money to, how much to send, and how much they will receive from each member.
 
 ### Transfers
 
-- **Member-to-Member Transfers**: Support transfers between members for settlement. *Note: This simulates the transfer process without actual financial transactions.*
-- **Transfer Notifications**: Notify users via in-app alerts when transfers are received.
+- **Member Transfers**: Support transfers between members for settlement. *No actual monetary transactions are implemented; only the simulation of the transfer process.*
+- **Transfer Notifications**: Notify users through in-app alerts when a transfer is received.
 
 ### User Email Search
 
-- Search for users by email within the app.
+- Search for users within the app using email.
 
-<br/>
+<br />
 
-## Project Management
+## 📋 Project Management
+This project was managed using a combination of Kanban methodology and Scrum elements.
 
-This project was managed using a combination of Kanban methodology and Scrum elements. Key management practices include:
+- **Kanban Board**: Visually manage frontend and backend tasks, track progress, and transparently share the status of tasks among team members.
+- **Meeting Management**: Conducted two Scrum meetings daily during the early and middle stages of the project to check progress, resolve issues, and make adjustments quickly. In the later stages, applied Kanban’s flexible approach and held meetings only as needed.
+- **Task Prioritization**: Regularly reviewed and adjusted task priorities to ensure that the most important tasks were handled first, based on the project's goals and requirements.
 
-- **Utilizing Kanban Board**: Visually manage frontend and backend tasks to clearly understand progress and transparently share the status among team members.
-- **Meeting Management**: Held twice-daily Scrum meetings during the initial and mid-stages of the project to review progress, address issues, and coordinate quickly. Adopted a flexible Kanban approach for meetings in the latter stages, holding them as needed.
-- **Task Prioritization**: Regular reviews to adjust task priorities, ensuring the most important tasks aligned with project goals and requirements were addressed first.
+<br />
+
+## 👨‍👩‍👦 Team Members
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Frontend</strong></td>
+      <td>Park Subin</td>
+      <td><a href="mailto:sooparksb@gmail.com">sooparksb@gmail.com</a></td>
+      <td>
+        <a href="https://github.com/sooparkdev">
+          <img src="https://img.shields.io/badge/GitHub-ED8B00?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - Park Subin" style="background-color: #ED8B00;" />
+        </a>
+      </td>
+      <td> 
+        - ERD and API Design <br/>
+        - User Flow Design <br/>
+        - UI/UX Design <br/>
+        - Client-side Feature Development 
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Backend</strong></td>
+      <td>Seo Donghee</td>
+      <td><a href="mailto:seodonghee456@gmail.com">seodonghee456@gmail.com</a></td>
+      <td>
+        <a href="https://github.com/donghee9">
+          <img src="https://img.shields.io/badge/GitHub-00A86B?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - Seo Donghee" style="background-color: #00A86B;" />
+        </a>
+      </td>
+       <td> 
+        - ERD and API Design <br/>
+        - Settlement Optimization Logic Design <br/>
+        - Database Management <br/>
+        - Server-side Feature Development 
+      </td>
+    </tr>
+  </tbody>
+</table>
